@@ -165,5 +165,17 @@
     }
   },
   "statusCompleted": "Completed",
-  "statusPending": "Pending"
+  "statusPending": "Pending",
+  "settingsTitle": "Settings",
+  "trainingPlanCacheTitle": "Training plan cache",
+  "trainingPlanCacheSubtitle": "Cache training plan data and update every few days.",
+  "cacheDaysLabel": "Refresh interval",
+  "cacheDaysValue": "Update every {days} days",
+  "@cacheDaysValue": {
+    "placeholders": {
+      "days": {}
+    }
+  },
+  "cacheClearButton": "Clear training plan cache",
+  "cacheClearedMessage": "Training plan cache cleared."
 }

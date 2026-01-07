@@ -6,6 +6,7 @@ import 'package:qfnu_app/login/login_service.dart';
 import 'package:qfnu_app/shared/html_parsers.dart';
 import 'package:qfnu_app/shared/http_options.dart';
 import 'package:qfnu_app/shared/models.dart';
+import 'package:qfnu_app/shared/training_plan_cache.dart';
 
 class ProxyLoginService implements LoginService {
   final Dio _dio;
@@ -155,6 +156,11 @@ class ProxyLoginService implements LoginService {
 
   @override
   Future<List<TrainingPlanGroup>> fetchTrainingPlan() async {
+    final cachedHtml = await TrainingPlanCache.getFreshHtml();
+    if (cachedHtml != null) {
+      return parseTrainingPlan(cachedHtml);
+    }
+
     final response = await _withSessionRetry(() {
       return _dio.get(
         '$baseUrl/pyfa',
@@ -163,7 +169,9 @@ class ProxyLoginService implements LoginService {
       );
     });
     final html = response.data?.toString() ?? '';
-    return parseTrainingPlan(html);
+    final groups = parseTrainingPlan(html);
+    await TrainingPlanCache.write(html);
+    return groups;
   }
 
   @override

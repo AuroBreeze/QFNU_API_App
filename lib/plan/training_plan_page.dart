@@ -4,6 +4,7 @@ import 'package:qfnu_app/login/login_page.dart';
 import 'package:qfnu_app/login/login_service.dart';
 import 'package:qfnu_app/plan/training_plan_detail_page.dart';
 import 'package:qfnu_app/shared/models.dart';
+import 'package:qfnu_app/shared/training_plan_cache.dart';
 import 'package:qfnu_app/shared/widgets/glow_circle.dart';
 
 class TrainingPlanPage extends StatefulWidget {
@@ -69,6 +70,11 @@ class _TrainingPlanPageState extends State<TrainingPlanPage> {
         });
       }
     }
+  }
+
+  Future<void> _reloadPlan() async {
+    await TrainingPlanCache.clear();
+    await _loadPlan();
   }
 
   Widget _buildGroupCard(
@@ -173,7 +179,7 @@ class _TrainingPlanPageState extends State<TrainingPlanPage> {
         elevation: 0,
         actions: [
           IconButton(
-            onPressed: _loading ? null : _loadPlan,
+            onPressed: _loading ? null : _reloadPlan,
             icon: const Icon(Icons.refresh),
             tooltip: l10n.reload,
           ),

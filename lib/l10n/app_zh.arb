@@ -1,7 +1,7 @@
 ﻿{
   "@@locale": "zh",
-  "appTitle": "QFNU App",
-  "loginTitle": "QFNU Login",
+  "appTitle": "QFNU教务",
+  "loginTitle": "QFNU教务登录",
   "loginSubtitle": "登录后查看考试、成绩、课表与培养方案。",
   "proxyUrlLabel": "代理地址（仅 Web）",
   "proxyUrlHint": "http://localhost:8080",
@@ -165,5 +165,17 @@
     }
   },
   "statusCompleted": "已完成",
-  "statusPending": "未完成"
+  "statusPending": "未完成",
+  "settingsTitle": "设置",
+  "trainingPlanCacheTitle": "培养方案缓存",
+  "trainingPlanCacheSubtitle": "缓存培养方案数据，按天数自动更新。",
+  "cacheDaysLabel": "更新间隔",
+  "cacheDaysValue": "每 {days} 天更新",
+  "@cacheDaysValue": {
+    "placeholders": {
+      "days": {}
+    }
+  },
+  "cacheClearButton": "清除培养方案缓存",
+  "cacheClearedMessage": "培养方案缓存已清除。"
 }

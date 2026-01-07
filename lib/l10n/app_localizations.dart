@@ -607,6 +607,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Pending'**
   String get statusPending;
+
+  /// No description provided for @settingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settingsTitle;
+
+  /// No description provided for @trainingPlanCacheTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Training plan cache'**
+  String get trainingPlanCacheTitle;
+
+  /// No description provided for @trainingPlanCacheSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cache training plan data and update every few days.'**
+  String get trainingPlanCacheSubtitle;
+
+  /// No description provided for @cacheDaysLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh interval'**
+  String get cacheDaysLabel;
+
+  /// No description provided for @cacheDaysValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Update every {days} days'**
+  String cacheDaysValue(Object days);
+
+  /// No description provided for @cacheClearButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear training plan cache'**
+  String get cacheClearButton;
+
+  /// No description provided for @cacheClearedMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Training plan cache cleared.'**
+  String get cacheClearedMessage;
 }
 
 class _AppLocalizationsDelegate

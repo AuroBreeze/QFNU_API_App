@@ -297,4 +297,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get statusPending => 'Pending';
+
+  @override
+  String get settingsTitle => 'Settings';
+
+  @override
+  String get trainingPlanCacheTitle => 'Training plan cache';
+
+  @override
+  String get trainingPlanCacheSubtitle =>
+      'Cache training plan data and update every few days.';
+
+  @override
+  String get cacheDaysLabel => 'Refresh interval';
+
+  @override
+  String cacheDaysValue(Object days) {
+    return 'Update every $days days';
+  }
+
+  @override
+  String get cacheClearButton => 'Clear training plan cache';
+
+  @override
+  String get cacheClearedMessage => 'Training plan cache cleared.';
 }

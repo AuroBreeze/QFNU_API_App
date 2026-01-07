@@ -9,10 +9,10 @@ class AppLocalizationsZh extends AppLocalizations {
   AppLocalizationsZh([String locale = 'zh']) : super(locale);
 
   @override
-  String get appTitle => 'QFNU App';
+  String get appTitle => 'QFNU教务';
 
   @override
-  String get loginTitle => 'QFNU Login';
+  String get loginTitle => 'QFNU教务登录';
 
   @override
   String get loginSubtitle => '登录后查看考试、成绩、课表与培养方案。';
@@ -294,4 +294,27 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get statusPending => '未完成';
+
+  @override
+  String get settingsTitle => '设置';
+
+  @override
+  String get trainingPlanCacheTitle => '培养方案缓存';
+
+  @override
+  String get trainingPlanCacheSubtitle => '缓存培养方案数据，按天数自动更新。';
+
+  @override
+  String get cacheDaysLabel => '更新间隔';
+
+  @override
+  String cacheDaysValue(Object days) {
+    return '每 $days 天更新';
+  }
+
+  @override
+  String get cacheClearButton => '清除培养方案缓存';
+
+  @override
+  String get cacheClearedMessage => '培养方案缓存已清除。';
 }

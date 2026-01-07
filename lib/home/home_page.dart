@@ -5,6 +5,7 @@ import 'package:qfnu_app/l10n/app_localizations.dart';
 import 'package:qfnu_app/login/login_page.dart';
 import 'package:qfnu_app/login/login_service.dart';
 import 'package:qfnu_app/plan/training_plan_card.dart';
+import 'package:qfnu_app/settings/settings_page.dart';
 import 'package:qfnu_app/shared/widgets/glow_circle.dart';
 import 'package:qfnu_app/timetable/today_schedule_card.dart';
 
@@ -67,6 +68,17 @@ class HomePage extends StatelessWidget {
                         ),
                       ),
                       const Spacer(),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => const SettingsPage(),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.settings_outlined),
+                        tooltip: l10n.settingsTitle,
+                      ),
                       TextButton.icon(
                         onPressed: () async {
                           await service.logout();

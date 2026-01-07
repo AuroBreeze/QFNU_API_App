@@ -11,6 +11,7 @@ import 'package:qfnu_app/shared/constants.dart';
 import 'package:qfnu_app/shared/html_parsers.dart';
 import 'package:qfnu_app/shared/http_options.dart';
 import 'package:qfnu_app/shared/models.dart';
+import 'package:qfnu_app/shared/training_plan_cache.dart';
 
 String? _extractAlert(String raw) {
   final match = RegExp(
@@ -174,13 +175,20 @@ class DirectLoginService implements LoginService {
 
   @override
   Future<List<TrainingPlanGroup>> fetchTrainingPlan() async {
+    final cachedHtml = await TrainingPlanCache.getFreshHtml();
+    if (cachedHtml != null) {
+      return parseTrainingPlan(cachedHtml);
+    }
+
     await _ensureSession();
     final response = await _dio.get(
       trainingPlanUrl,
       options: requestOptions(responseType: ResponseType.plain),
     );
     final html = response.data?.toString() ?? '';
-    return parseTrainingPlan(html);
+    final groups = parseTrainingPlan(html);
+    await TrainingPlanCache.write(html);
+    return groups;
   }
 
   @override
