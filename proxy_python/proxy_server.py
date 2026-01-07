@@ -14,6 +14,8 @@ CAPTCHA_URL = f"{BASE_URL}/jsxsd/verifycode.servlet"
 LOGIN_URL = f"{BASE_URL}/jsxsd/xk/LoginToXkLdap"
 QUERY_URL = f"{BASE_URL}/jsxsd/xsks/xsksap_query"
 LIST_URL = f"{BASE_URL}/jsxsd/xsks/xsksap_list"
+GRADE_QUERY_URL = f"{BASE_URL}/jsxsd/kscj/cjcx_query"
+GRADE_LIST_URL = f"{BASE_URL}/jsxsd/kscj/cjcx_list"
 
 SESSION_TTL_SECONDS = 15 * 60
 SESSIONS = {}
@@ -247,6 +249,37 @@ class ProxyHandler(BaseHTTPRequestHandler):
             self._send_text(200, html)
             return
 
+        if parsed.path == "/kscj/query":
+            params = parse_qs(parsed.query)
+            session_id = None
+            if "sid" in params:
+                session_id = params["sid"][0]
+            if not session_id:
+                session_id = self.headers.get("X-Session-Id")
+
+            if not session_id:
+                _log("kscj query missing session id")
+                self._send_json(400, {"error": "Missing sessionId"})
+                return
+
+            state = _get_session(session_id)
+            if not state:
+                _log(f"kscj query session expired sid={session_id[:8]}...")
+                self._send_json(404, {"error": "Session expired"})
+                return
+
+            try:
+                response = state.session.get(GRADE_QUERY_URL, timeout=10)
+            except requests.RequestException as exc:
+                _log(f"kscj query failed: {exc}")
+                self._send_json(502, {"error": "Query fetch failed", "detail": str(exc)})
+                return
+
+            html = _decode_response(response)
+            _log(f"kscj query ok sid={session_id[:8]}... len={len(html)}")
+            self._send_text(200, html)
+            return
+
         _log(f"unknown path: {parsed.path}")
         self._send_json(404, {"error": "Not found"})
 
@@ -299,6 +332,50 @@ class ProxyHandler(BaseHTTPRequestHandler):
             _log(
                 f"xsks list ok sid={session_id[:8]}... len={len(html)} xnxqid={xnxqid}"
             )
+            self._send_text(200, html)
+            return
+
+        if self.path == "/kscj/list":
+            _log(f"POST /kscj/list from {self.client_address[0]}")
+            payload, error = self._parse_json()
+            if error:
+                _log(f"kscj list bad request: {error}")
+                self._send_json(400, {"error": error})
+                return
+
+            session_id = str(payload.get("sessionId", "")).strip()
+            kksj = str(payload.get("kksj", "")).strip()
+            kcxz = str(payload.get("kcxz", "")).strip()
+            kcmc = str(payload.get("kcmc", "")).strip()
+            xsfs = str(payload.get("xsfs", "")).strip()
+
+            if not session_id:
+                _log("kscj list missing session id")
+                self._send_json(400, {"error": "Missing sessionId"})
+                return
+
+            state = _get_session(session_id)
+            if not state:
+                _log(f"kscj list session expired sid={session_id[:8]}...")
+                self._send_json(404, {"error": "Session expired"})
+                return
+
+            data = {
+                "kksj": kksj,
+                "kcxz": kcxz,
+                "kcmc": kcmc,
+                "xsfs": xsfs,
+            }
+
+            try:
+                response = state.session.post(GRADE_LIST_URL, data=data, timeout=10)
+            except requests.RequestException as exc:
+                _log(f"kscj list request failed: {exc}")
+                self._send_json(502, {"error": "List request failed", "detail": str(exc)})
+                return
+
+            html = _decode_response(response)
+            _log(f"kscj list ok sid={session_id[:8]}... len={len(html)}")
             self._send_text(200, html)
             return
 

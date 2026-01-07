@@ -11,4 +11,11 @@ abstract class LoginService {
   });
   Future<List<TermOption>> fetchExamTerms();
   Future<List<ExamItem>> fetchExamList({required String xnxqid});
+  Future<GradeQueryOptions> fetchGradeQueryOptions();
+  Future<List<GradeItem>> fetchGrades({
+    String kksj,
+    String kcxz,
+    String kcmc,
+    String xsfs,
+  });
 }

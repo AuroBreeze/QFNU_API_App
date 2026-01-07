@@ -2,7 +2,7 @@
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-import 'package:qfnu_app/exams/exam_schedule_page.dart';
+import 'package:qfnu_app/home/home_page.dart';
 import 'package:qfnu_app/login/direct_login_service.dart';
 import 'package:qfnu_app/login/login_service.dart';
 import 'package:qfnu_app/login/proxy_login_service.dart';
@@ -67,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
       if (terms.isNotEmpty) {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (_) => ExamSchedulePage(
+            builder: (_) => HomePage(
               service: service,
               username: '',
             ),
@@ -180,7 +180,7 @@ class _LoginPageState extends State<LoginPage> {
       if (result.ok) {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (_) => ExamSchedulePage(
+            builder: (_) => HomePage(
               service: service,
               username: username,
             ),

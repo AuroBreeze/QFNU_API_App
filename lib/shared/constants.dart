@@ -4,6 +4,8 @@ const captchaUrl = '$baseUrl/jsxsd/verifycode.servlet';
 const loginUrl = '$baseUrl/jsxsd/xk/LoginToXkLdap';
 const queryUrl = '$baseUrl/jsxsd/xsks/xsksap_query';
 const listUrl = '$baseUrl/jsxsd/xsks/xsksap_list';
+const gradeQueryUrl = '$baseUrl/jsxsd/kscj/cjcx_query';
+const gradeListUrl = '$baseUrl/jsxsd/kscj/cjcx_list';
 const defaultProxyUrl = 'http://localhost:8080';
 const browserUserAgent =
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '

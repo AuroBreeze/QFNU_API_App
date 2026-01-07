@@ -157,4 +157,44 @@ class ProxyLoginService implements LoginService {
     final html = response.data?.toString() ?? '';
     return parseExamList(html);
   }
+
+  @override
+  Future<GradeQueryOptions> fetchGradeQueryOptions() async {
+    final response = await _withSessionRetry(() {
+      return _dio.get(
+        '$baseUrl/kscj/query',
+        queryParameters: {'sid': _sessionId},
+        options: requestOptions(responseType: ResponseType.plain),
+      );
+    });
+    final html = response.data?.toString() ?? '';
+    return parseGradeQueryOptions(html);
+  }
+
+  @override
+  Future<List<GradeItem>> fetchGrades({
+    String kksj = '',
+    String kcxz = '',
+    String kcmc = '',
+    String xsfs = 'all',
+  }) async {
+    final response = await _withSessionRetry(() {
+      return _dio.post(
+        '$baseUrl/kscj/list',
+        data: {
+          'sessionId': _sessionId,
+          'kksj': kksj,
+          'kcxz': kcxz,
+          'kcmc': kcmc,
+          'xsfs': xsfs,
+        },
+        options: requestOptions(
+          contentType: Headers.jsonContentType,
+          responseType: ResponseType.plain,
+        ),
+      );
+    });
+    final html = response.data?.toString() ?? '';
+    return parseGradeList(html);
+  }
 }

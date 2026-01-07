@@ -172,4 +172,40 @@ class DirectLoginService implements LoginService {
     final html = response.data?.toString() ?? '';
     return parseExamList(html);
   }
+
+  @override
+  Future<GradeQueryOptions> fetchGradeQueryOptions() async {
+    await _ensureSession();
+    final response = await _dio.get(
+      gradeQueryUrl,
+      options: requestOptions(responseType: ResponseType.plain),
+    );
+    final html = response.data?.toString() ?? '';
+    return parseGradeQueryOptions(html);
+  }
+
+  @override
+  Future<List<GradeItem>> fetchGrades({
+    String kksj = '',
+    String kcxz = '',
+    String kcmc = '',
+    String xsfs = 'all',
+  }) async {
+    await _ensureSession();
+    final response = await _dio.post(
+      gradeListUrl,
+      data: {
+        'kksj': kksj,
+        'kcxz': kcxz,
+        'kcmc': kcmc,
+        'xsfs': xsfs,
+      },
+      options: requestOptions(
+        contentType: Headers.formUrlEncodedContentType,
+        responseType: ResponseType.plain,
+      ),
+    );
+    final html = response.data?.toString() ?? '';
+    return parseGradeList(html);
+  }
 }

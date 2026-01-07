@@ -1,0 +1,300 @@
+
+  
+
+ 
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<head id="headerid1">
+	<base target='_self'>
+	<title>学生个人考试成绩</title>	
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">
+	<meta http-equiv="keywords" content="湖南强智科技教务系统">
+	<meta http-equiv="description" content="湖南强智科技教务系统">
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+<script type="text/javascript" src="/jsxsd/js/jquery-1.8.0.min.js" language="javascript" ></script>
+<script type="text/javascript" src="/jsxsd/js/jquery-min.js" language="javascript" ></script>
+<script type="text/javascript" src="/jsxsd/js/common.js" language="javascript" ></script>
+<script type="text/javascript" src="/jsxsd/js/iepngfix_tilebg.js" language="javascript" ></script>
+<script type="text/javascript" src="/jsxsd/js/easyui/jquery.easyui.min.js" language="javascript" ></script>
+<script type="text/javascript" src="/jsxsd/js/jquery.autocomplete.min.js" language="javascript" ></script>
+<link href="/jsxsd/framework/images/common.css" rel="stylesheet" type="text/css" />
+<link href="/jsxsd/framework/images/blue.css" rel="stylesheet" type="text/css" id="link_theme" />
+<link href="/jsxsd/framework/images/workstation.css" rel="stylesheet" type="text/css" /> 
+<link href="/jsxsd/css/easyui.css" rel="stylesheet" type="text/css" />
+<link href="/jsxsd/css/jquery.autocomplete.css" rel="stylesheet" type="text/css" />
+</head>
+<iframe id="notSession" name="notSession" style="display: none;" src=""></iframe>
+<script type="text/javascript">
+jQuery(document).ready(function(){
+	window.setInterval(function(){
+		 document.getElementById("notSession").src = "/jsxsd/framework/blankPage.jsp";
+	 }, 1000 * 60 * 10);
+});
+</script>
+
+<!--  -->
+<div  >
+	<!-- <div class="Nsb_r_title"><a href="/jsxsd/framework/main.jsp"">首页</a> » 考试成绩 » 课程成绩查询 » 查询列表</div>
+	<input type="button" id="btn_back" class="button" value="返 回" onclick="window.location.href='/jsxsd/kscj/cjcx_query';"/> -->
+
+
+	查询条件：开课时间【2025-2026-1】&nbsp;&nbsp; 	  
+	
+	<!--
+		user:promition fucecode="NEW_XSD_XJCJ_WDCJ_KCCJCX_XSCJKDY">
+			<input type="button" id="btn_xscjk" value="学生成绩卡  " onclick="printXscjk(1);" class="button el-button"/>
+		/user:promition>
+		user:promition fucecode="NEW_XSD_XJCJ_WDCJ_KCCJCX_BJGXSCJKDY">
+			<input type="button" id="btn_bjgxscjk" value="不及格学生成绩卡  " onclick="printXscjk(2);"   class="button el-button"/>
+		/user:promition>
+		-->
+	
+	
+	
+	
+	
+		 	
+			
+
+
+
+
+
+
+
+
+
+	<table id="dataList" width="100%" border="0" cellspacing="0" cellpadding="0" class="Nsb_r_list Nsb_table">
+		<tr>
+			<th class="Nsb_r_list_thb" style="width: 35px;">序号</th>
+			<th class="Nsb_r_list_thb" style="width: 140px;">开课学期</th>
+			<th class="Nsb_r_list_thb" style="width: 110px;">课程编号</th>
+			<th class="Nsb_r_list_thb" style="width: 110px;">课程名称</th>
+			
+			<th class="Nsb_r_list_thb" style="width: 110px;">分组名</th>
+			<th class="Nsb_r_list_thb" style="width: 60px;">
+            成绩</th>
+			
+
+			<th class="Nsb_r_list_thb" style="width: 50px;">成绩标识</th>
+			<th class="Nsb_r_list_thb" style="width: 50px;">学分</th>
+			<th class="Nsb_r_list_thb" style="width: 50px;">总学时</th>
+			<th class="Nsb_r_list_thb" style="width: 50px;">绩点</th>
+
+			
+			
+			<th class="Nsb_r_list_thb" style="width: 110px;">补重学期</th>
+			
+			<th class="Nsb_r_list_thb" style="width: 60px;">考核方式</th>
+			<th class="Nsb_r_list_thb" style="width: 60px;">考试性质</th>
+			
+				<th class="Nsb_r_list_thb" style="width: 60px;">课程属性</th>
+			
+			<th class="Nsb_r_list_thb" style="width: 80px;">课程性质</th>
+			
+				<th class="Nsb_r_list_thb" style="width: 80px;">课程类别</th>
+			
+			
+		</tr>
+		
+		<tr>
+			<td>1</td>
+			<td>2025-2026-1</td>
+			<td align="left">510102</td>
+			<td align="left">四史教育</td>
+			
+			<td align="left"></td>
+			<!-- 控制成绩显示 -->
+			
+				
+				   
+				   
+			<td style=" ">
+
+
+			
+				
+				
+					94
+				
+			
+
+
+
+
+			</td></td>
+				   
+				
+			
+			
+
+			
+
+			<td></td>
+			<td>1</td>
+			<td>18</td>
+
+			<!-- 控制绩点显示 -->
+			
+				
+					
+					
+						
+						<td>4.4</td>
+					
+				
+			
+			
+			
+			<td></td>
+			
+			<td>考查</td>
+			<td>正常考试</td>
+			
+			<td>必修</td>
+			
+			<td>公共必修课</td>
+			
+			<td></td>
+			
+			
+		</tr>
+		
+		<tr>
+			<td>2</td>
+			<td>2025-2026-1</td>
+			<td align="left">550117</td>
+			<td align="left">形势与政策专题三</td>
+			
+			<td align="left"></td>
+			<!-- 控制成绩显示 -->
+			
+				
+				   
+				   
+			<td style=" ">
+
+
+			
+				
+				
+					87
+				
+			
+
+
+
+
+			</td></td>
+				   
+				
+			
+			
+
+			
+
+			<td></td>
+			<td>0.5</td>
+			<td>8</td>
+
+			<!-- 控制绩点显示 -->
+			
+				
+					
+					
+						
+						<td>3.7</td>
+					
+				
+			
+			
+			
+			<td></td>
+			
+			<td>考查</td>
+			<td>正常考试</td>
+			
+			<td>必修</td>
+			
+			<td>公共必修课</td>
+			
+			<td></td>
+			
+			
+		</tr>
+		
+
+
+
+		
+	</table>
+
+		<form action="" method="post" name="Form1" id="Form1"></form>
+</div>
+<br />
+<!--   -->
+<script language="javascript">
+
+//合并学年学期列
+//jQuery("#dataList").rowspan(1);
+</script>
+<form  action="" name="Formfr" id="FormFr">
+	<input type="hidden" name="key" id="key" />
+</form>
+ 
+<input id="PageContext" type="hidden" value="/jsxsd" />
+<script type="text/javascript" src="/jsxsd/js/validate.js" language="javascript"></script>
+<script language="javascript">
+
+	function printXscjk(type){
+		document.Form1.action = "/jsxsd/kscj/printXscjk?dytype_11437="+type;
+		document.Form1.target = "hidfrm";
+		document.Form1.submit();
+		document.Form1.target="";
+	}
+
+function queren() {  
+	$.ajax({
+        type : "GET",
+        async:false,
+        url : "/jsxsd/kscj/cjcx_list_qr",
+        data : "",
+        dataType: "json",
+        success : function(msg) {
+        	    alert('确认成功！');
+	           $("#btn_query").prop("disabled","disabled");
+	           $("#btn_query").val("已确认");
+	   }
+    });
+}
+
+loadjs();
+function loadjs(){
+if( ''!=''){
+    alert('');
+    if('教材评教未完成，不能查询成绩！'=='' && '14435'=='10446'){
+        parent.parent.parent.window.frames["Frame0"].location.href= "/jsxsd/framework/xsMain_new.jsp?jumpUrl=/xsjc/jcpj_xspj_find_14435";
+    }
+
+}
+}
+	function printXscjk_2(type){
+		document.Form1.action = "/jsxsd/kscj/printXscjk_11049";
+		document.Form1.target = "hidfrm";
+		document.Form1.submit();
+		document.Form1.target="";
+	}
+
+	function queryXsxycjb_whkjdx(type){
+		document.Form1.action = "/jsxsd/kscj/queryCjk_whkjdx?pdf=1";
+		document.Form1.target = "_self";
+		document.Form1.submit();
+		document.Form1.target="";
+	}
+</script>

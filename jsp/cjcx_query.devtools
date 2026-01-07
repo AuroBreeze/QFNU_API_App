@@ -1,0 +1,348 @@
+
+
+
+  
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+
+<head id="headerid1">
+	<base target='_self'>
+	<title>课程成绩查询</title>	
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">
+	<meta http-equiv="keywords" content="湖南强智科技教务系统">
+	<meta http-equiv="description" content="湖南强智科技教务系统">
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+<script type="text/javascript" src="/jsxsd/js/jquery-1.8.0.min.js" language="javascript" ></script>
+<script type="text/javascript" src="/jsxsd/js/jquery-min.js" language="javascript" ></script>
+<script type="text/javascript" src="/jsxsd/js/common.js" language="javascript" ></script>
+<script type="text/javascript" src="/jsxsd/js/iepngfix_tilebg.js" language="javascript" ></script>
+<script type="text/javascript" src="/jsxsd/js/easyui/jquery.easyui.min.js" language="javascript" ></script>
+<script type="text/javascript" src="/jsxsd/js/jquery.autocomplete.min.js" language="javascript" ></script>
+<link href="/jsxsd/framework/images/common.css" rel="stylesheet" type="text/css" />
+<link href="/jsxsd/framework/images/blue.css" rel="stylesheet" type="text/css" id="link_theme" />
+<link href="/jsxsd/framework/images/workstation.css" rel="stylesheet" type="text/css" /> 
+<link href="/jsxsd/css/easyui.css" rel="stylesheet" type="text/css" />
+<link href="/jsxsd/css/jquery.autocomplete.css" rel="stylesheet" type="text/css" />
+</head>
+<iframe id="notSession" name="notSession" style="display: none;" src=""></iframe>
+<script type="text/javascript">
+jQuery(document).ready(function(){
+	window.setInterval(function(){
+		 document.getElementById("notSession").src = "/jsxsd/framework/blankPage.jsp";
+	 }, 1000 * 60 * 10);
+});
+</script>
+  
+<div class="Nsb_layout_r">   
+	<div class="Nsb_layout_r title">课程成绩查询</div>
+	<form action="" name="kscjQueryForm" id="kscjQueryForm" method="post" target="cjcx_list_frm">
+		<table align="left">
+			<tr>
+				<td>开课时间：</td>
+				<td  width="220px;">
+					<select id="kksj" name="kksj" style="width: 170px;">
+						<option value="" selected>全部学期</option>
+						
+							<option value="2025-2026-2"  >2025-2026-2</option>
+						
+							<option value="2025-2026-1"  >2025-2026-1</option>
+						
+							<option value="2024-2025-3"  >2024-2025-3</option>
+						
+							<option value="2024-2025-2"  >2024-2025-2</option>
+						
+							<option value="2024-2025-1"  >2024-2025-1</option>
+						
+							<option value="2023-2024-3"  >2023-2024-3</option>
+						
+							<option value="2023-2024-2"  >2023-2024-2</option>
+						
+							<option value="2023-2024-1"  >2023-2024-1</option>
+						
+							<option value="2022-2023-3"  >2022-2023-3</option>
+						
+							<option value="2022-2023-2"  >2022-2023-2</option>
+						
+							<option value="2022-2023-1"  >2022-2023-1</option>
+						
+							<option value="2021-2022-3"  >2021-2022-3</option>
+						
+							<option value="2021-2022-2"  >2021-2022-2</option>
+						
+							<option value="2021-2022-1"  >2021-2022-1</option>
+						
+							<option value="2020-2021-2"  >2020-2021-2</option>
+						
+							<option value="2020-2021-1"  >2020-2021-1</option>
+						
+							<option value="2019-2020-3"  >2019-2020-3</option>
+						
+							<option value="2019-2020-2"  >2019-2020-2</option>
+						
+							<option value="2019-2020-1"  >2019-2020-1</option>
+						
+							<option value="2018-2019-2"  >2018-2019-2</option>
+						
+							<option value="2018-2019-1"  >2018-2019-1</option>
+						
+							<option value="2017-2018-2"  >2017-2018-2</option>
+						
+							<option value="2017-2018-1"  >2017-2018-1</option>
+						
+							<option value="2016-2017-2"  >2016-2017-2</option>
+						
+							<option value="2016-2017-1"  >2016-2017-1</option>
+						
+							<option value="2015-2016-2"  >2015-2016-2</option>
+						
+							<option value="2015-2016-1"  >2015-2016-1</option>
+						
+							<option value="2014-2015-2"  >2014-2015-2</option>
+						
+							<option value="2014-2015-1"  >2014-2015-1</option>
+						
+							<option value="2013-2014-2"  >2013-2014-2</option>
+						
+							<option value="2013-2014-1"  >2013-2014-1</option>
+						
+							<option value="2012-2013-2"  >2012-2013-2</option>
+						
+							<option value="2012-2013-1"  >2012-2013-1</option>
+						
+							<option value="2011-2012-2"  >2011-2012-2</option>
+						
+							<option value="2011-2012-1"  >2011-2012-1</option>
+						
+							<option value="2010-2011-2"  >2010-2011-2</option>
+						
+							<option value="2010-2011-1"  >2010-2011-1</option>
+						
+							<option value="2009-2010-2"  >2009-2010-2</option>
+						
+							<option value="2009-2010-1"  >2009-2010-1</option>
+						
+							<option value="2008-2009-2"  >2008-2009-2</option>
+						
+							<option value="2008-2009-1"  >2008-2009-1</option>
+						
+							<option value="2007-2008-2"  >2007-2008-2</option>
+						
+							<option value="2007-2008-1"  >2007-2008-1</option>
+						
+					</select>
+					<!-- <font color="red">*</font> -->
+				</td>
+				<td align="right">课程性质：</td>
+				<td   width="220px;"><select id="kcxz" name="kcxz" style="width: 170px;">
+						<option value="">---请选择---</option>
+						
+						<option value="01">公共课</option>
+						
+						<option value="02">公共基础课</option>
+						
+						<option value="03">专业基础课</option>
+						
+						<option value="04">专业课</option>
+						
+						<option value="05">专业选修课</option>
+						
+						<option value="06">公共选修课</option>
+						
+						<option value="07">专业任选课</option>
+						
+						<option value="08">实践教学环节</option>
+						
+						<option value="09">公共任选课</option>
+						
+						<option value="10">教师教育基础课程（必修）</option>
+						
+						<option value="11">专业必修课</option>
+						
+						<option value="12">学科基础必修课</option>
+						
+						<option value="13">专业方向限选课</option>
+						
+						<option value="14">考试报名虚拟课程</option>
+						
+						<option value="15">教师教育选修课程</option>
+						
+						<option value="16">公共必修课</option>
+						
+					</select></td>
+				<td   align="right">课程名称：</td>
+				<td   width="220px;"s><input type="text" id="kcmc" name="kcmc" value="" style="width: 165px;"/></td>
+				<th align="right">显示方式：</th>
+				<td   width="220px;"><select id="xsfs" name="xsfs" style="width: 170px;">
+
+					
+					<option value="all">显示全部成绩</option>
+					<option value="max">显示最好成绩</option>
+					
+					</select></td>
+			</tr>
+			<tr>
+
+				<td colspan="6" align="left">
+					<input type="checkbox" id="sfxsbcxq" name="sfxsbcxq" value="1"/>是否显示补重成绩
+					
+					
+
+					<input type="button" id="btn_query" value="查 询" onclick="queryKscj()" class="button el-button"/>
+					
+
+					
+
+					
+					
+
+					
+					
+				</td>
+			</tr>
+		</table>
+	</form>
+	<form  action="" name="Formfr" id="FormFr">
+		<input type="hidden" name="key" id="key" />
+	</form>
+</div>
+<div id="showDiv" style="background-color: #999900; border: 1px double #000000; text-align: center; width: 220px; height: 60px; display: none; position: absolute;">
+	<table cellpadding="0" cellspacing="0" width="100%" height="100%">
+		<tr>
+			<td height="60px;" style="color: #000000; font-size: 14px;">正在拼命加载中，请稍后...</td>
+		</tr>
+	</table>
+</div>
+<input id="PageContext" type="hidden" value="/jsxsd" />
+<script type="text/javascript" src="/jsxsd/js/validate.js" language="javascript"></script>
+<script language="javascript">
+	function frdy_10135() {
+		var xnxqval = "";
+		$.each($("#xnxq option:selected"), function (i, xnxq) {
+			xnxqval += $(xnxq).val() + ",";
+		});
+		var selShowType="";
+		if("max"==document.getElementById("xsfs").value){
+			selShowType=1;
+		}else{
+			selShowType=3;
+		}
+		//xnxqval = xnxqval.length > 0 ? xnxqval.substr(0, xnxqval.length - 1) : xnxqval;
+		//var url  = ''+","+xnxqval+","+'';
+		var url  = ""+","+""+","+'2024413493'+","+""+","+""+","+""+","+""+","+selShowType;
+		frdy_laosha(url,'学生端成绩单模板','http://202.194.188.36:8089','alert(\'无对应帆软模板配置\')');
+	}
+	function cjdab(){
+
+		var xsxh="2024413493";
+
+		var kksj=document.getElementById("kksj").value;
+		var selShowType="";
+		if("max"==document.getElementById("xsfs").value){
+			selShowType=1;
+		}else{
+			selShowType=3;
+		}
+
+		frdy_laosha(xsxh+","+kksj+","+selShowType,'课程成绩查询_成绩档案表','http://202.194.188.36:8089','alert(\'无对应帆软模板配置\')')
+	}
+	function xscjzmb(){
+		//xsxh  xnxqs selShowType
+		var xsxh="2024413493";
+		//var xnxqs="";
+		var kksj=document.getElementById("kksj").value;
+		var selShowType="";
+		if("max"==document.getElementById("xsfs").value){
+			selShowType=1;
+		}else{
+			selShowType=3;
+		}
+
+		frdy_laosha(xsxh+","+kksj+","+selShowType,'课程成绩查询_学籍成绩证明表','http://202.194.188.36:8089','alert(\'无对应帆软模板配置\')')
+
+	}
+function pyfacjdy() {//$(window).height() - this.height()) / 2+$(window).scrollTop() + "px");
+	jQuery("#showDiv").css({"left": ((jQuery(window).width()-220)/2)+"px", "top": ((jQuery(window).height()-60)/2)+"px"}).show();
+	window.location.href = "/jsxsd/kscj/facjdy_list";
+}
+function printKscj(){
+	var url="";
+		var xsfs = $("#xsfs").val();
+	var selShowType="";
+	if("max"==document.getElementById("xsfs").value){
+		selShowType=1;
+	}else{
+		selShowType=3;
+	}
+
+	
+	 url = "/jsxsd/view/kscj/selectPrintXnxq.jsp?xsfs="+xsfs+"&selShowType="+selShowType;
+	
+	openWindow(url,450,350);
+}
+
+function queryKscj() {
+	
+	/*if("" == $("#kksj").val()){
+		alert("请选择开课时间!");
+		return ;
+	}*/
+	document.forms["kscjQueryForm"].action = "/jsxsd/kscj/cjcx_list";
+	document.forms["kscjQueryForm"].submit();
+}
+	function printXscjk_2(){
+		document.forms["kscjQueryForm"].action = "/jsxsd/kscj/printXscjk_11049";
+		document.forms["kscjQueryForm"].target = "hidfrm";
+		document.forms["kscjQueryForm"].submit();
+		document.forms["kscjQueryForm"].target="cjcx_list_frm";
+	}
+	function printXscjk_3(){
+		document.forms["kscjQueryForm"].action = "/jsxsd/kscj/printXscjk_11049en";
+		document.forms["kscjQueryForm"].target = "hidfrm";
+		document.forms["kscjQueryForm"].submit();
+		document.forms["kscjQueryForm"].target="cjcx_list_frm";
+	}
+loadjs();
+function loadjs(){
+if( ''!=''){
+alert('');
+}
+
+}
+
+	function printFRkccj(){
+		var xsxh="2024413493";
+		var xnxqs=document.getElementById("kksj").value;
+		var selShowType="";
+		if("max"==document.getElementById("xsfs").value){
+			selShowType=1;
+		}else{
+			selShowType=3;
+		}
+		frdy_laosha(xsxh+","+xnxqs+","+selShowType,'学生成绩卡_ 86705','http://202.194.188.36:8089','alert(\'无对应帆软模板配置\')')
+	}
+
+	function printExe() {
+		//document.Form1.action = "/jsxsd/cjzkAction.do?method=queryXsxycjb&isexcel=1";
+		document.forms["kscjQueryForm"].action = "/jsxsd/kscj/queryXsxycjb";
+		document.forms["kscjQueryForm"].submit();
+		document.forms["kscjQueryForm"].action ="";
+	}
+	function printPdf() {
+		//document.Form1.action = "/jsxsd/cjzkAction.do?method=queryXsxycjb&isexcel=1";
+		document.forms["kscjQueryForm"].action = "/jsxsd/kscj/queryXsxycjb?pdf=1";
+		document.forms["kscjQueryForm"].submit();
+		document.forms["kscjQueryForm"].action ="";
+	}
+
+
+	function printCjkBest(){
+		document.forms["kscjQueryForm"].action = "/jsxsd/kscj/printXscjk_13594_best";
+		document.forms["kscjQueryForm"].target = "hidfrm";
+		document.forms["kscjQueryForm"].submit();
+		document.forms["kscjQueryForm"].target="cjcx_list_frm";
+	}
+</script>
+ 

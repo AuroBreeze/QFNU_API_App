@@ -16,9 +16,14 @@ String _stripHtml(String text) {
   return decoded.replaceAll(RegExp(r'\s+'), ' ').trim();
 }
 
-List<TermOption> parseTermOptions(String html) {
+List<TermOption> parseSelectOptions(
+  String html,
+  String selectId, {
+  bool includeEmpty = false,
+}) {
+  final escapedId = RegExp.escape(selectId);
   final selectMatch = RegExp(
-    r'<select[^>]*id="xnxqid"[^>]*>(.*?)</select>',
+    '<select[^>]*id="$escapedId"[^>]*>(.*?)</select>',
     caseSensitive: false,
     dotAll: true,
   ).firstMatch(html);
@@ -42,17 +47,31 @@ List<TermOption> parseTermOptions(String html) {
     final label = _stripHtml(match.group(2) ?? '');
     final selected =
         RegExp(r'\bselected\b', caseSensitive: false).hasMatch(attrs);
-    if (value.isEmpty) continue;
+    if (value.isEmpty && !includeEmpty) continue;
+    final displayLabel =
+        label.isEmpty ? (value.isEmpty ? 'All' : value) : label;
     options.add(
       TermOption(
         value: value,
-        label: label.isEmpty ? value : label,
+        label: displayLabel,
         selected: selected,
       ),
     );
   }
 
   return options;
+}
+
+List<TermOption> parseTermOptions(String html) {
+  return parseSelectOptions(html, 'xnxqid');
+}
+
+GradeQueryOptions parseGradeQueryOptions(String html) {
+  return GradeQueryOptions(
+    terms: parseSelectOptions(html, 'kksj', includeEmpty: true),
+    courseTypes: parseSelectOptions(html, 'kcxz', includeEmpty: true),
+    displayModes: parseSelectOptions(html, 'xsfs'),
+  );
 }
 
 List<ExamItem> parseExamList(String html) {
@@ -96,6 +115,63 @@ List<ExamItem> parseExamList(String html) {
         time: cells[6],
         place: cells[7],
         seat: cells[8],
+      ),
+    );
+  }
+
+  return items;
+}
+
+List<GradeItem> parseGradeList(String html) {
+  final tableMatch = RegExp(
+    r'<table[^>]*id="dataList"[^>]*>(.*?)</table>',
+    caseSensitive: false,
+    dotAll: true,
+  ).firstMatch(html);
+  if (tableMatch == null) return [];
+
+  final tableHtml = tableMatch.group(1) ?? '';
+  final rowMatches = RegExp(
+    r'<tr[^>]*>(.*?)</tr>',
+    caseSensitive: false,
+    dotAll: true,
+  ).allMatches(tableHtml);
+
+  final items = <GradeItem>[];
+  for (final row in rowMatches) {
+    final rowHtml = row.group(1) ?? '';
+    if (rowHtml.contains('<th')) continue;
+
+    final cellMatches = RegExp(
+      r'<td[^>]*>(.*?)</td>',
+      caseSensitive: false,
+      dotAll: true,
+    ).allMatches(rowHtml);
+
+    final cells = <String>[];
+    for (final cell in cellMatches) {
+      cells.add(_stripHtml(cell.group(1) ?? ''));
+    }
+
+    if (cells.length < 10) continue;
+
+    items.add(
+      GradeItem(
+        term: cells.length > 1 ? cells[1] : '',
+        courseCode: cells.length > 2 ? cells[2] : '',
+        courseName: cells.length > 3 ? cells[3] : '',
+        groupName: cells.length > 4 ? cells[4] : '',
+        score: cells.length > 5 ? cells[5] : '',
+        scoreFlag: cells.length > 6 ? cells[6] : '',
+        credit: cells.length > 7 ? cells[7] : '',
+        hours: cells.length > 8 ? cells[8] : '',
+        gradePoint: cells.length > 9 ? cells[9] : '',
+        retakeTerm: cells.length > 10 ? cells[10] : '',
+        assessmentMethod: cells.length > 11 ? cells[11] : '',
+        examNature: cells.length > 12 ? cells[12] : '',
+        courseAttribute: cells.length > 13 ? cells[13] : '',
+        courseNature: cells.length > 14 ? cells[14] : '',
+        courseCategory: cells.length > 15 ? cells[15] : '',
       ),
     );
   }

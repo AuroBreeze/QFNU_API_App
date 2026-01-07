@@ -1,0 +1,87 @@
+import 'package:flutter/material.dart';
+import 'package:qfnu_app/exams/exam_schedule_card.dart';
+import 'package:qfnu_app/grades/grade_query_card.dart';
+import 'package:qfnu_app/login/login_service.dart';
+import 'package:qfnu_app/shared/widgets/glow_circle.dart';
+
+class HomePage extends StatelessWidget {
+  final LoginService service;
+  final String username;
+
+  const HomePage({
+    super.key,
+    required this.service,
+    required this.username,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final name = username.trim();
+    final greeting = name.isEmpty ? 'Welcome back' : 'Welcome, $name';
+
+    return Scaffold(
+      body: Stack(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xFFF7F1EA),
+                  Color(0xFFE6F3EE),
+                  Color(0xFFF1E9DC),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+          ),
+          const GlowCircle(
+            offset: Offset(-140, -120),
+            size: 240,
+            colors: [Color(0xFFBFE4D8), Color(0xFFECF6F2)],
+          ),
+          const GlowCircle(
+            offset: Offset(210, 120),
+            size: 180,
+            colors: [Color(0xFFF3DCCB), Color(0xFFF7F1EA)],
+          ),
+          SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(20, 24, 20, 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Dashboard',
+                    style: theme.textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    greeting,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      color: Colors.black54,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  ExamScheduleCard(
+                    service: service,
+                    username: username,
+                  ),
+                  const SizedBox(height: 16),
+                  GradeQueryCard(
+                    service: service,
+                    username: username,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
