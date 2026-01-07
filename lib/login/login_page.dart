@@ -8,6 +8,8 @@ import 'package:qfnu_app/login/login_service.dart';
 import 'package:qfnu_app/login/proxy_login_service.dart';
 import 'package:qfnu_app/shared/constants.dart';
 import 'package:qfnu_app/shared/widgets/glow_circle.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -28,8 +30,18 @@ class _LoginPageState extends State<LoginPage> {
   bool _captchaLoading = false;
   bool _loading = false;
   bool _restoringSession = false;
+  bool _rememberAccount = false;
+  bool _rememberPassword = false;
   bool _showPassword = false;
   String? _error;
+
+  static const _secureStorage = FlutterSecureStorage(
+    aOptions: AndroidOptions(encryptedSharedPreferences: true),
+  );
+  static const _prefRememberAccount = 'remember_account';
+  static const _prefRememberPassword = 'remember_password';
+  static const _prefUsername = 'remembered_username';
+  static const _securePassword = 'remembered_password';
 
   @override
   void initState() {
@@ -47,10 +59,84 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _bootstrap() async {
+    await _loadSavedCredentials();
     final restored = await _tryRestoreSession();
     if (!restored) {
       await _refreshCaptcha();
     }
+  }
+
+  Future<void> _loadSavedCredentials() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_securePassword);
+    final rememberAccount = prefs.getBool(_prefRememberAccount) ?? false;
+    final rememberPassword = prefs.getBool(_prefRememberPassword) ?? false;
+    final savedUsername = prefs.getString(_prefUsername) ?? '';
+    final savedPassword = rememberPassword && rememberAccount
+        ? await _secureStorage.read(key: _securePassword) ?? ''
+        : '';
+
+    if (rememberAccount) {
+      _userController.text = savedUsername;
+    } else {
+      _userController.clear();
+    }
+    if (rememberPassword && rememberAccount) {
+      _passController.text = savedPassword;
+    } else {
+      _passController.clear();
+    }
+
+    if (!mounted) return;
+    setState(() {
+      _rememberAccount = rememberAccount;
+      _rememberPassword = rememberPassword && rememberAccount;
+    });
+  }
+
+  Future<void> _persistCredentials() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_securePassword);
+    if (_rememberAccount) {
+      await prefs.setBool(_prefRememberAccount, true);
+      await prefs.setString(_prefUsername, _userController.text.trim());
+    } else {
+      await prefs.setBool(_prefRememberAccount, false);
+      await prefs.remove(_prefUsername);
+    }
+
+    if (_rememberPassword && _rememberAccount) {
+      await prefs.setBool(_prefRememberPassword, true);
+      await _secureStorage.write(
+        key: _securePassword,
+        value: _passController.text,
+      );
+    } else {
+      await prefs.setBool(_prefRememberPassword, false);
+      await _secureStorage.delete(key: _securePassword);
+    }
+  }
+
+  void _toggleRememberAccount(bool? value) {
+    final enabled = value ?? false;
+    setState(() {
+      _rememberAccount = enabled;
+      if (!enabled) {
+        _rememberPassword = false;
+      }
+    });
+    _persistCredentials();
+  }
+
+  void _toggleRememberPassword(bool? value) {
+    final enabled = value ?? false;
+    setState(() {
+      _rememberPassword = enabled;
+      if (enabled) {
+        _rememberAccount = true;
+      }
+    });
+    _persistCredentials();
   }
 
   Future<bool> _tryRestoreSession() async {
@@ -168,6 +254,7 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     try {
+      await _persistCredentials();
       final service = await _resolveService();
       final result = await service.login(
         username: username,
@@ -329,6 +416,57 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             obscureText: !_showPassword,
                             textInputAction: TextInputAction.next,
+                          ),
+                          const SizedBox(height: 6),
+                          Wrap(
+                            spacing: 12,
+                            runSpacing: 4,
+                            children: [
+                              InkWell(
+                                onTap: () => _toggleRememberAccount(
+                                  !_rememberAccount,
+                                ),
+                                borderRadius: BorderRadius.circular(16),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Checkbox(
+                                      value: _rememberAccount,
+                                      onChanged: _toggleRememberAccount,
+                                    ),
+                                    const Text('Remember account'),
+                                  ],
+                                ),
+                              ),
+                              InkWell(
+                                onTap: _rememberAccount
+                                    ? () => _toggleRememberPassword(
+                                          !_rememberPassword,
+                                        )
+                                    : null,
+                                borderRadius: BorderRadius.circular(16),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Checkbox(
+                                      value: _rememberPassword,
+                                      onChanged: _rememberAccount
+                                          ? _toggleRememberPassword
+                                          : null,
+                                    ),
+                                    Text(
+                                      'Remember password',
+                                      style: TextStyle(
+                                        color: _rememberAccount
+                                            ? theme.colorScheme.onSurface
+                                            : theme.colorScheme.onSurface
+                                                .withOpacity(0.4),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                           const SizedBox(height: 18),
                           Row(
