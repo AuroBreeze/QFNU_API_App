@@ -168,6 +168,8 @@ class _ExamSchedulePageState extends State<ExamSchedulePage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final name = widget.username.trim();
+    final greeting = name.isEmpty ? 'Welcome back' : 'Welcome, $name';
 
     return Scaffold(
       appBar: AppBar(
@@ -208,7 +210,7 @@ class _ExamSchedulePageState extends State<ExamSchedulePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Welcome, ${widget.username}',
+                    greeting,
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),

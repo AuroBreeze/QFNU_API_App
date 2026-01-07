@@ -5,6 +5,7 @@ import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:path_provider/path_provider.dart';
 import 'package:qfnu_app/login/login_service.dart';
 import 'package:qfnu_app/shared/constants.dart';
 import 'package:qfnu_app/shared/html_parsers.dart';
@@ -52,23 +53,31 @@ class DirectLoginService implements LoginService {
   final Dio _dio;
   bool _sessionReady = false;
 
-  DirectLoginService()
-      : _dio = Dio(
-          BaseOptions(
-            connectTimeout: const Duration(seconds: 15),
-            receiveTimeout: const Duration(seconds: 20),
-            responseType: ResponseType.plain,
-            followRedirects: true,
-            validateStatus: acceptRedirectStatus,
-            receiveDataWhenStatusError: true,
-            headers: const {
-              'User-Agent': browserUserAgent,
-            },
-          ),
-        ) {
+  DirectLoginService._(this._dio);
+
+  static Future<DirectLoginService> create() async {
+    final dio = Dio(
+      BaseOptions(
+        connectTimeout: const Duration(seconds: 15),
+        receiveTimeout: const Duration(seconds: 20),
+        responseType: ResponseType.plain,
+        followRedirects: true,
+        validateStatus: acceptRedirectStatus,
+        receiveDataWhenStatusError: true,
+        headers: const {
+          'User-Agent': browserUserAgent,
+        },
+      ),
+    );
+
     if (!kIsWeb) {
-      _dio.interceptors.add(CookieManager(CookieJar()));
+      final directory = await getApplicationSupportDirectory();
+      final storagePath = '${directory.path}/cookies';
+      final cookieJar = PersistCookieJar(storage: FileStorage(storagePath));
+      dio.interceptors.add(CookieManager(cookieJar));
     }
+
+    return DirectLoginService._(dio);
   }
 
   Future<void> _ensureSession() async {

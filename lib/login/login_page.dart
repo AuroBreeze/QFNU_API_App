@@ -22,17 +22,19 @@ class _LoginPageState extends State<LoginPage> {
   final _passController = TextEditingController();
   final _captchaController = TextEditingController();
   LoginService? _service;
+  Future<LoginService>? _serviceFuture;
   String? _serviceKey;
   Uint8List? _captchaBytes;
   bool _captchaLoading = false;
   bool _loading = false;
+  bool _restoringSession = false;
   bool _showPassword = false;
   String? _error;
 
   @override
   void initState() {
     super.initState();
-    _refreshCaptcha();
+    _bootstrap();
   }
 
   @override
@@ -44,6 +46,48 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
+  Future<void> _bootstrap() async {
+    final restored = await _tryRestoreSession();
+    if (!restored) {
+      await _refreshCaptcha();
+    }
+  }
+
+  Future<bool> _tryRestoreSession() async {
+    if (kIsWeb) return false;
+
+    setState(() {
+      _restoringSession = true;
+    });
+
+    try {
+      final service = await _resolveService();
+      final terms = await service.fetchExamTerms();
+      if (!mounted) return false;
+      if (terms.isNotEmpty) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (_) => ExamSchedulePage(
+              service: service,
+              username: '',
+            ),
+          ),
+        );
+        return true;
+      }
+    } catch (_) {
+      // Ignore and fall back to login UI.
+    } finally {
+      if (mounted) {
+        setState(() {
+          _restoringSession = false;
+        });
+      }
+    }
+
+    return false;
+  }
+
   String _normalizeBaseUrl(String value) {
     final trimmed = value.trim();
     if (trimmed.endsWith('/')) {
@@ -52,9 +96,10 @@ class _LoginPageState extends State<LoginPage> {
     return trimmed;
   }
 
-  LoginService _resolveService() {
+  Future<LoginService> _resolveService() async {
     if (!kIsWeb) {
-      _service ??= DirectLoginService();
+      _serviceFuture ??= DirectLoginService.create();
+      _service ??= await _serviceFuture!;
       return _service!;
     }
 
@@ -83,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     try {
-      final service = _resolveService();
+      final service = await _resolveService();
       final bytes = await service.fetchCaptcha();
       if (!mounted) return;
       setState(() {
@@ -123,7 +168,7 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     try {
-      final service = _resolveService();
+      final service = await _resolveService();
       final result = await service.login(
         username: username,
         password: password,
@@ -199,23 +244,25 @@ class _LoginPageState extends State<LoginPage> {
             colors: [Color(0xFFCAE5F4), Color(0xFFE9F4FB)],
           ),
           SafeArea(
-            child: Center(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 28),
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 460),
-                  child: Card(
-                    elevation: 12,
-                    shadowColor: Colors.black26,
-                    color: Colors.white.withOpacity(0.92),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(24),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(24, 26, 24, 24),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
+            child: IgnorePointer(
+              ignoring: _restoringSession,
+              child: Center(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 28),
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 460),
+                    child: Card(
+                      elevation: 12,
+                      shadowColor: Colors.black26,
+                      color: Colors.white.withOpacity(0.92),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(24, 26, 24, 24),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
                           Text(
                             'QFNU Exam Login',
                             style: theme.textTheme.headlineSmall?.copyWith(
@@ -422,7 +469,8 @@ class _LoginPageState extends State<LoginPage> {
                                     ),
                                   ),
                           ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -430,6 +478,29 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           ),
+          if (_restoringSession)
+            Positioned.fill(
+              child: Container(
+                color: Colors.white.withOpacity(0.65),
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(
+                        height: 28,
+                        width: 28,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        'Checking session...',
+                        style: theme.textTheme.bodyMedium,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     );
