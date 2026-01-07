@@ -114,6 +114,116 @@ class _ExamSchedulePageState extends State<ExamSchedulePage> {
     }
   }
 
+  String _currentTermLabel() {
+    final termValue = _selectedTerm;
+    if (termValue == null || termValue.isEmpty) return 'Select term';
+    for (final term in _terms) {
+      if (term.value == termValue) return term.label;
+    }
+    return termValue;
+  }
+
+  Future<void> _showTermSheet() async {
+    var term = _selectedTerm;
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        final theme = Theme.of(context);
+        return SafeArea(
+          child: Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(24),
+              ),
+            ),
+            padding: EdgeInsets.fromLTRB(
+              20,
+              16,
+              20,
+              16 + MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: StatefulBuilder(
+              builder: (context, setSheetState) {
+                return SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            'Select term',
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const Spacer(),
+                          IconButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            icon: const Icon(Icons.close),
+                            tooltip: 'Close',
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      if (_loadingTerms)
+                        const LinearProgressIndicator()
+                      else if (_terms.isEmpty)
+                        const Text('No term options available.')
+                      else
+                        DropdownButtonFormField<String>(
+                          value: term,
+                          items: _terms
+                              .map(
+                                (termOption) => DropdownMenuItem(
+                                  value: termOption.value,
+                                  child: Text(termOption.label),
+                                ),
+                              )
+                              .toList(),
+                          onChanged: (value) {
+                            setSheetState(() {
+                              term = value;
+                            });
+                          },
+                          decoration: const InputDecoration(
+                            labelText: 'Term',
+                          ),
+                        ),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: const Text('Cancel'),
+                          ),
+                          const Spacer(),
+                          FilledButton(
+                            onPressed: _loadingTerms
+                                ? null
+                                : () {
+                                    setState(() {
+                                      _selectedTerm = term;
+                                    });
+                                    Navigator.of(context).pop();
+                                  },
+                            child: const Text('Apply'),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   Widget _buildExamCard(ExamItem item, ThemeData theme) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -168,8 +278,6 @@ class _ExamSchedulePageState extends State<ExamSchedulePage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final name = widget.username.trim();
-    final greeting = name.isEmpty ? 'Welcome back' : 'Welcome, $name';
 
     return Scaffold(
       appBar: AppBar(
@@ -204,91 +312,155 @@ class _ExamSchedulePageState extends State<ExamSchedulePage> {
             colors: [Color(0xFFF3DCCB), Color(0xFFF7F1EA)],
           ),
           SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    greeting,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
+            child: CustomScrollView(
+              slivers: [
+                const SliverToBoxAdapter(child: SizedBox(height: 6)),
+                SliverPersistentHeader(
+                  pinned: true,
+                  delegate: _ExamSummaryHeaderDelegate(
+                    termLabel: _currentTermLabel(),
+                    loadingTerms: _loadingTerms,
+                    loadingList: _loadingList,
+                    onOpenFilters: _loadingTerms ? null : _showTermSheet,
+                    onQuery: _selectedTerm == null || _loadingList
+                        ? null
+                        : () => _loadList(_selectedTerm!),
+                  ),
+                ),
+                if (_error != null)
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+                      child: Text(
+                        _error!,
+                        style: TextStyle(color: theme.colorScheme.error),
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  if (_loadingTerms)
-                    const LinearProgressIndicator()
-                  else
-                    Row(
-                      children: [
-                        Expanded(
-                          child: DropdownButtonFormField<String>(
-                            initialValue: _selectedTerm,
-                            items: _terms
-                                .map(
-                                  (term) => DropdownMenuItem(
-                                    value: term.value,
-                                    child: Text(term.label),
-                                  ),
-                                )
-                                .toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                _selectedTerm = value;
-                              });
-                            },
-                            decoration: const InputDecoration(
-                              labelText: 'Term',
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        SizedBox(
-                          height: 50,
-                          child: FilledButton.icon(
-                            onPressed: _selectedTerm == null || _loadingList
-                                ? null
-                                : () => _loadList(_selectedTerm!),
-                            icon: const Icon(Icons.search),
-                            label: const Text('Query'),
-                          ),
-                        ),
-                      ],
+                if (_loadingList)
+                  const SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Center(child: CircularProgressIndicator()),
+                  )
+                else if (_items.isEmpty)
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Center(
+                      child: Text(
+                        'No exam data available.',
+                        style: theme.textTheme.bodyMedium,
+                      ),
                     ),
-                  if (_error != null) ...[
-                    const SizedBox(height: 12),
-                    Text(
-                      _error!,
-                      style: TextStyle(color: theme.colorScheme.error),
+                  )
+                else
+                  SliverPadding(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                    sliver: SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          if (index.isOdd) {
+                            return const SizedBox(height: 12);
+                          }
+                          final item = _items[index ~/ 2];
+                          return _buildExamCard(item, theme);
+                        },
+                        childCount:
+                            _items.isEmpty ? 0 : _items.length * 2 - 1,
+                      ),
                     ),
-                  ],
-                  const SizedBox(height: 16),
-                  Expanded(
-                    child: _loadingList
-                        ? const Center(child: CircularProgressIndicator())
-                        : _items.isEmpty
-                            ? Center(
-                                child: Text(
-                                  'No exam data available.',
-                                  style: theme.textTheme.bodyMedium,
-                                ),
-                              )
-                            : ListView.separated(
-                                itemCount: _items.length,
-                                separatorBuilder: (_, __) =>
-                                    const SizedBox(height: 12),
-                                itemBuilder: (context, index) {
-                                  final item = _items[index];
-                                  return _buildExamCard(item, theme);
-                                },
-                              ),
                   ),
-                ],
-              ),
+              ],
             ),
           ),
         ],
       ),
     );
+  }
+}
+
+class _ExamSummaryHeaderDelegate extends SliverPersistentHeaderDelegate {
+  final String termLabel;
+  final bool loadingTerms;
+  final bool loadingList;
+  final VoidCallback? onOpenFilters;
+  final VoidCallback? onQuery;
+
+  _ExamSummaryHeaderDelegate({
+    required this.termLabel,
+    required this.loadingTerms,
+    required this.loadingList,
+    required this.onOpenFilters,
+    required this.onQuery,
+  });
+
+  @override
+  double get minExtent => 108;
+
+  @override
+  double get maxExtent => 108;
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    final theme = Theme.of(context);
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 6, 20, 8),
+      child: Card(
+        elevation: 10,
+        shadowColor: Colors.black26,
+        color: Colors.white.withOpacity(0.95),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(14, 12, 14, 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      termLabel,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: onOpenFilters,
+                    icon: const Icon(Icons.tune),
+                    tooltip: 'Filters',
+                  ),
+                  const SizedBox(width: 4),
+                  FilledButton.icon(
+                    onPressed: onQuery,
+                    icon: const Icon(Icons.search),
+                    label: Text(loadingList ? 'Loading' : 'Query'),
+                  ),
+                ],
+              ),
+              if (loadingTerms) ...[
+                const SizedBox(height: 6),
+                const LinearProgressIndicator(),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  bool shouldRebuild(covariant _ExamSummaryHeaderDelegate oldDelegate) {
+    return termLabel != oldDelegate.termLabel ||
+        loadingTerms != oldDelegate.loadingTerms ||
+        loadingList != oldDelegate.loadingList ||
+        onOpenFilters != oldDelegate.onOpenFilters ||
+        onQuery != oldDelegate.onQuery;
   }
 }

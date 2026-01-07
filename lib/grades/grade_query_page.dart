@@ -28,7 +28,6 @@ class _GradeQueryPageState extends State<GradeQueryPage> {
   List<GradeItem> _items = [];
   bool _loadingOptions = false;
   bool _loadingList = false;
-  bool _filtersExpanded = false;
   bool _autoQueried = false;
   String? _error;
 
@@ -242,6 +241,186 @@ class _GradeQueryPageState extends State<GradeQueryPage> {
     );
   }
 
+  Widget _buildFiltersFields({
+    required String? selectedTerm,
+    required ValueChanged<String?> onTermChanged,
+    required String? selectedCourseType,
+    required ValueChanged<String?> onCourseTypeChanged,
+    required String? selectedDisplayMode,
+    required ValueChanged<String?> onDisplayModeChanged,
+  }) {
+    if (_loadingOptions) {
+      return const LinearProgressIndicator();
+    }
+
+    return Column(
+      children: [
+        DropdownButtonFormField<String>(
+          value: selectedTerm,
+          items: _terms
+              .map(
+                (term) => DropdownMenuItem(
+                  value: term.value,
+                  child: Text(term.label),
+                ),
+              )
+              .toList(),
+          onChanged: onTermChanged,
+          decoration: const InputDecoration(
+            labelText: 'Term',
+          ),
+        ),
+        const SizedBox(height: 12),
+        if (_courseTypes.isNotEmpty) ...[
+          DropdownButtonFormField<String>(
+            value: selectedCourseType,
+            items: _courseTypes
+                .map(
+                  (option) => DropdownMenuItem(
+                    value: option.value,
+                    child: Text(option.label),
+                  ),
+                )
+                .toList(),
+            onChanged: onCourseTypeChanged,
+            decoration: const InputDecoration(
+              labelText: 'Course Type',
+            ),
+          ),
+          const SizedBox(height: 12),
+        ],
+        TextField(
+          controller: _courseController,
+          decoration: const InputDecoration(
+            labelText: 'Course Name',
+            prefixIcon: Icon(Icons.search),
+          ),
+        ),
+        const SizedBox(height: 12),
+        if (_displayModes.isNotEmpty) ...[
+          DropdownButtonFormField<String>(
+            value: selectedDisplayMode,
+            items: _displayModes
+                .map(
+                  (option) => DropdownMenuItem(
+                    value: option.value,
+                    child: Text(option.label),
+                  ),
+                )
+                .toList(),
+            onChanged: onDisplayModeChanged,
+            decoration: const InputDecoration(
+              labelText: 'Display',
+            ),
+          ),
+          const SizedBox(height: 12),
+        ],
+      ],
+    );
+  }
+
+  Future<void> _showFiltersSheet() async {
+    var term = _selectedTerm;
+    var courseType = _selectedCourseType;
+    var displayMode = _selectedDisplayMode;
+
+    await showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        final theme = Theme.of(context);
+        return SafeArea(
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(24),
+              ),
+            ),
+            padding: EdgeInsets.fromLTRB(
+              20,
+              16,
+              20,
+              16 + MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: StatefulBuilder(
+              builder: (context, setSheetState) {
+                return SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            'Filters',
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const Spacer(),
+                          IconButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            icon: const Icon(Icons.close),
+                            tooltip: 'Close',
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      _buildFiltersFields(
+                        selectedTerm: term,
+                        onTermChanged: (value) {
+                          setSheetState(() {
+                            term = value;
+                          });
+                        },
+                        selectedCourseType: courseType,
+                        onCourseTypeChanged: (value) {
+                          setSheetState(() {
+                            courseType = value;
+                          });
+                        },
+                        selectedDisplayMode: displayMode,
+                        onDisplayModeChanged: (value) {
+                          setSheetState(() {
+                            displayMode = value;
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: const Text('Cancel'),
+                          ),
+                          const Spacer(),
+                          FilledButton(
+                            onPressed: _loadingOptions
+                                ? null
+                                : () {
+                                    setState(() {
+                                      _selectedTerm = term;
+                                      _selectedCourseType = courseType;
+                                      _selectedDisplayMode = displayMode;
+                                    });
+                                    Navigator.of(context).pop();
+                                  },
+                            child: const Text('Apply'),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -286,233 +465,179 @@ class _GradeQueryPageState extends State<GradeQueryPage> {
             colors: [Color(0xFFF3DCCB), Color(0xFFF7F1EA)],
           ),
           SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Card(
-                    elevation: 10,
-                    shadowColor: Colors.black26,
-                    color: Colors.white.withOpacity(0.95),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
+            child: CustomScrollView(
+              slivers: [
+                const SliverToBoxAdapter(child: SizedBox(height: 6)),
+                SliverPersistentHeader(
+                  pinned: true,
+                  delegate: _GradeSummaryHeaderDelegate(
+                    termLabel: _currentTermLabel(),
+                    averageGpa: _averageGpa(),
+                    loadingOptions: _loadingOptions,
+                    loadingList: _loadingList,
+                    onOpenFilters: _loadingOptions ? null : _showFiltersSheet,
+                    onQuery:
+                        _loadingOptions || _loadingList ? null : _loadGrades,
+                  ),
+                ),
+                if (_error != null)
+                  SliverToBoxAdapter(
                     child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                'Grade Query',
-                                style: theme.textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              const Spacer(),
-                              TextButton.icon(
-                                onPressed: _loadingOptions
-                                    ? null
-                                    : () {
-                                        setState(() {
-                                          _filtersExpanded = !_filtersExpanded;
-                                        });
-                                      },
-                                icon: Icon(
-                                  _filtersExpanded
-                                      ? Icons.expand_less
-                                      : Icons.tune,
-                                ),
-                                label: Text(
-                                  _filtersExpanded ? 'Collapse' : 'Filters',
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          if (_loadingOptions)
-                            const LinearProgressIndicator()
-                          else if (_filtersExpanded) ...[
-                            DropdownButtonFormField<String>(
-                              initialValue: _selectedTerm,
-                              items: _terms
-                                  .map(
-                                    (term) => DropdownMenuItem(
-                                      value: term.value,
-                                      child: Text(term.label),
-                                    ),
-                                  )
-                                  .toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  _selectedTerm = value;
-                                });
-                              },
-                              decoration: const InputDecoration(
-                                labelText: 'Term',
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            if (_courseTypes.isNotEmpty) ...[
-                              DropdownButtonFormField<String>(
-                                initialValue: _selectedCourseType,
-                                items: _courseTypes
-                                    .map(
-                                      (option) => DropdownMenuItem(
-                                        value: option.value,
-                                        child: Text(option.label),
-                                      ),
-                                    )
-                                    .toList(),
-                                onChanged: (value) {
-                                  setState(() {
-                                    _selectedCourseType = value;
-                                  });
-                                },
-                                decoration: const InputDecoration(
-                                  labelText: 'Course Type',
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-                            ],
-                            TextField(
-                              controller: _courseController,
-                              decoration: const InputDecoration(
-                                labelText: 'Course Name',
-                                prefixIcon: Icon(Icons.search),
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            if (_displayModes.isNotEmpty) ...[
-                              DropdownButtonFormField<String>(
-                                initialValue: _selectedDisplayMode,
-                                items: _displayModes
-                                    .map(
-                                      (option) => DropdownMenuItem(
-                                        value: option.value,
-                                        child: Text(option.label),
-                                      ),
-                                    )
-                                    .toList(),
-                                onChanged: (value) {
-                                  setState(() {
-                                    _selectedDisplayMode = value;
-                                  });
-                                },
-                                decoration: const InputDecoration(
-                                  labelText: 'Display',
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-                            ],
-                          ] else ...[
-                            Text(
-                              _selectedTerm == null || _selectedTerm!.isEmpty
-                                  ? 'Using default term'
-                                  : 'Term: ${_selectedTerm!}',
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: Colors.black54,
-                              ),
-                            ),
-                          ],
-                          const SizedBox(height: 6),
-                          SizedBox(
-                            width: double.infinity,
-                            height: 48,
-                            child: FilledButton.icon(
-                              onPressed: _loadingOptions || _loadingList
-                                  ? null
-                                  : _loadGrades,
-                              icon: const Icon(Icons.search),
-                              label: const Text('Query'),
-                            ),
-                          ),
-                          if (_error != null) ...[
-                            const SizedBox(height: 10),
-                            Text(
-                              _error!,
-                              style: TextStyle(color: theme.colorScheme.error),
-                            ),
-                          ],
-                        ],
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+                      child: Text(
+                        _error!,
+                        style: TextStyle(color: theme.colorScheme.error),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  if (!_loadingList && _items.isNotEmpty) ...[
-                    Builder(
-                      builder: (context) {
-                        final average = _averageGpa();
-                        if (average == null) return const SizedBox.shrink();
-                        return Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 14,
-                            vertical: 12,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.92),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: theme.colorScheme.outlineVariant,
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.auto_graph,
-                                size: 18,
-                                color: theme.colorScheme.primary,
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Text(
-                                  'Average GPA (${_currentTermLabel()})',
-                                  style: theme.textTheme.bodyMedium?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                average.toStringAsFixed(2),
-                                style: theme.textTheme.titleSmall?.copyWith(
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
+                if (_loadingList)
+                  const SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Center(child: CircularProgressIndicator()),
+                  )
+                else if (_items.isEmpty)
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Center(
+                      child: Text(
+                        'No grade data available.',
+                        style: theme.textTheme.bodySmall,
+                      ),
                     ),
-                    const SizedBox(height: 16),
-                  ],
-                  Expanded(
-                    child: _loadingList
-                        ? const Center(child: CircularProgressIndicator())
-                        : _items.isEmpty
-                            ? Center(
-                                child: Text(
-                                  'No grade data available.',
-                                  style: theme.textTheme.bodySmall,
-                                ),
-                              )
-                            : ListView.separated(
-                                itemCount: _items.length,
-                                separatorBuilder: (_, __) =>
-                                    const SizedBox(height: 12),
-                                itemBuilder: (context, index) {
-                                  final item = _items[index];
-                                  return _buildGradeItem(item, theme);
-                                },
-                              ),
+                  )
+                else
+                  SliverPadding(
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                    sliver: SliverList(
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          if (index.isOdd) {
+                            return const SizedBox(height: 12);
+                          }
+                          final item = _items[index ~/ 2];
+                          return _buildGradeItem(item, theme);
+                        },
+                        childCount:
+                            _items.isEmpty ? 0 : _items.length * 2 - 1,
+                      ),
+                    ),
                   ),
-                ],
-              ),
+              ],
             ),
           ),
         ],
       ),
     );
+  }
+}
+
+class _GradeSummaryHeaderDelegate extends SliverPersistentHeaderDelegate {
+  final String termLabel;
+  final double? averageGpa;
+  final bool loadingOptions;
+  final bool loadingList;
+  final VoidCallback? onOpenFilters;
+  final VoidCallback? onQuery;
+
+  _GradeSummaryHeaderDelegate({
+    required this.termLabel,
+    required this.averageGpa,
+    required this.loadingOptions,
+    required this.loadingList,
+    required this.onOpenFilters,
+    required this.onQuery,
+  });
+
+  @override
+  double get minExtent => 124;
+
+  @override
+  double get maxExtent => 124;
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    final theme = Theme.of(context);
+    final gpaText = averageGpa == null ? '--' : averageGpa!.toStringAsFixed(2);
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 6, 20, 8),
+      child: Card(
+        elevation: 10,
+        shadowColor: Colors.black26,
+        color: Colors.white.withOpacity(0.95),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(14, 12, 14, 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Current term',
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: Colors.black54,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          termLabel,
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: onOpenFilters,
+                    icon: const Icon(Icons.tune),
+                    tooltip: 'Filters',
+                  ),
+                  const SizedBox(width: 4),
+                  FilledButton.icon(
+                    onPressed: onQuery,
+                    icon: const Icon(Icons.search),
+                    label: Text(loadingList ? 'Loading' : 'Query'),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 6),
+              Text(
+                'Average GPA: $gpaText',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: Colors.black54,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              if (loadingOptions) ...[
+                const SizedBox(height: 8),
+                const LinearProgressIndicator(),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  bool shouldRebuild(covariant _GradeSummaryHeaderDelegate oldDelegate) {
+    return termLabel != oldDelegate.termLabel ||
+        averageGpa != oldDelegate.averageGpa ||
+        loadingOptions != oldDelegate.loadingOptions ||
+        loadingList != oldDelegate.loadingList ||
+        onOpenFilters != oldDelegate.onOpenFilters ||
+        onQuery != oldDelegate.onQuery;
   }
 }
