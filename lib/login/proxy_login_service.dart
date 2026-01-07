@@ -132,6 +132,28 @@ class ProxyLoginService implements LoginService {
   }
 
   @override
+  Future<List<ScheduleItem>> fetchDailySchedule({required DateTime date}) async {
+    final response = await _withSessionRetry(() {
+      return _dio.post(
+        '$baseUrl/kb/day',
+        data: {
+          'sessionId': _sessionId,
+          'rq': '${date.year.toString().padLeft(4, '0')}-'
+              '${date.month.toString().padLeft(2, '0')}-'
+              '${date.day.toString().padLeft(2, '0')}',
+        },
+        options: requestOptions(
+          contentType: Headers.jsonContentType,
+          responseType: ResponseType.plain,
+        ),
+      );
+    });
+
+    final html = response.data?.toString() ?? '';
+    return parseDailySchedule(html, date.weekday);
+  }
+
+  @override
   Future<List<TermOption>> fetchExamTerms() async {
     final response = await _withSessionRetry(() {
       return _dio.get(

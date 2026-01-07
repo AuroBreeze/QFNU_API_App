@@ -4,6 +4,7 @@ import 'package:qfnu_app/grades/grade_query_card.dart';
 import 'package:qfnu_app/login/login_page.dart';
 import 'package:qfnu_app/login/login_service.dart';
 import 'package:qfnu_app/shared/widgets/glow_circle.dart';
+import 'package:qfnu_app/timetable/today_schedule_card.dart';
 
 class HomePage extends StatelessWidget {
   final LoginService service;
@@ -87,6 +88,11 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 20),
+                  TodayScheduleCard(
+                    service: service,
+                    username: username,
+                  ),
+                  const SizedBox(height: 16),
                   ExamScheduleCard(
                     service: service,
                     username: username,

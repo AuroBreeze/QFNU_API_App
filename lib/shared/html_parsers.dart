@@ -178,3 +178,109 @@ List<GradeItem> parseGradeList(String html) {
 
   return items;
 }
+
+String _extractAttribute(String tag, String name) {
+  final escaped = RegExp.escape(name);
+  final match = RegExp(
+    '$escaped\\s*=\\s*([\"\\\'])(.*?)\\1',
+    caseSensitive: false,
+    dotAll: true,
+  ).firstMatch(tag);
+  return match?.group(2) ?? '';
+}
+
+int _findTagEnd(String text, int start) {
+  var inSingle = false;
+  var inDouble = false;
+  for (var i = start; i < text.length; i += 1) {
+    final char = text[i];
+    if (char == '"' && !inSingle) {
+      inDouble = !inDouble;
+    } else if (char == "'" && !inDouble) {
+      inSingle = !inSingle;
+    } else if (char == '>' && !inSingle && !inDouble) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+List<String> _scheduleLinesFromTitle(String title) {
+  if (title.isEmpty) return const [];
+  final normalized =
+      title.replaceAll(RegExp(r'<br\s*/?>', caseSensitive: false), '\n');
+  final decoded = _decodeHtmlEntities(normalized)
+      .replaceAll(RegExp(r'<br\s*/?>', caseSensitive: false), '\n');
+  return decoded
+      .split(RegExp(r'\n+'))
+      .map((line) => _stripHtml(line))
+      .where((line) => line.isNotEmpty)
+      .toList();
+}
+
+List<ScheduleItem> parseDailySchedule(String html, int weekdayIndex) {
+  if (weekdayIndex < 1 || weekdayIndex > 7) return [];
+
+  final tableMatch = RegExp(
+    r'<table[^>]*kb_table[^>]*>(.*?)</table>',
+    caseSensitive: false,
+    dotAll: true,
+  ).firstMatch(html);
+  if (tableMatch == null) return [];
+
+  final tableHtml = tableMatch.group(1) ?? '';
+  final rowMatches = RegExp(
+    r'<tr[^>]*>(.*?)</tr>',
+    caseSensitive: false,
+    dotAll: true,
+  ).allMatches(tableHtml);
+
+  final items = <ScheduleItem>[];
+  for (final row in rowMatches) {
+    final rowHtml = row.group(1) ?? '';
+    if (rowHtml.contains('<th')) continue;
+
+    final cellMatches = RegExp(
+      r'<td[^>]*>(.*?)</td>',
+      caseSensitive: false,
+      dotAll: true,
+    ).allMatches(rowHtml);
+
+    final cells = <String>[];
+    for (final cell in cellMatches) {
+      cells.add(cell.group(1) ?? '');
+    }
+
+    if (cells.length <= weekdayIndex) continue;
+
+    final period = _stripHtml(cells[0]);
+    final dayCell = cells[weekdayIndex];
+
+    final courseMatches = RegExp(
+      r'<p[\s\S]*?</p>',
+      caseSensitive: false,
+      dotAll: true,
+    ).allMatches(dayCell);
+
+    for (final course in courseMatches) {
+      final block = course.group(0) ?? '';
+      final tagEnd = _findTagEnd(block, 2);
+      if (tagEnd == -1) continue;
+      final tag = block.substring(0, tagEnd + 1);
+      final inner = block.substring(tagEnd + 1, block.length - 4);
+      final name = _stripHtml(inner);
+      if (name.isEmpty) continue;
+      final title = _extractAttribute(tag, 'title');
+      final detailLines = _scheduleLinesFromTitle(title);
+      items.add(
+        ScheduleItem(
+          period: period,
+          courseName: name,
+          detailLines: detailLines,
+        ),
+      );
+    }
+  }
+
+  return items;
+}

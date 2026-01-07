@@ -4,6 +4,7 @@ const captchaUrl = '$baseUrl/jsxsd/verifycode.servlet';
 const loginUrl = '$baseUrl/jsxsd/xk/LoginToXkLdap';
 const queryUrl = '$baseUrl/jsxsd/xsks/xsksap_query';
 const listUrl = '$baseUrl/jsxsd/xsks/xsksap_list';
+const scheduleUrl = '$baseUrl/jsxsd/framework/main_index_loadkb.jsp';
 const gradeQueryUrl = '$baseUrl/jsxsd/kscj/cjcx_query';
 const gradeListUrl = '$baseUrl/jsxsd/kscj/cjcx_list';
 const defaultProxyUrl = 'http://localhost:8080';

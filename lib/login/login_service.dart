@@ -10,6 +10,7 @@ abstract class LoginService {
     required String captcha,
   });
   Future<void> logout();
+  Future<List<ScheduleItem>> fetchDailySchedule({required DateTime date});
   Future<List<TermOption>> fetchExamTerms();
   Future<List<ExamItem>> fetchExamList({required String xnxqid});
   Future<GradeQueryOptions> fetchGradeQueryOptions();

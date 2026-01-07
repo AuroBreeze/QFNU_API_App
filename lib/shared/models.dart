@@ -95,3 +95,15 @@ class GradeItem {
     required this.courseCategory,
   });
 }
+
+class ScheduleItem {
+  final String period;
+  final String courseName;
+  final List<String> detailLines;
+
+  const ScheduleItem({
+    required this.period,
+    required this.courseName,
+    required this.detailLines,
+  });
+}

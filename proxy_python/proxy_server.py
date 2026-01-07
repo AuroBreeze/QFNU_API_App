@@ -14,6 +14,7 @@ CAPTCHA_URL = f"{BASE_URL}/jsxsd/verifycode.servlet"
 LOGIN_URL = f"{BASE_URL}/jsxsd/xk/LoginToXkLdap"
 QUERY_URL = f"{BASE_URL}/jsxsd/xsks/xsksap_query"
 LIST_URL = f"{BASE_URL}/jsxsd/xsks/xsksap_list"
+SCHEDULE_URL = f"{BASE_URL}/jsxsd/framework/main_index_loadkb.jsp"
 GRADE_QUERY_URL = f"{BASE_URL}/jsxsd/kscj/cjcx_query"
 GRADE_LIST_URL = f"{BASE_URL}/jsxsd/kscj/cjcx_list"
 
@@ -285,6 +286,44 @@ class ProxyHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         _cleanup_sessions()
+        if self.path == "/kb/day":
+            _log(f"POST /kb/day from {self.client_address[0]}")
+            payload, error = self._parse_json()
+            if error:
+                _log(f"kb day bad request: {error}")
+                self._send_json(400, {"error": error})
+                return
+
+            session_id = str(payload.get("sessionId", "")).strip()
+            rq = str(payload.get("rq", "")).strip()
+
+            if not session_id:
+                _log("kb day missing session id")
+                self._send_json(400, {"error": "Missing sessionId"})
+                return
+            if not rq:
+                _log("kb day missing rq")
+                self._send_json(400, {"error": "Missing rq"})
+                return
+
+            state = _get_session(session_id)
+            if not state:
+                _log(f"kb day session expired sid={session_id[:8]}...")
+                self._send_json(404, {"error": "Session expired"})
+                return
+
+            try:
+                response = state.session.post(SCHEDULE_URL, data={"rq": rq}, timeout=10)
+            except requests.RequestException as exc:
+                _log(f"kb day request failed: {exc}")
+                self._send_json(502, {"error": "Schedule request failed", "detail": str(exc)})
+                return
+
+            html = _decode_response(response)
+            _log(f"kb day ok sid={session_id[:8]}... len={len(html)} rq={rq}")
+            self._send_text(200, html)
+            return
+
         if self.path == "/xsks/list":
             _log(f"POST /xsks/list from {self.client_address[0]}")
             payload, error = self._parse_json()

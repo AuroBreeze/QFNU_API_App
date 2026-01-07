@@ -49,6 +49,13 @@ bool _isLoginSuccess(
   return false;
 }
 
+String _formatDate(DateTime date) {
+  final year = date.year.toString().padLeft(4, '0');
+  final month = date.month.toString().padLeft(2, '0');
+  final day = date.day.toString().padLeft(2, '0');
+  return '$year-$month-$day';
+}
+
 class DirectLoginService implements LoginService {
   final Dio _dio;
   final CookieJar? _cookieJar;
@@ -148,6 +155,21 @@ class DirectLoginService implements LoginService {
     if (_cookieJar != null) {
       await _cookieJar!.deleteAll();
     }
+  }
+
+  @override
+  Future<List<ScheduleItem>> fetchDailySchedule({required DateTime date}) async {
+    await _ensureSession();
+    final response = await _dio.post(
+      scheduleUrl,
+      data: {'rq': _formatDate(date)},
+      options: requestOptions(
+        contentType: Headers.formUrlEncodedContentType,
+        responseType: ResponseType.plain,
+      ),
+    );
+    final html = response.data?.toString() ?? '';
+    return parseDailySchedule(html, date.weekday);
   }
 
   @override
