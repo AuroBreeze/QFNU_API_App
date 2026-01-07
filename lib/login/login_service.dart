@@ -9,6 +9,7 @@ abstract class LoginService {
     required String password,
     required String captcha,
   });
+  Future<void> logout();
   Future<List<TermOption>> fetchExamTerms();
   Future<List<ExamItem>> fetchExamList({required String xnxqid});
   Future<GradeQueryOptions> fetchGradeQueryOptions();

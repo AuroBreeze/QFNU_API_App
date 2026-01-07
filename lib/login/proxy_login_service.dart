@@ -127,6 +127,11 @@ class ProxyLoginService implements LoginService {
   }
 
   @override
+  Future<void> logout() async {
+    _resetSession();
+  }
+
+  @override
   Future<List<TermOption>> fetchExamTerms() async {
     final response = await _withSessionRetry(() {
       return _dio.get(

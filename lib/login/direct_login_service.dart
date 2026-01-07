@@ -51,9 +51,10 @@ bool _isLoginSuccess(
 
 class DirectLoginService implements LoginService {
   final Dio _dio;
+  final CookieJar? _cookieJar;
   bool _sessionReady = false;
 
-  DirectLoginService._(this._dio);
+  DirectLoginService._(this._dio, this._cookieJar);
 
   static Future<DirectLoginService> create() async {
     final dio = Dio(
@@ -70,14 +71,15 @@ class DirectLoginService implements LoginService {
       ),
     );
 
+    CookieJar? cookieJar;
     if (!kIsWeb) {
       final directory = await getApplicationSupportDirectory();
       final storagePath = '${directory.path}/cookies';
-      final cookieJar = PersistCookieJar(storage: FileStorage(storagePath));
+      cookieJar = PersistCookieJar(storage: FileStorage(storagePath));
       dio.interceptors.add(CookieManager(cookieJar));
     }
 
-    return DirectLoginService._(dio);
+    return DirectLoginService._(dio, cookieJar);
   }
 
   Future<void> _ensureSession() async {
@@ -138,6 +140,14 @@ class DirectLoginService implements LoginService {
       redirects: response.redirects,
     );
     return LoginResult(ok: ok, raw: raw, alert: alert);
+  }
+
+  @override
+  Future<void> logout() async {
+    _sessionReady = false;
+    if (_cookieJar != null) {
+      await _cookieJar!.deleteAll();
+    }
   }
 
   @override

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:qfnu_app/exams/exam_schedule_card.dart';
 import 'package:qfnu_app/grades/grade_query_card.dart';
+import 'package:qfnu_app/login/login_page.dart';
 import 'package:qfnu_app/login/login_service.dart';
 import 'package:qfnu_app/shared/widgets/glow_circle.dart';
 
@@ -52,11 +53,30 @@ class HomePage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Dashboard',
-                    style: theme.textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w700,
-                    ),
+                  Row(
+                    children: [
+                      Text(
+                        'Dashboard',
+                        style: theme.textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const Spacer(),
+                      TextButton.icon(
+                        onPressed: () async {
+                          await service.logout();
+                          if (!context.mounted) return;
+                          Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                              builder: (_) => const LoginPage(),
+                            ),
+                            (route) => false,
+                          );
+                        },
+                        icon: const Icon(Icons.logout),
+                        label: const Text('Logout'),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 6),
                   Text(
