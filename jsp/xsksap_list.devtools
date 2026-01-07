@@ -1,0 +1,288 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+
+<head id="headerid1">
+	<base target='_self'>
+	<title>我的考试 - 考试安排查询</title>	
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">
+	<meta http-equiv="keywords" content="湖南强智科技教务系统">
+	<meta http-equiv="description" content="湖南强智科技教务系统">
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+<script type="text/javascript" src="/jsxsd/js/jquery-1.8.0.min.js" language="javascript" ></script>
+<script type="text/javascript" src="/jsxsd/js/jquery-min.js" language="javascript" ></script>
+<script type="text/javascript" src="/jsxsd/js/common.js" language="javascript" ></script>
+<script type="text/javascript" src="/jsxsd/js/iepngfix_tilebg.js" language="javascript" ></script>
+<script type="text/javascript" src="/jsxsd/js/easyui/jquery.easyui.min.js" language="javascript" ></script>
+<script type="text/javascript" src="/jsxsd/js/jquery.autocomplete.min.js" language="javascript" ></script>
+<link href="/jsxsd/framework/images/common.css" rel="stylesheet" type="text/css" />
+<link href="/jsxsd/framework/images/blue.css" rel="stylesheet" type="text/css" id="link_theme" />
+<link href="/jsxsd/framework/images/workstation.css" rel="stylesheet" type="text/css" /> 
+<link href="/jsxsd/css/easyui.css" rel="stylesheet" type="text/css" />
+<link href="/jsxsd/css/jquery.autocomplete.css" rel="stylesheet" type="text/css" />
+</head>
+<iframe id="notSession" name="notSession" style="display: none;" src=""></iframe>
+<script type="text/javascript">
+jQuery(document).ready(function(){
+	window.setInterval(function(){
+		 document.getElementById("notSession").src = "/jsxsd/framework/blankPage.jsp";
+	 }, 1000 * 60 * 10);
+});
+</script>
+<body>
+<script >
+            .MHover{
+                border:1px solid #ccc;
+                white-space:nowrap;
+                text-overflow:ellipsis;
+                overflow:hidden;
+            }
+</script>
+ 
+<div class="Nsb_pw">
+	<br/>
+	
+	<table id="dataList" width="100%" border="0" cellspacing="0" cellpadding="0" class="Nsb_r_list Nsb_table">
+		<tr>
+			
+				<th class="Nsb_r_list_thb" style="width: 35px;">序号</th>
+				<th class="Nsb_r_list_thb" style="width: 80px;">校区</th>
+				<th class="Nsb_r_list_thb" style="width: 120px;">考试场次</th>
+				<th class="Nsb_r_list_thb" style="width: 120px;">课程编号</th>
+				<th class="Nsb_r_list_thb" style="width: 160px;">课程名称</th>
+				<th class="Nsb_r_list_thb" style="width: 110px;">授课教师</th>
+				<th class="Nsb_r_list_thb">考试时间</th>
+				<th class="Nsb_r_list_thb" style="width: 140px;">考场</th>
+				<th class="Nsb_r_list_thb" style="width: 60px;">座位号</th>
+				<th class="Nsb_r_list_thb" style="width: 120px;">准考证号</th>
+				<th class="Nsb_r_list_thb" style="width: 120px;">备注</th>
+				<th class="Nsb_r_list_thb" style="width: 50px;">操作</th>
+			
+			
+		</tr>
+		
+		<tr>
+			<td>1</td>
+			<td align="left">曲阜校区</td>
+			<td align="left">ggk002</td>
+			
+
+			<td align="left">301901</td>
+			<td align="left">概率论与数理统计A</td>
+			<td>刘长玉</td>
+			<td>2026-01-05 10:30~12:30</td>
+
+			
+			<td>格物楼B112</td>
+			<td>42</td>
+			<td></td>
+			
+			
+				<td></td>
+			
+            
+			    <td><a href="javascript:fuc('5C70D78E46214B2689F228705A5F6987')">备注</a></td>
+            
+		</tr>
+		
+		<tr>
+			<td>2</td>
+			<td align="left">曲阜校区</td>
+			<td align="left">ggk008</td>
+			
+
+			<td align="left">510003</td>
+			<td align="left">马克思主义基本原理</td>
+			<td>刘宝杰</td>
+			<td>2026-01-06 14:00~16:00</td>
+
+			
+			<td>致知楼B111</td>
+			<td>54</td>
+			<td></td>
+			
+			
+				<td></td>
+			
+            
+			    <td><a href="javascript:fuc('BBAEDBF8C2B2446594AD075C90579AE3')">备注</a></td>
+            
+		</tr>
+		
+		<tr>
+			<td>3</td>
+			<td align="left">曲阜校区</td>
+			<td align="left">ggk013</td>
+			
+
+			<td align="left">520013</td>
+			<td align="left">大学英语3（普通）</td>
+			<td>吴静</td>
+			<td>2026-01-07 14:00~16:00</td>
+
+			
+			<td>综合教学楼503</td>
+			<td>36</td>
+			<td></td>
+			
+			
+				<td></td>
+			
+            
+			    <td><a href="javascript:fuc('1C6EEA6AA9BF419084C475C6F5C3B814')">备注</a></td>
+            
+		</tr>
+		
+		<tr>
+			<td>4</td>
+			<td align="left">曲阜校区</td>
+			<td align="left">wa101002</td>
+			
+
+			<td align="left">301004</td>
+			<td align="left">离散数学</td>
+			<td>王蓓</td>
+			<td>2026-01-12 14:00~16:00</td>
+
+			
+			<td>致知楼B201</td>
+			<td>42</td>
+			<td></td>
+			
+			
+				<td></td>
+			
+            
+			    <td><a href="javascript:fuc('4BDB76C73B3B4C7B8B0D555F0C403FFE')">备注</a></td>
+            
+		</tr>
+		
+		<tr>
+			<td>5</td>
+			<td align="left">曲阜校区</td>
+			<td align="left">wa101005</td>
+			
+
+			<td align="left">302001</td>
+			<td align="left">计算机组成原理</td>
+			<td>王来花</td>
+			<td>2026-01-13 08:00~10:00</td>
+
+			
+			<td>致知楼B202</td>
+			<td>45</td>
+			<td></td>
+			
+			
+				<td></td>
+			
+            
+			    <td><a href="javascript:fuc('D33E0201552D493C971D381D67336F66')">备注</a></td>
+            
+		</tr>
+		
+		<tr>
+			<td>6</td>
+			<td align="left">曲阜校区</td>
+			<td align="left">wa101009</td>
+			
+
+			<td align="left">302748</td>
+			<td align="left">Java程序设计</td>
+			<td>刘红娟</td>
+			<td>2026-01-14 08:00~10:00</td>
+
+			
+			<td>致知楼B202</td>
+			<td>42</td>
+			<td></td>
+			
+			
+				<td></td>
+			
+            
+			    <td><a href="javascript:fuc('792C23140A7D4C8EA7A45A4816E7183F')">备注</a></td>
+            
+		</tr>
+		
+		<tr>
+			<td>7</td>
+			<td align="left">曲阜校区</td>
+			<td align="left">wa101017</td>
+			
+
+			<td align="left">302017</td>
+			<td align="left">数据结构</td>
+			<td>公冶小燕</td>
+			<td>2026-01-16 08:00~10:00</td>
+
+			
+			<td>格物楼B106</td>
+			<td>42</td>
+			<td></td>
+			
+			
+				<td></td>
+			
+            
+			    <td><a href="javascript:fuc('B7D16EE9D8654B2082B639B14D208E3E')">备注</a></td>
+            
+		</tr>
+		
+		<tr>
+			<td>8</td>
+			<td align="left">曲阜校区</td>
+			<td align="left">wa101020</td>
+			
+
+			<td align="left">301219</td>
+			<td align="left">程序设计实践</td>
+			<td>公冶小燕</td>
+			<td>2026-01-16 16:30~18:30</td>
+
+			
+			<td>测试实验室304</td>
+			<td>10</td>
+			<td></td>
+			
+			
+				<td></td>
+			
+            
+			    <td><a href="javascript:fuc('B617AC1975F643E588F6B6D553664CCD')">备注</a></td>
+            
+		</tr>
+		
+		
+	</table>
+</div>
+<br />
+ 
+<script language="javascript">
+	function fuc(obj){
+			JsMod('/jsxsd/xsks/xsksap_bz.do?kw0410id='+obj);
+
+
+	}
+
+	$(document).ready(function () {
+            $(".MALL").hide();
+            $(".MHover").mouseover(function (e) {
+                $(this).next(".MALL").css({"position":"absolute","top":e.pageY+5,"left":e.pageX+5}).show();
+            });
+            $(".MHover").mousemove(function (e) {
+                $(this).next(".MALL").css({ "color": "fff", "position": "absolute", "opacity": "1.0", "background-color": "#F0FFFF", "top": e.pageY + 5, "left": e.pageX+5});
+            });
+            $(".MHover").mouseout(function () {
+                $(this).next(".MALL").hide();
+            });
+        });
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,13 @@
+[project]
+name = "qfnuapi"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "colorlog>=6.10.1",
+    "ddddocr>=1.5.6",
+    "pillow>=12.1.0",
+    "requests>=2.32.5",
+    "toml>=0.10.2",
+]
