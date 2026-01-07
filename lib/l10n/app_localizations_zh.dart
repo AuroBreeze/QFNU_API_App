@@ -317,4 +317,38 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get cacheClearedMessage => '培养方案缓存已清除。';
+
+  @override
+  String get gradeNotifySectionTitle => '成绩提醒';
+
+  @override
+  String get gradeNotifySectionSubtitle => '后台定时检查新成绩并通知。';
+
+  @override
+  String get gradeNotifyEnabledLabel => '启用成绩提醒';
+
+  @override
+  String get gradeNotifyIntervalLabel => '检查间隔';
+
+  @override
+  String gradeNotifyIntervalValue(Object hours) {
+    return '每 $hours 小时检查';
+  }
+
+  @override
+  String get gradeNotifyTitle => '成绩有更新';
+
+  @override
+  String gradeNotifyBody(Object count) {
+    return '发现 $count 条新成绩';
+  }
+
+  @override
+  String get gradeNotifyChannelName => '成绩提醒';
+
+  @override
+  String get gradeNotifyChannelDescription => '当有新成绩发布时通知';
+
+  @override
+  String get notificationPermissionRequired => '需要开启通知权限才能接收成绩提醒。';
 }

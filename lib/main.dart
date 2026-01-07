@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:qfnu_app/background/grade_check_scheduler.dart';
 import 'package:qfnu_app/l10n/app_localizations.dart';
 import 'package:qfnu_app/login/login_page.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await GradeCheckScheduler.initialize();
   runApp(const QfnuApp());
 }
 

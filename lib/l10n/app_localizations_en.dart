@@ -321,4 +321,41 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cacheClearedMessage => 'Training plan cache cleared.';
+
+  @override
+  String get gradeNotifySectionTitle => 'Grade notifications';
+
+  @override
+  String get gradeNotifySectionSubtitle =>
+      'Check in background and notify when new grades appear.';
+
+  @override
+  String get gradeNotifyEnabledLabel => 'Enable grade notifications';
+
+  @override
+  String get gradeNotifyIntervalLabel => 'Check interval';
+
+  @override
+  String gradeNotifyIntervalValue(Object hours) {
+    return 'Every $hours hours';
+  }
+
+  @override
+  String get gradeNotifyTitle => 'New grades available';
+
+  @override
+  String gradeNotifyBody(Object count) {
+    return '$count new grade(s) detected';
+  }
+
+  @override
+  String get gradeNotifyChannelName => 'Grade updates';
+
+  @override
+  String get gradeNotifyChannelDescription =>
+      'Notify when new grades are posted';
+
+  @override
+  String get notificationPermissionRequired =>
+      'Enable notification permission to receive grade reminders.';
 }

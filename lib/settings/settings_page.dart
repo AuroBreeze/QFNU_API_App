@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:qfnu_app/background/grade_check_scheduler.dart';
 import 'package:qfnu_app/l10n/app_localizations.dart';
 import 'package:qfnu_app/shared/settings_store.dart';
 import 'package:qfnu_app/shared/training_plan_cache.dart';
@@ -14,6 +16,8 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   bool _loading = true;
   int _cacheDays = SettingsStore.defaultTrainingPlanCacheDays;
+  bool _gradeNotifyEnabled = true;
+  int _gradeCheckHours = SettingsStore.defaultGradeCheckIntervalHours;
 
   @override
   void initState() {
@@ -23,9 +27,13 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<void> _loadSettings() async {
     final days = await SettingsStore.getTrainingPlanCacheDays();
+    final gradeEnabled = await SettingsStore.getGradeNotificationEnabled();
+    final gradeHours = await SettingsStore.getGradeCheckIntervalHours();
     if (!mounted) return;
     setState(() {
       _cacheDays = days;
+      _gradeNotifyEnabled = gradeEnabled;
+      _gradeCheckHours = gradeHours;
       _loading = false;
     });
   }
@@ -36,6 +44,70 @@ class _SettingsPageState extends State<SettingsPage> {
       _cacheDays = days;
     });
     await SettingsStore.setTrainingPlanCacheDays(days);
+  }
+
+  Future<bool> _requestNotificationPermission() async {
+    final plugin = FlutterLocalNotificationsPlugin();
+    const initializationSettings = InitializationSettings(
+      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+    );
+    await plugin.initialize(initializationSettings);
+    final android =
+        plugin.resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>();
+    if (android == null) return true;
+    final dynamic androidDynamic = android;
+    try {
+      final granted = await androidDynamic.requestNotificationsPermission();
+      return granted ?? false;
+    } catch (_) {
+      try {
+        final granted = await androidDynamic.requestPermission();
+        return granted ?? false;
+      } catch (_) {
+        return true;
+      }
+    }
+  }
+
+  Future<void> _toggleGradeNotify(bool value) async {
+    if (value) {
+      final granted = await _requestNotificationPermission();
+      if (!granted) {
+        if (!mounted) return;
+        final l10n = AppLocalizations.of(context)!;
+        setState(() {
+          _gradeNotifyEnabled = false;
+        });
+        await SettingsStore.setGradeNotificationEnabled(false);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.notificationPermissionRequired)),
+        );
+        await GradeCheckScheduler.syncWithSettings();
+        return;
+      }
+    }
+
+    setState(() {
+      _gradeNotifyEnabled = value;
+    });
+    await SettingsStore.setGradeNotificationEnabled(value);
+    await GradeCheckScheduler.syncWithSettings();
+  }
+
+  void _previewGradeInterval(double value) {
+    setState(() {
+      _gradeCheckHours = value.round();
+    });
+  }
+
+  Future<void> _commitGradeInterval(double value) async {
+    final hours = value.round();
+    setState(() {
+      _gradeCheckHours = hours;
+    });
+    await SettingsStore.setGradeCheckIntervalHours(hours);
+    await GradeCheckScheduler.syncWithSettings();
   }
 
   Future<void> _clearTrainingPlanCache() async {
@@ -148,6 +220,82 @@ class _SettingsPageState extends State<SettingsPage> {
                             icon: const Icon(Icons.delete_outline),
                             label: Text(l10n.cacheClearButton),
                           ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Card(
+                  elevation: 10,
+                  shadowColor: Colors.black26,
+                  color: Colors.white.withOpacity(0.95),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.gradeNotifySectionTitle,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          l10n.gradeNotifySectionSubtitle,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: Colors.black54,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        SwitchListTile.adaptive(
+                          value: _gradeNotifyEnabled,
+                          onChanged: _loading ? null : _toggleGradeNotify,
+                          contentPadding: EdgeInsets.zero,
+                          title: Text(
+                            l10n.gradeNotifyEnabledLabel,
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          l10n.gradeNotifyIntervalLabel,
+                          style: theme.textTheme.labelMedium?.copyWith(
+                            color: Colors.black87,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Slider(
+                                value: _gradeCheckHours.toDouble(),
+                                min: 1,
+                                max: 24,
+                                divisions: 23,
+                                label:
+                                    l10n.gradeNotifyIntervalValue(_gradeCheckHours),
+                                onChanged: !_gradeNotifyEnabled || _loading
+                                    ? null
+                                    : _previewGradeInterval,
+                                onChangeEnd: !_gradeNotifyEnabled || _loading
+                                    ? null
+                                    : _commitGradeInterval,
+                              ),
+                            ),
+                            Text(
+                              l10n.gradeNotifyIntervalValue(_gradeCheckHours),
+                              style: theme.textTheme.labelMedium?.copyWith(
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),

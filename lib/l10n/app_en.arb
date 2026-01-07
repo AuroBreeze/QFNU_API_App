@@ -177,5 +177,25 @@
     }
   },
   "cacheClearButton": "Clear training plan cache",
-  "cacheClearedMessage": "Training plan cache cleared."
+  "cacheClearedMessage": "Training plan cache cleared.",
+  "gradeNotifySectionTitle": "Grade notifications",
+  "gradeNotifySectionSubtitle": "Check in background and notify when new grades appear.",
+  "gradeNotifyEnabledLabel": "Enable grade notifications",
+  "gradeNotifyIntervalLabel": "Check interval",
+  "gradeNotifyIntervalValue": "Every {hours} hours",
+  "@gradeNotifyIntervalValue": {
+    "placeholders": {
+      "hours": {}
+    }
+  },
+  "gradeNotifyTitle": "New grades available",
+  "gradeNotifyBody": "{count} new grade(s) detected",
+  "@gradeNotifyBody": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "gradeNotifyChannelName": "Grade updates",
+  "gradeNotifyChannelDescription": "Notify when new grades are posted",
+  "notificationPermissionRequired": "Enable notification permission to receive grade reminders."
 }

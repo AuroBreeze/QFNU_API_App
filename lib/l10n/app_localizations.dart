@@ -649,6 +649,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Training plan cache cleared.'**
   String get cacheClearedMessage;
+
+  /// No description provided for @gradeNotifySectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Grade notifications'**
+  String get gradeNotifySectionTitle;
+
+  /// No description provided for @gradeNotifySectionSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check in background and notify when new grades appear.'**
+  String get gradeNotifySectionSubtitle;
+
+  /// No description provided for @gradeNotifyEnabledLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable grade notifications'**
+  String get gradeNotifyEnabledLabel;
+
+  /// No description provided for @gradeNotifyIntervalLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Check interval'**
+  String get gradeNotifyIntervalLabel;
+
+  /// No description provided for @gradeNotifyIntervalValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Every {hours} hours'**
+  String gradeNotifyIntervalValue(Object hours);
+
+  /// No description provided for @gradeNotifyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'New grades available'**
+  String get gradeNotifyTitle;
+
+  /// No description provided for @gradeNotifyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} new grade(s) detected'**
+  String gradeNotifyBody(Object count);
+
+  /// No description provided for @gradeNotifyChannelName.
+  ///
+  /// In en, this message translates to:
+  /// **'Grade updates'**
+  String get gradeNotifyChannelName;
+
+  /// No description provided for @gradeNotifyChannelDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Notify when new grades are posted'**
+  String get gradeNotifyChannelDescription;
+
+  /// No description provided for @notificationPermissionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable notification permission to receive grade reminders.'**
+  String get notificationPermissionRequired;
 }
 
 class _AppLocalizationsDelegate
