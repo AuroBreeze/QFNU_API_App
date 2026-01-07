@@ -29,6 +29,7 @@ class _GradeQueryPageState extends State<GradeQueryPage> {
   bool _loadingOptions = false;
   bool _loadingList = false;
   bool _filtersExpanded = false;
+  bool _autoQueried = false;
   String? _error;
 
   @override
@@ -53,9 +54,13 @@ class _GradeQueryPageState extends State<GradeQueryPage> {
       final options = await widget.service.fetchGradeQueryOptions();
       if (!mounted) return;
 
+      final nonEmptyTerms =
+          options.terms.where((option) => option.value.isNotEmpty).toList();
       String? defaultTerm;
-      if (options.terms.length > 1) {
-        defaultTerm = options.terms[1].value;
+      if (nonEmptyTerms.length > 1) {
+        defaultTerm = nonEmptyTerms[1].value;
+      } else if (nonEmptyTerms.isNotEmpty) {
+        defaultTerm = nonEmptyTerms.first.value;
       } else if (options.terms.isNotEmpty) {
         defaultTerm = options.terms.first.value;
       }
@@ -91,6 +96,10 @@ class _GradeQueryPageState extends State<GradeQueryPage> {
         _selectedCourseType = defaultCourseType;
         _selectedDisplayMode = defaultDisplayMode;
       });
+      if (!_autoQueried) {
+        _autoQueried = true;
+        await _loadGrades();
+      }
     } catch (error) {
       if (!mounted) return;
       setState(() {
