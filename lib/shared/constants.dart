@@ -1,0 +1,10 @@
+﻿const baseUrl = 'http://zhjw.qfnu.edu.cn';
+const mainUrl = '$baseUrl/jsxsd/framework/xsMain.jsp';
+const captchaUrl = '$baseUrl/jsxsd/verifycode.servlet';
+const loginUrl = '$baseUrl/jsxsd/xk/LoginToXkLdap';
+const queryUrl = '$baseUrl/jsxsd/xsks/xsksap_query';
+const listUrl = '$baseUrl/jsxsd/xsks/xsksap_list';
+const defaultProxyUrl = 'http://localhost:8080';
+const browserUserAgent =
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
+    '(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';

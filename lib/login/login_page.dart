@@ -1,0 +1,437 @@
+﻿import 'dart:typed_data';
+
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/material.dart';
+import 'package:qfnu_app/exams/exam_schedule_page.dart';
+import 'package:qfnu_app/login/direct_login_service.dart';
+import 'package:qfnu_app/login/login_service.dart';
+import 'package:qfnu_app/login/proxy_login_service.dart';
+import 'package:qfnu_app/shared/constants.dart';
+import 'package:qfnu_app/shared/widgets/glow_circle.dart';
+
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final _proxyController = TextEditingController(text: defaultProxyUrl);
+  final _userController = TextEditingController();
+  final _passController = TextEditingController();
+  final _captchaController = TextEditingController();
+  LoginService? _service;
+  String? _serviceKey;
+  Uint8List? _captchaBytes;
+  bool _captchaLoading = false;
+  bool _loading = false;
+  bool _showPassword = false;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshCaptcha();
+  }
+
+  @override
+  void dispose() {
+    _proxyController.dispose();
+    _userController.dispose();
+    _passController.dispose();
+    _captchaController.dispose();
+    super.dispose();
+  }
+
+  String _normalizeBaseUrl(String value) {
+    final trimmed = value.trim();
+    if (trimmed.endsWith('/')) {
+      return trimmed.replaceAll(RegExp(r'/+$'), '');
+    }
+    return trimmed;
+  }
+
+  LoginService _resolveService() {
+    if (!kIsWeb) {
+      _service ??= DirectLoginService();
+      return _service!;
+    }
+
+    final baseUrl = _normalizeBaseUrl(_proxyController.text);
+    if (baseUrl.isEmpty) {
+      throw Exception('Proxy URL is required for web testing.');
+    }
+
+    final key = 'proxy:$baseUrl';
+    if (_service == null || _serviceKey != key) {
+      _service = ProxyLoginService(baseUrl: baseUrl);
+      _serviceKey = key;
+    }
+
+    return _service!;
+  }
+
+  Future<void> _refreshCaptcha({bool clearError = true}) async {
+    if (_captchaLoading) return;
+
+    setState(() {
+      _captchaLoading = true;
+      if (clearError) {
+        _error = null;
+      }
+    });
+
+    try {
+      final service = _resolveService();
+      final bytes = await service.fetchCaptcha();
+      if (!mounted) return;
+      setState(() {
+        _captchaBytes = bytes;
+      });
+      _captchaController.clear();
+    } catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _captchaBytes = null;
+        _error = 'Failed to load captcha: $error';
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _captchaLoading = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _submit() async {
+    final username = _userController.text.trim();
+    final password = _passController.text;
+    final captcha = _captchaController.text.trim();
+
+    if (username.isEmpty || password.isEmpty || captcha.isEmpty) {
+      setState(() {
+        _error = 'Please fill in username, password, and captcha.';
+      });
+      return;
+    }
+
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+
+    try {
+      final service = _resolveService();
+      final result = await service.login(
+        username: username,
+        password: password,
+        captcha: captcha,
+      );
+
+      if (!mounted) return;
+
+      if (result.ok) {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => ExamSchedulePage(
+              service: service,
+              username: username,
+            ),
+          ),
+        );
+      } else {
+        final message = result.message;
+        setState(() {
+          _error = message ??
+              (result.preview.isEmpty ? 'Login failed.' : result.preview);
+        });
+        await _refreshCaptcha(clearError: false);
+      }
+    } catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _error = error.toString();
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _loading = false;
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Scaffold(
+      body: Stack(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xFFF5EFE6),
+                  Color(0xFFE3F1EC),
+                  Color(0xFFF1E9DC),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+          ),
+          const GlowCircle(
+            offset: Offset(-120, -100),
+            size: 240,
+            colors: [Color(0xFFBFE4D8), Color(0xFFECF6F2)],
+          ),
+          const GlowCircle(
+            offset: Offset(180, 80),
+            size: 160,
+            colors: [Color(0xFFF3DCCB), Color(0xFFF7F1EA)],
+          ),
+          const GlowCircle(
+            offset: Offset(-80, 520),
+            size: 200,
+            colors: [Color(0xFFCAE5F4), Color(0xFFE9F4FB)],
+          ),
+          SafeArea(
+            child: Center(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 28),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 460),
+                  child: Card(
+                    elevation: 12,
+                    shadowColor: Colors.black26,
+                    color: Colors.white.withOpacity(0.92),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(24, 26, 24, 24),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            'QFNU Exam Login',
+                            style: theme.textTheme.headlineSmall?.copyWith(
+                              fontWeight: FontWeight.w700,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            'Sign in with your student account to check exam schedule.',
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: Colors.black54,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 22),
+                          if (kIsWeb) ...[
+                            Text(
+                              'Proxy URL (Web only)',
+                              style: theme.textTheme.labelMedium?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                color: theme.colorScheme.onSurface,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            TextField(
+                              controller: _proxyController,
+                              decoration: const InputDecoration(
+                                hintText: defaultProxyUrl,
+                                prefixIcon: Icon(Icons.hub_outlined),
+                              ),
+                              keyboardType: TextInputType.url,
+                            ),
+                            const SizedBox(height: 16),
+                          ],
+                          TextField(
+                            controller: _userController,
+                            decoration: const InputDecoration(
+                              labelText: 'Username',
+                              prefixIcon: Icon(Icons.person_outline),
+                            ),
+                            textInputAction: TextInputAction.next,
+                          ),
+                          const SizedBox(height: 14),
+                          TextField(
+                            controller: _passController,
+                            decoration: InputDecoration(
+                              labelText: 'Password',
+                              prefixIcon: const Icon(Icons.lock_outline),
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _showPassword = !_showPassword;
+                                  });
+                                },
+                                icon: Icon(
+                                  _showPassword
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                ),
+                                tooltip:
+                                    _showPassword ? 'Hide password' : 'Show password',
+                              ),
+                            ),
+                            obscureText: !_showPassword,
+                            textInputAction: TextInputAction.next,
+                          ),
+                          const SizedBox(height: 18),
+                          Row(
+                            children: [
+                              Text(
+                                'Captcha',
+                                style: theme.textTheme.titleSmall?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const Spacer(),
+                              TextButton.icon(
+                                onPressed:
+                                    _captchaLoading ? null : _refreshCaptcha,
+                                icon: const Icon(Icons.refresh),
+                                label: const Text('Refresh'),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Container(
+                            height: 76,
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.9),
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: theme.colorScheme.outlineVariant,
+                              ),
+                            ),
+                            alignment: Alignment.centerLeft,
+                            child: _captchaLoading
+                                ? const SizedBox(
+                                    height: 22,
+                                    width: 22,
+                                    child: CircularProgressIndicator(strokeWidth: 2),
+                                  )
+                                : _captchaBytes == null
+                                    ? const Text('Tap refresh to load')
+                                    : Image.memory(
+                                        _captchaBytes!,
+                                        fit: BoxFit.contain,
+                                      ),
+                          ),
+                          const SizedBox(height: 12),
+                          TextField(
+                            controller: _captchaController,
+                            decoration: const InputDecoration(
+                              labelText: 'Captcha',
+                              prefixIcon: Icon(Icons.verified_outlined),
+                            ),
+                            textInputAction: TextInputAction.done,
+                            onSubmitted: (_) => _loading ? null : _submit(),
+                          ),
+                          const SizedBox(height: 20),
+                          SizedBox(
+                            height: 50,
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    theme.colorScheme.primary,
+                                    theme.colorScheme.primaryContainer,
+                                  ],
+                                  begin: Alignment.centerLeft,
+                                  end: Alignment.centerRight,
+                                ),
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: ElevatedButton(
+                                onPressed: _loading ? null : _submit,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.transparent,
+                                  shadowColor: Colors.transparent,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                ),
+                                child: _loading
+                                    ? const SizedBox(
+                                        height: 20,
+                                        width: 20,
+                                        child: CircularProgressIndicator(
+                                          strokeWidth: 2,
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                            Colors.white,
+                                          ),
+                                        ),
+                                      )
+                                    : const Text(
+                                        'Login',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                              ),
+                            ),
+                          ),
+                          AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 200),
+                            child: _error == null
+                                ? const SizedBox.shrink()
+                                : Container(
+                                    key: ValueKey(_error),
+                                    margin: const EdgeInsets.only(top: 16),
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      color: theme.colorScheme.error
+                                          .withOpacity(0.08),
+                                      borderRadius: BorderRadius.circular(12),
+                                      border: Border.all(
+                                        color: theme.colorScheme.error
+                                            .withOpacity(0.3),
+                                      ),
+                                    ),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Icon(
+                                          Icons.info_outline,
+                                          color: theme.colorScheme.error,
+                                          size: 20,
+                                        ),
+                                        const SizedBox(width: 8),
+                                        Expanded(
+                                          child: Text(
+                                            _error!,
+                                            style: TextStyle(
+                                              color: theme.colorScheme.error,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
