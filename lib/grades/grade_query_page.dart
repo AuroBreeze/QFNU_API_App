@@ -32,6 +32,49 @@ class _GradeQueryPageState extends State<GradeQueryPage> {
   bool _autoQueried = false;
   String? _error;
 
+  double? _parseNumber(String value) {
+    final match = RegExp(r'[-+]?\d*\.?\d+').firstMatch(value);
+    if (match == null) return null;
+    return double.tryParse(match.group(0) ?? '');
+  }
+
+  double? _averageGpa() {
+    double weightedSum = 0;
+    double creditSum = 0;
+    double plainSum = 0;
+    int plainCount = 0;
+
+    for (final item in _items) {
+      final gpa = _parseNumber(item.gradePoint);
+      if (gpa == null) continue;
+      final credit = _parseNumber(item.credit);
+      if (credit != null && credit > 0) {
+        weightedSum += gpa * credit;
+        creditSum += credit;
+      } else {
+        plainSum += gpa;
+        plainCount += 1;
+      }
+    }
+
+    if (creditSum > 0) {
+      return weightedSum / creditSum;
+    }
+    if (plainCount > 0) {
+      return plainSum / plainCount;
+    }
+    return null;
+  }
+
+  String _currentTermLabel() {
+    final termValue = _selectedTerm;
+    if (termValue == null || termValue.isEmpty) return 'All terms';
+    for (final term in _terms) {
+      if (term.value == termValue) return term.label;
+    }
+    return termValue;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -398,6 +441,52 @@ class _GradeQueryPageState extends State<GradeQueryPage> {
                     ),
                   ),
                   const SizedBox(height: 16),
+                  if (!_loadingList && _items.isNotEmpty) ...[
+                    Builder(
+                      builder: (context) {
+                        final average = _averageGpa();
+                        if (average == null) return const SizedBox.shrink();
+                        return Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 12,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.92),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: theme.colorScheme.outlineVariant,
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.auto_graph,
+                                size: 18,
+                                color: theme.colorScheme.primary,
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  'Average GPA (${_currentTermLabel()})',
+                                  style: theme.textTheme.bodyMedium?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                              Text(
+                                average.toStringAsFixed(2),
+                                style: theme.textTheme.titleSmall?.copyWith(
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                  ],
                   Expanded(
                     child: _loadingList
                         ? const Center(child: CircularProgressIndicator())
