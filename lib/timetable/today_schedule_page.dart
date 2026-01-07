@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:qfnu_app/l10n/app_localizations.dart';
+import 'package:qfnu_app/login/login_page.dart';
 import 'package:qfnu_app/login/login_service.dart';
 import 'package:qfnu_app/shared/models.dart';
 import 'package:qfnu_app/shared/widgets/glow_circle.dart';
@@ -29,6 +32,15 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
     _loadSchedule();
   }
 
+  Future<void> _handleSessionExpired() async {
+    await widget.service.logout();
+    if (!mounted) return;
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (_) => const LoginPage()),
+      (route) => false,
+    );
+  }
+
   String _formatDate(DateTime date) {
     final year = date.year.toString().padLeft(4, '0');
     final month = date.month.toString().padLeft(2, '0');
@@ -36,9 +48,9 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
     return '$year-$month-$day';
   }
 
-  String _weekdayLabel(DateTime date) {
-    const labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    return labels[date.weekday - 1];
+  String _weekdayLabel(BuildContext context, DateTime date) {
+    final locale = Localizations.localeOf(context).toString();
+    return DateFormat.E(locale).format(date);
   }
 
   Future<void> _loadSchedule({DateTime? date}) async {
@@ -56,10 +68,14 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
       setState(() {
         _items = items;
       });
+    } on SessionExpiredException {
+      if (!mounted) return;
+      await _handleSessionExpired();
     } catch (error) {
       if (!mounted) return;
+      final l10n = AppLocalizations.of(context)!;
       setState(() {
-        _error = 'Failed to load schedule: $error';
+        _error = l10n.failedToLoadSchedule(error.toString());
         _items = [];
       });
     } finally {
@@ -82,7 +98,11 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
     await _loadSchedule(date: picked);
   }
 
-  Widget _buildScheduleCard(ScheduleItem item, ThemeData theme) {
+  Widget _buildScheduleCard(
+    ScheduleItem item,
+    ThemeData theme,
+    AppLocalizations l10n,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -94,7 +114,7 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            item.period.isEmpty ? 'Class period' : item.period,
+            item.period.isEmpty ? l10n.classPeriodLabel : item.period,
             style: theme.textTheme.labelMedium?.copyWith(
               color: Colors.black54,
               fontWeight: FontWeight.w600,
@@ -133,25 +153,27 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final name = widget.username.trim();
-    final greeting = name.isEmpty ? 'Welcome back' : 'Welcome, $name';
+    final greeting =
+        name.isEmpty ? l10n.welcomeBack : l10n.welcomeUser(name);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Schedule'),
+        title: Text(l10n.scheduleTitle),
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
           IconButton(
             onPressed: _loading ? null : _selectDate,
             icon: const Icon(Icons.calendar_month_outlined),
-            tooltip: 'Pick date',
+            tooltip: l10n.pickDate,
           ),
           IconButton(
             onPressed: _loading ? null : _loadSchedule,
             icon: const Icon(Icons.refresh),
-            tooltip: 'Refresh',
+            tooltip: l10n.refresh,
           ),
         ],
       ),
@@ -195,7 +217,7 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    '${_formatDate(_date)} (${_weekdayLabel(_date)})',
+                    '${_formatDate(_date)} (${_weekdayLabel(context, _date)})',
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: Colors.black54,
                       fontWeight: FontWeight.w600,
@@ -219,7 +241,7 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
                         : _items.isEmpty
                             ? Center(
                                 child: Text(
-                                  'No classes scheduled for this date.',
+                                  l10n.noClassesForDate,
                                   style: theme.textTheme.bodyMedium,
                                 ),
                               )
@@ -229,7 +251,7 @@ class _TodaySchedulePageState extends State<TodaySchedulePage> {
                                     const SizedBox(height: 12),
                                 itemBuilder: (context, index) {
                                   final item = _items[index];
-                                  return _buildScheduleCard(item, theme);
+                                  return _buildScheduleCard(item, theme, l10n);
                                 },
                               ),
                   ),

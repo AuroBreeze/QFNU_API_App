@@ -150,3 +150,12 @@ class TrainingPlanCourse {
     required this.totalHours,
   });
 }
+
+class SessionExpiredException implements Exception {
+  final String message;
+
+  const SessionExpiredException([this.message = 'Session expired']);
+
+  @override
+  String toString() => message;
+}

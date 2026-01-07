@@ -1,0 +1,169 @@
+{
+  "@@locale": "en",
+  "appTitle": "QFNU Student Portal",
+  "loginTitle": "QFNU Exam Login",
+  "loginSubtitle": "Sign in with your student account to check exam schedule.",
+  "proxyUrlLabel": "Proxy URL (Web only)",
+  "proxyUrlHint": "http://localhost:8080",
+  "proxyUrlRequired": "Proxy URL is required for web testing.",
+  "usernameLabel": "Username",
+  "passwordLabel": "Password",
+  "showPassword": "Show password",
+  "hidePassword": "Hide password",
+  "rememberAccount": "Remember account",
+  "rememberPassword": "Remember password",
+  "captchaLabel": "Captcha",
+  "captchaHint": "Tap refresh to load",
+  "loginButton": "Login",
+  "checkingSession": "Checking session...",
+  "fillCredentialsError": "Please fill in username, password, and captcha.",
+  "loginFailed": "Login failed.",
+  "loadCaptchaFailed": "Failed to load captcha: {error}",
+  "@loadCaptchaFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "failedToLoadTerms": "Failed to load terms: {error}",
+  "@failedToLoadTerms": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "failedToLoadExams": "Failed to load exams: {error}",
+  "@failedToLoadExams": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "failedToLoadOptions": "Failed to load options: {error}",
+  "@failedToLoadOptions": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "failedToLoadGrades": "Failed to load grades: {error}",
+  "@failedToLoadGrades": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "failedToLoadSchedule": "Failed to load schedule: {error}",
+  "@failedToLoadSchedule": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "failedToLoadTrainingPlan": "Failed to load training plan: {error}",
+  "@failedToLoadTrainingPlan": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "dashboardTitle": "Dashboard",
+  "welcomeBack": "Welcome back",
+  "welcomeUser": "Welcome, {name}",
+  "@welcomeUser": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "logout": "Logout",
+  "examScheduleCardTitle": "Exam Schedule",
+  "examScheduleCardSubtitle": "Tap to view your upcoming exams",
+  "gradesCardTitle": "Course Grades",
+  "gradesCardSubtitle": "Tap to view your grades",
+  "timetableCardTitle": "Timetable",
+  "timetableCardSubtitle": "Tap to view your schedule",
+  "trainingPlanCardTitle": "Training Plan",
+  "trainingPlanCardSubtitle": "Tap to view progress by curriculum group",
+  "examScheduleTitle": "Exam Schedule",
+  "gradeQueryTitle": "Course Grades",
+  "scheduleTitle": "Schedule",
+  "trainingPlanTitle": "Training Plan",
+  "close": "Close",
+  "cancel": "Cancel",
+  "apply": "Apply",
+  "query": "Query",
+  "loading": "Loading",
+  "refresh": "Refresh",
+  "reload": "Reload",
+  "filters": "Filters",
+  "termLabel": "Term",
+  "courseTypeLabel": "Course Type",
+  "courseNameLabel": "Course Name",
+  "displayLabel": "Display",
+  "scoreLabel": "Score",
+  "creditLabel": "Credit",
+  "gpaLabel": "GPA",
+  "averageGpaLabel": "Average GPA",
+  "averageGpaValue": "Average GPA: {value}",
+  "@averageGpaValue": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "currentTermLabel": "Current term",
+  "allTerms": "All terms",
+  "allOption": "All",
+  "selectTerm": "Select term",
+  "noTermOptions": "No term options available.",
+  "noTermOptionsFound": "No term options found.",
+  "noExamData": "No exam data available.",
+  "noGradeData": "No grade data available.",
+  "noClassesForDate": "No classes scheduled for this date.",
+  "noTrainingPlanData": "No training plan data.",
+  "loadingTrainingPlan": "Loading training plan...",
+  "pickDate": "Pick date",
+  "classPeriodLabel": "Class period",
+  "untitledCourse": "Untitled course",
+  "completedRequired": "Completed {completed} / Required {required}",
+  "@completedRequired": {
+    "placeholders": {
+      "completed": {},
+      "required": {}
+    }
+  },
+  "totalHoursLabel": "Total hours: {hours}",
+  "@totalHoursLabel": {
+    "placeholders": {
+      "hours": {}
+    }
+  },
+  "coursesCount": "Courses: {count}",
+  "@coursesCount": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "completedSection": "Completed",
+  "pendingSection": "Pending",
+  "noCompletedCourses": "No completed courses.",
+  "noPendingCourses": "No pending courses.",
+  "attributeLabel": "Attribute: {value}",
+  "@attributeLabel": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "creditsLabel": "Credits: {value}",
+  "@creditsLabel": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "termValueLabel": "Term: {value}",
+  "@termValueLabel": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "hoursValueLabel": "Hours: {value}",
+  "@hoursValueLabel": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "statusCompleted": "Completed",
+  "statusPending": "Pending"
+}

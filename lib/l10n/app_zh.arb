@@ -1,0 +1,169 @@
+﻿{
+  "@@locale": "zh",
+  "appTitle": "QFNU App",
+  "loginTitle": "QFNU Login",
+  "loginSubtitle": "登录后查看考试、成绩、课表与培养方案。",
+  "proxyUrlLabel": "代理地址（仅 Web）",
+  "proxyUrlHint": "http://localhost:8080",
+  "proxyUrlRequired": "Web 调试需要填写代理地址。",
+  "usernameLabel": "账号",
+  "passwordLabel": "密码",
+  "showPassword": "显示密码",
+  "hidePassword": "隐藏密码",
+  "rememberAccount": "记住账号",
+  "rememberPassword": "记住密码",
+  "captchaLabel": "验证码",
+  "captchaHint": "点击刷新获取",
+  "loginButton": "登录",
+  "checkingSession": "正在检查会话...",
+  "fillCredentialsError": "请填写账号、密码和验证码。",
+  "loginFailed": "登录失败。",
+  "loadCaptchaFailed": "验证码加载失败：{error}",
+  "@loadCaptchaFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "failedToLoadTerms": "加载学期失败：{error}",
+  "@failedToLoadTerms": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "failedToLoadExams": "加载考试失败：{error}",
+  "@failedToLoadExams": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "failedToLoadOptions": "加载选项失败：{error}",
+  "@failedToLoadOptions": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "failedToLoadGrades": "加载成绩失败：{error}",
+  "@failedToLoadGrades": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "failedToLoadSchedule": "加载课表失败：{error}",
+  "@failedToLoadSchedule": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "failedToLoadTrainingPlan": "加载培养方案失败：{error}",
+  "@failedToLoadTrainingPlan": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "dashboardTitle": "首页",
+  "welcomeBack": "欢迎回来",
+  "welcomeUser": "欢迎，{name}",
+  "@welcomeUser": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "logout": "退出登录",
+  "examScheduleCardTitle": "考试安排",
+  "examScheduleCardSubtitle": "查看你的考试安排",
+  "gradesCardTitle": "成绩查询",
+  "gradesCardSubtitle": "查看你的成绩",
+  "timetableCardTitle": "课表",
+  "timetableCardSubtitle": "查看课表",
+  "trainingPlanCardTitle": "培养方案",
+  "trainingPlanCardSubtitle": "查看课程体系进度",
+  "examScheduleTitle": "考试安排",
+  "gradeQueryTitle": "成绩查询",
+  "scheduleTitle": "课表",
+  "trainingPlanTitle": "培养方案",
+  "close": "关闭",
+  "cancel": "取消",
+  "apply": "应用",
+  "query": "查询",
+  "loading": "加载中",
+  "refresh": "刷新",
+  "reload": "重新加载",
+  "filters": "筛选",
+  "termLabel": "学期",
+  "courseTypeLabel": "课程类别",
+  "courseNameLabel": "课程名称",
+  "displayLabel": "显示方式",
+  "scoreLabel": "成绩",
+  "creditLabel": "学分",
+  "gpaLabel": "绩点",
+  "averageGpaLabel": "平均绩点",
+  "averageGpaValue": "平均绩点：{value}",
+  "@averageGpaValue": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "currentTermLabel": "当前学期",
+  "allTerms": "全部学期",
+  "allOption": "全部",
+  "selectTerm": "选择学期",
+  "noTermOptions": "暂无学期选项。",
+  "noTermOptionsFound": "未找到学期选项。",
+  "noExamData": "暂无考试数据。",
+  "noGradeData": "暂无成绩数据。",
+  "noClassesForDate": "该日期没有课程安排。",
+  "noTrainingPlanData": "暂无培养方案数据。",
+  "loadingTrainingPlan": "正在加载培养方案...",
+  "pickDate": "选择日期",
+  "classPeriodLabel": "节次",
+  "untitledCourse": "未命名课程",
+  "completedRequired": "已修 {completed} / 应修 {required}",
+  "@completedRequired": {
+    "placeholders": {
+      "completed": {},
+      "required": {}
+    }
+  },
+  "totalHoursLabel": "总学时：{hours}",
+  "@totalHoursLabel": {
+    "placeholders": {
+      "hours": {}
+    }
+  },
+  "coursesCount": "课程数：{count}",
+  "@coursesCount": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "completedSection": "已完成",
+  "pendingSection": "未完成",
+  "noCompletedCourses": "暂无已完成课程。",
+  "noPendingCourses": "暂无未完成课程。",
+  "attributeLabel": "课程属性：{value}",
+  "@attributeLabel": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "creditsLabel": "学分：{value}",
+  "@creditsLabel": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "termValueLabel": "开设学期：{value}",
+  "@termValueLabel": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "hoursValueLabel": "总学时：{value}",
+  "@hoursValueLabel": {
+    "placeholders": {
+      "value": {}
+    }
+  },
+  "statusCompleted": "已完成",
+  "statusPending": "未完成"
+}

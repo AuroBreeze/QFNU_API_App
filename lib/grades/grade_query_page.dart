@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:qfnu_app/l10n/app_localizations.dart';
+import 'package:qfnu_app/login/login_page.dart';
 import 'package:qfnu_app/login/login_service.dart';
 import 'package:qfnu_app/shared/models.dart';
 import 'package:qfnu_app/shared/widgets/glow_circle.dart';
@@ -65,9 +67,9 @@ class _GradeQueryPageState extends State<GradeQueryPage> {
     return null;
   }
 
-  String _currentTermLabel() {
+  String _currentTermLabel(AppLocalizations l10n) {
     final termValue = _selectedTerm;
-    if (termValue == null || termValue.isEmpty) return 'All terms';
+    if (termValue == null || termValue.isEmpty) return l10n.allTerms;
     for (final term in _terms) {
       if (term.value == termValue) return term.label;
     }
@@ -78,6 +80,15 @@ class _GradeQueryPageState extends State<GradeQueryPage> {
   void initState() {
     super.initState();
     _loadOptions();
+  }
+
+  Future<void> _handleSessionExpired() async {
+    await widget.service.logout();
+    if (!mounted) return;
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (_) => const LoginPage()),
+      (route) => false,
+    );
   }
 
   @override
@@ -142,10 +153,14 @@ class _GradeQueryPageState extends State<GradeQueryPage> {
         _autoQueried = true;
         await _loadGrades();
       }
+    } on SessionExpiredException {
+      if (!mounted) return;
+      await _handleSessionExpired();
     } catch (error) {
       if (!mounted) return;
+      final l10n = AppLocalizations.of(context)!;
       setState(() {
-        _error = 'Failed to load options: $error';
+        _error = l10n.failedToLoadOptions(error.toString());
       });
     } finally {
       if (mounted) {
@@ -173,10 +188,14 @@ class _GradeQueryPageState extends State<GradeQueryPage> {
       setState(() {
         _items = items;
       });
+    } on SessionExpiredException {
+      if (!mounted) return;
+      await _handleSessionExpired();
     } catch (error) {
       if (!mounted) return;
+      final l10n = AppLocalizations.of(context)!;
       setState(() {
-        _error = 'Failed to load grades: $error';
+        _error = l10n.failedToLoadGrades(error.toString());
         _items = [];
       });
     } finally {
@@ -188,7 +207,11 @@ class _GradeQueryPageState extends State<GradeQueryPage> {
     }
   }
 
-  Widget _buildGradeItem(GradeItem item, ThemeData theme) {
+  Widget _buildGradeItem(
+    GradeItem item,
+    ThemeData theme,
+    AppLocalizations l10n,
+  ) {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -200,7 +223,7 @@ class _GradeQueryPageState extends State<GradeQueryPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            item.courseName.isEmpty ? 'Untitled course' : item.courseName,
+            item.courseName.isEmpty ? l10n.untitledCourse : item.courseName,
             style: theme.textTheme.titleSmall?.copyWith(
               fontWeight: FontWeight.w700,
             ),
@@ -215,10 +238,10 @@ class _GradeQueryPageState extends State<GradeQueryPage> {
             spacing: 10,
             runSpacing: 6,
             children: [
-              _chip('Term', item.term),
-              _chip('Score', item.score),
-              _chip('Credit', item.credit),
-              _chip('GPA', item.gradePoint),
+              _chip(l10n.termLabel, item.term),
+              _chip(l10n.scoreLabel, item.score),
+              _chip(l10n.creditLabel, item.credit),
+              _chip(l10n.gpaLabel, item.gradePoint),
             ],
           ),
         ],
@@ -242,6 +265,7 @@ class _GradeQueryPageState extends State<GradeQueryPage> {
   }
 
   Widget _buildFiltersFields({
+    required AppLocalizations l10n,
     required String? selectedTerm,
     required ValueChanged<String?> onTermChanged,
     required String? selectedCourseType,
@@ -253,6 +277,15 @@ class _GradeQueryPageState extends State<GradeQueryPage> {
       return const LinearProgressIndicator();
     }
 
+    String optionLabel(TermOption option, {bool isTerm = false}) {
+      final isAllValue = option.value.isEmpty || option.value == 'all';
+      final isAllLabel = option.label.toLowerCase() == 'all';
+      if (isAllValue || isAllLabel) {
+        return isTerm ? l10n.allTerms : l10n.allOption;
+      }
+      return option.label;
+    }
+
     return Column(
       children: [
         DropdownButtonFormField<String>(
@@ -261,13 +294,13 @@ class _GradeQueryPageState extends State<GradeQueryPage> {
               .map(
                 (term) => DropdownMenuItem(
                   value: term.value,
-                  child: Text(term.label),
+                  child: Text(optionLabel(term, isTerm: true)),
                 ),
               )
               .toList(),
           onChanged: onTermChanged,
-          decoration: const InputDecoration(
-            labelText: 'Term',
+          decoration: InputDecoration(
+            labelText: l10n.termLabel,
           ),
         ),
         const SizedBox(height: 12),
@@ -278,22 +311,22 @@ class _GradeQueryPageState extends State<GradeQueryPage> {
                 .map(
                   (option) => DropdownMenuItem(
                     value: option.value,
-                    child: Text(option.label),
+                    child: Text(optionLabel(option)),
                   ),
                 )
                 .toList(),
             onChanged: onCourseTypeChanged,
-            decoration: const InputDecoration(
-              labelText: 'Course Type',
+            decoration: InputDecoration(
+              labelText: l10n.courseTypeLabel,
             ),
           ),
           const SizedBox(height: 12),
         ],
         TextField(
           controller: _courseController,
-          decoration: const InputDecoration(
-            labelText: 'Course Name',
-            prefixIcon: Icon(Icons.search),
+          decoration: InputDecoration(
+            labelText: l10n.courseNameLabel,
+            prefixIcon: const Icon(Icons.search),
           ),
         ),
         const SizedBox(height: 12),
@@ -304,13 +337,13 @@ class _GradeQueryPageState extends State<GradeQueryPage> {
                 .map(
                   (option) => DropdownMenuItem(
                     value: option.value,
-                    child: Text(option.label),
+                    child: Text(optionLabel(option)),
                   ),
                 )
                 .toList(),
             onChanged: onDisplayModeChanged,
-            decoration: const InputDecoration(
-              labelText: 'Display',
+            decoration: InputDecoration(
+              labelText: l10n.displayLabel,
             ),
           ),
           const SizedBox(height: 12),
@@ -329,6 +362,7 @@ class _GradeQueryPageState extends State<GradeQueryPage> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) {
+        final l10n = AppLocalizations.of(context)!;
         final theme = Theme.of(context);
         return SafeArea(
           child: Container(
@@ -353,7 +387,7 @@ class _GradeQueryPageState extends State<GradeQueryPage> {
                       Row(
                         children: [
                           Text(
-                            'Filters',
+                            l10n.filters,
                             style: theme.textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.w700,
                             ),
@@ -362,12 +396,13 @@ class _GradeQueryPageState extends State<GradeQueryPage> {
                           IconButton(
                             onPressed: () => Navigator.of(context).pop(),
                             icon: const Icon(Icons.close),
-                            tooltip: 'Close',
+                            tooltip: l10n.close,
                           ),
                         ],
                       ),
                       const SizedBox(height: 8),
                       _buildFiltersFields(
+                        l10n: l10n,
                         selectedTerm: term,
                         onTermChanged: (value) {
                           setSheetState(() {
@@ -392,7 +427,7 @@ class _GradeQueryPageState extends State<GradeQueryPage> {
                         children: [
                           TextButton(
                             onPressed: () => Navigator.of(context).pop(),
-                            child: const Text('Cancel'),
+                            child: Text(l10n.cancel),
                           ),
                           const Spacer(),
                           FilledButton(
@@ -406,7 +441,7 @@ class _GradeQueryPageState extends State<GradeQueryPage> {
                                     });
                                     Navigator.of(context).pop();
                                   },
-                            child: const Text('Apply'),
+                            child: Text(l10n.apply),
                           ),
                         ],
                       ),
@@ -423,18 +458,19 @@ class _GradeQueryPageState extends State<GradeQueryPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Course Grades'),
+        title: Text(l10n.gradeQueryTitle),
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
           IconButton(
             onPressed: _loadingOptions ? null : _loadOptions,
             icon: const Icon(Icons.refresh),
-            tooltip: 'Reload',
+            tooltip: l10n.reload,
           ),
         ],
       ),
@@ -471,10 +507,15 @@ class _GradeQueryPageState extends State<GradeQueryPage> {
                 SliverPersistentHeader(
                   pinned: true,
                   delegate: _GradeSummaryHeaderDelegate(
-                    termLabel: _currentTermLabel(),
+                    termLabel: _currentTermLabel(l10n),
                     averageGpa: _averageGpa(),
                     loadingOptions: _loadingOptions,
                     loadingList: _loadingList,
+                    currentTermLabel: l10n.currentTermLabel,
+                    filtersLabel: l10n.filters,
+                    queryLabel: l10n.query,
+                    loadingLabel: l10n.loading,
+                    averageGpaLabel: l10n.averageGpaValue,
                     onOpenFilters: _loadingOptions ? null : _showFiltersSheet,
                     onQuery:
                         _loadingOptions || _loadingList ? null : _loadGrades,
@@ -500,7 +541,7 @@ class _GradeQueryPageState extends State<GradeQueryPage> {
                     hasScrollBody: false,
                     child: Center(
                       child: Text(
-                        'No grade data available.',
+                        l10n.noGradeData,
                         style: theme.textTheme.bodySmall,
                       ),
                     ),
@@ -515,7 +556,7 @@ class _GradeQueryPageState extends State<GradeQueryPage> {
                             return const SizedBox(height: 12);
                           }
                           final item = _items[index ~/ 2];
-                          return _buildGradeItem(item, theme);
+                          return _buildGradeItem(item, theme, l10n);
                         },
                         childCount:
                             _items.isEmpty ? 0 : _items.length * 2 - 1,
@@ -536,6 +577,11 @@ class _GradeSummaryHeaderDelegate extends SliverPersistentHeaderDelegate {
   final double? averageGpa;
   final bool loadingOptions;
   final bool loadingList;
+  final String currentTermLabel;
+  final String filtersLabel;
+  final String queryLabel;
+  final String loadingLabel;
+  final String Function(Object value) averageGpaLabel;
   final VoidCallback? onOpenFilters;
   final VoidCallback? onQuery;
 
@@ -544,6 +590,11 @@ class _GradeSummaryHeaderDelegate extends SliverPersistentHeaderDelegate {
     required this.averageGpa,
     required this.loadingOptions,
     required this.loadingList,
+    required this.currentTermLabel,
+    required this.filtersLabel,
+    required this.queryLabel,
+    required this.loadingLabel,
+    required this.averageGpaLabel,
     required this.onOpenFilters,
     required this.onQuery,
   });
@@ -584,7 +635,7 @@ class _GradeSummaryHeaderDelegate extends SliverPersistentHeaderDelegate {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Current term',
+                          currentTermLabel,
                           style: theme.textTheme.labelSmall?.copyWith(
                             color: Colors.black54,
                           ),
@@ -602,19 +653,19 @@ class _GradeSummaryHeaderDelegate extends SliverPersistentHeaderDelegate {
                   IconButton(
                     onPressed: onOpenFilters,
                     icon: const Icon(Icons.tune),
-                    tooltip: 'Filters',
+                    tooltip: filtersLabel,
                   ),
                   const SizedBox(width: 4),
                   FilledButton.icon(
                     onPressed: onQuery,
                     icon: const Icon(Icons.search),
-                    label: Text(loadingList ? 'Loading' : 'Query'),
+                    label: Text(loadingList ? loadingLabel : queryLabel),
                   ),
                 ],
               ),
               const SizedBox(height: 6),
               Text(
-                'Average GPA: $gpaText',
+                averageGpaLabel(gpaText),
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: Colors.black54,
                   fontWeight: FontWeight.w600,
@@ -637,6 +688,11 @@ class _GradeSummaryHeaderDelegate extends SliverPersistentHeaderDelegate {
         averageGpa != oldDelegate.averageGpa ||
         loadingOptions != oldDelegate.loadingOptions ||
         loadingList != oldDelegate.loadingList ||
+        currentTermLabel != oldDelegate.currentTermLabel ||
+        filtersLabel != oldDelegate.filtersLabel ||
+        queryLabel != oldDelegate.queryLabel ||
+        loadingLabel != oldDelegate.loadingLabel ||
+        averageGpaLabel != oldDelegate.averageGpaLabel ||
         onOpenFilters != oldDelegate.onOpenFilters ||
         onQuery != oldDelegate.onQuery;
   }

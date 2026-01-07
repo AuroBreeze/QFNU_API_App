@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qfnu_app/l10n/app_localizations.dart';
 import 'package:qfnu_app/login/login_service.dart';
 import 'package:qfnu_app/plan/training_plan_page.dart';
 
@@ -14,6 +15,7 @@ class TrainingPlanCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
     return InkWell(
@@ -64,14 +66,14 @@ class TrainingPlanCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Training Plan',
+                      l10n.trainingPlanCardTitle,
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Tap to view progress by curriculum group',
+                      l10n.trainingPlanCardSubtitle,
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: Colors.black54,
                       ),

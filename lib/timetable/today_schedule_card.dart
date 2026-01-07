@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qfnu_app/l10n/app_localizations.dart';
 import 'package:qfnu_app/login/login_service.dart';
 import 'package:qfnu_app/timetable/today_schedule_page.dart';
 
@@ -14,6 +15,7 @@ class TodayScheduleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
     return InkWell(
@@ -64,14 +66,14 @@ class TodayScheduleCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Timetable',
+                      l10n.timetableCardTitle,
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Tap to view your schedule',
+                      l10n.timetableCardSubtitle,
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: Colors.black54,
                       ),

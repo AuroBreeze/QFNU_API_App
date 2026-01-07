@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:qfnu_app/l10n/app_localizations.dart';
+import 'package:qfnu_app/login/login_page.dart';
 import 'package:qfnu_app/login/login_service.dart';
 import 'package:qfnu_app/plan/training_plan_detail_page.dart';
 import 'package:qfnu_app/shared/models.dart';
@@ -29,6 +31,15 @@ class _TrainingPlanPageState extends State<TrainingPlanPage> {
     _loadPlan();
   }
 
+  Future<void> _handleSessionExpired() async {
+    await widget.service.logout();
+    if (!mounted) return;
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (_) => const LoginPage()),
+      (route) => false,
+    );
+  }
+
   Future<void> _loadPlan() async {
     setState(() {
       _loading = true;
@@ -41,10 +52,14 @@ class _TrainingPlanPageState extends State<TrainingPlanPage> {
       setState(() {
         _groups = groups;
       });
+    } on SessionExpiredException {
+      if (!mounted) return;
+      await _handleSessionExpired();
     } catch (error) {
       if (!mounted) return;
+      final l10n = AppLocalizations.of(context)!;
       setState(() {
-        _error = 'Failed to load training plan: $error';
+        _error = l10n.failedToLoadTrainingPlan(error.toString());
         _groups = [];
       });
     } finally {
@@ -60,6 +75,7 @@ class _TrainingPlanPageState extends State<TrainingPlanPage> {
     BuildContext context,
     TrainingPlanGroup group,
     ThemeData theme,
+    AppLocalizations l10n,
   ) {
     final progress = group.progress;
     final percentText =
@@ -125,17 +141,17 @@ class _TrainingPlanPageState extends State<TrainingPlanPage> {
               ),
               const SizedBox(height: 8),
               Text(
-                'Completed $completed / Required $required',
+                l10n.completedRequired(completed, required),
                 style: theme.textTheme.bodySmall?.copyWith(color: Colors.black54),
               ),
               const SizedBox(height: 4),
               Text(
-                'Total hours: ${group.totalHours}',
+                l10n.totalHoursLabel(group.totalHours),
                 style: theme.textTheme.bodySmall?.copyWith(color: Colors.black54),
               ),
               const SizedBox(height: 6),
               Text(
-                'Courses: ${group.courses.length}',
+                l10n.coursesCount(group.courses.length),
                 style: theme.textTheme.bodySmall?.copyWith(color: Colors.black45),
               ),
             ],
@@ -147,18 +163,19 @@ class _TrainingPlanPageState extends State<TrainingPlanPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Training Plan'),
+        title: Text(l10n.trainingPlanTitle),
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
           IconButton(
             onPressed: _loading ? null : _loadPlan,
             icon: const Icon(Icons.refresh),
-            tooltip: 'Reload',
+            tooltip: l10n.reload,
           ),
         ],
       ),
@@ -208,8 +225,8 @@ class _TrainingPlanPageState extends State<TrainingPlanPage> {
                         ? Center(
                             child: Text(
                               _loading
-                                  ? 'Loading training plan...'
-                                  : 'No training plan data.',
+                                  ? l10n.loadingTrainingPlan
+                                  : l10n.noTrainingPlanData,
                               style: theme.textTheme.bodyMedium,
                             ),
                           )
@@ -219,7 +236,12 @@ class _TrainingPlanPageState extends State<TrainingPlanPage> {
                                 const SizedBox(height: 12),
                             itemBuilder: (context, index) {
                               final group = _groups[index];
-                              return _buildGroupCard(context, group, theme);
+                              return _buildGroupCard(
+                                context,
+                                group,
+                                theme,
+                                l10n,
+                              );
                             },
                           ),
                   ),

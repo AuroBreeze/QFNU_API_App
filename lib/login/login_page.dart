@@ -2,6 +2,7 @@
 
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:qfnu_app/l10n/app_localizations.dart';
 import 'package:qfnu_app/home/home_page.dart';
 import 'package:qfnu_app/login/direct_login_service.dart';
 import 'package:qfnu_app/login/login_service.dart';
@@ -182,6 +183,12 @@ class _LoginPageState extends State<LoginPage> {
     return trimmed;
   }
 
+  String _proxyUrlRequiredMessage() {
+    final l10n = AppLocalizations.of(context);
+    return l10n?.proxyUrlRequired ??
+        'Proxy URL is required for web testing.';
+  }
+
   Future<LoginService> _resolveService() async {
     if (!kIsWeb) {
       _serviceFuture ??= DirectLoginService.create();
@@ -191,7 +198,7 @@ class _LoginPageState extends State<LoginPage> {
 
     final baseUrl = _normalizeBaseUrl(_proxyController.text);
     if (baseUrl.isEmpty) {
-      throw Exception('Proxy URL is required for web testing.');
+      throw Exception(_proxyUrlRequiredMessage());
     }
 
     final key = 'proxy:$baseUrl';
@@ -223,9 +230,10 @@ class _LoginPageState extends State<LoginPage> {
       _captchaController.clear();
     } catch (error) {
       if (!mounted) return;
+      final l10n = AppLocalizations.of(context)!;
       setState(() {
         _captchaBytes = null;
-        _error = 'Failed to load captcha: $error';
+        _error = l10n.loadCaptchaFailed(error.toString());
       });
     } finally {
       if (mounted) {
@@ -242,8 +250,9 @@ class _LoginPageState extends State<LoginPage> {
     final captcha = _captchaController.text.trim();
 
     if (username.isEmpty || password.isEmpty || captcha.isEmpty) {
+      final l10n = AppLocalizations.of(context)!;
       setState(() {
-        _error = 'Please fill in username, password, and captcha.';
+        _error = l10n.fillCredentialsError;
       });
       return;
     }
@@ -275,9 +284,10 @@ class _LoginPageState extends State<LoginPage> {
         );
       } else {
         final message = result.message;
+        final l10n = AppLocalizations.of(context)!;
         setState(() {
           _error = message ??
-              (result.preview.isEmpty ? 'Login failed.' : result.preview);
+              (result.preview.isEmpty ? l10n.loginFailed : result.preview);
         });
         await _refreshCaptcha(clearError: false);
       }
@@ -297,6 +307,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -351,7 +362,7 @@ class _LoginPageState extends State<LoginPage> {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                           Text(
-                            'QFNU Exam Login',
+                            l10n.loginTitle,
                             style: theme.textTheme.headlineSmall?.copyWith(
                               fontWeight: FontWeight.w700,
                             ),
@@ -359,7 +370,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           const SizedBox(height: 12),
                           Text(
-                            'Sign in with your student account to check exam schedule.',
+                            l10n.loginSubtitle,
                             style: theme.textTheme.bodyMedium?.copyWith(
                               color: Colors.black54,
                             ),
@@ -368,7 +379,7 @@ class _LoginPageState extends State<LoginPage> {
                           const SizedBox(height: 22),
                           if (kIsWeb) ...[
                             Text(
-                              'Proxy URL (Web only)',
+                              l10n.proxyUrlLabel,
                               style: theme.textTheme.labelMedium?.copyWith(
                                 fontWeight: FontWeight.w600,
                                 color: theme.colorScheme.onSurface,
@@ -377,9 +388,9 @@ class _LoginPageState extends State<LoginPage> {
                             const SizedBox(height: 8),
                             TextField(
                               controller: _proxyController,
-                              decoration: const InputDecoration(
-                                hintText: defaultProxyUrl,
-                                prefixIcon: Icon(Icons.hub_outlined),
+                              decoration: InputDecoration(
+                                hintText: l10n.proxyUrlHint,
+                                prefixIcon: const Icon(Icons.hub_outlined),
                               ),
                               keyboardType: TextInputType.url,
                             ),
@@ -387,9 +398,9 @@ class _LoginPageState extends State<LoginPage> {
                           ],
                           TextField(
                             controller: _userController,
-                            decoration: const InputDecoration(
-                              labelText: 'Username',
-                              prefixIcon: Icon(Icons.person_outline),
+                            decoration: InputDecoration(
+                              labelText: l10n.usernameLabel,
+                              prefixIcon: const Icon(Icons.person_outline),
                             ),
                             textInputAction: TextInputAction.next,
                           ),
@@ -397,7 +408,7 @@ class _LoginPageState extends State<LoginPage> {
                           TextField(
                             controller: _passController,
                             decoration: InputDecoration(
-                              labelText: 'Password',
+                              labelText: l10n.passwordLabel,
                               prefixIcon: const Icon(Icons.lock_outline),
                               suffixIcon: IconButton(
                                 onPressed: () {
@@ -410,8 +421,9 @@ class _LoginPageState extends State<LoginPage> {
                                       ? Icons.visibility_off
                                       : Icons.visibility,
                                 ),
-                                tooltip:
-                                    _showPassword ? 'Hide password' : 'Show password',
+                                tooltip: _showPassword
+                                    ? l10n.hidePassword
+                                    : l10n.showPassword,
                               ),
                             ),
                             obscureText: !_showPassword,
@@ -434,7 +446,7 @@ class _LoginPageState extends State<LoginPage> {
                                       value: _rememberAccount,
                                       onChanged: _toggleRememberAccount,
                                     ),
-                                    const Text('Remember account'),
+                                    Text(l10n.rememberAccount),
                                   ],
                                 ),
                               ),
@@ -455,7 +467,7 @@ class _LoginPageState extends State<LoginPage> {
                                           : null,
                                     ),
                                     Text(
-                                      'Remember password',
+                                      l10n.rememberPassword,
                                       style: TextStyle(
                                         color: _rememberAccount
                                             ? theme.colorScheme.onSurface
@@ -472,7 +484,7 @@ class _LoginPageState extends State<LoginPage> {
                           Row(
                             children: [
                               Text(
-                                'Captcha',
+                                l10n.captchaLabel,
                                 style: theme.textTheme.titleSmall?.copyWith(
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -482,7 +494,7 @@ class _LoginPageState extends State<LoginPage> {
                                 onPressed:
                                     _captchaLoading ? null : _refreshCaptcha,
                                 icon: const Icon(Icons.refresh),
-                                label: const Text('Refresh'),
+                                label: Text(l10n.refresh),
                               ),
                             ],
                           ),
@@ -505,7 +517,7 @@ class _LoginPageState extends State<LoginPage> {
                                     child: CircularProgressIndicator(strokeWidth: 2),
                                   )
                                 : _captchaBytes == null
-                                    ? const Text('Tap refresh to load')
+                                    ? Text(l10n.captchaHint)
                                     : Image.memory(
                                         _captchaBytes!,
                                         fit: BoxFit.contain,
@@ -514,9 +526,9 @@ class _LoginPageState extends State<LoginPage> {
                           const SizedBox(height: 12),
                           TextField(
                             controller: _captchaController,
-                            decoration: const InputDecoration(
-                              labelText: 'Captcha',
-                              prefixIcon: Icon(Icons.verified_outlined),
+                            decoration: InputDecoration(
+                              labelText: l10n.captchaLabel,
+                              prefixIcon: const Icon(Icons.verified_outlined),
                             ),
                             textInputAction: TextInputAction.done,
                             onSubmitted: (_) => _loading ? null : _submit(),
@@ -557,9 +569,9 @@ class _LoginPageState extends State<LoginPage> {
                                           ),
                                         ),
                                       )
-                                    : const Text(
-                                        'Login',
-                                        style: TextStyle(
+                                    : Text(
+                                        l10n.loginButton,
+                                        style: const TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600,
                                           color: Colors.white,
@@ -631,7 +643,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       const SizedBox(height: 12),
                       Text(
-                        'Checking session...',
+                        l10n.checkingSession,
                         style: theme.textTheme.bodyMedium,
                       ),
                     ],

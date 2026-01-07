@@ -1,4 +1,6 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:qfnu_app/l10n/app_localizations.dart';
+import 'package:qfnu_app/login/login_page.dart';
 import 'package:qfnu_app/login/login_service.dart';
 import 'package:qfnu_app/shared/models.dart';
 import 'package:qfnu_app/shared/widgets/glow_circle.dart';
@@ -31,6 +33,15 @@ class _ExamSchedulePageState extends State<ExamSchedulePage> {
     _loadTerms();
   }
 
+  Future<void> _handleSessionExpired() async {
+    await widget.service.logout();
+    if (!mounted) return;
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (_) => const LoginPage()),
+      (route) => false,
+    );
+  }
+
   Future<void> _loadTerms() async {
     setState(() {
       _loadingTerms = true;
@@ -40,12 +51,13 @@ class _ExamSchedulePageState extends State<ExamSchedulePage> {
     try {
       final terms = await widget.service.fetchExamTerms();
       if (!mounted) return;
+      final l10n = AppLocalizations.of(context)!;
 
       if (terms.isEmpty) {
         setState(() {
           _terms = [];
           _selectedTerm = null;
-          _error = 'No term options found.';
+          _error = l10n.noTermOptionsFound;
         });
         return;
       }
@@ -73,10 +85,14 @@ class _ExamSchedulePageState extends State<ExamSchedulePage> {
       if (defaultValue != null) {
         await _loadList(defaultValue);
       }
+    } on SessionExpiredException {
+      if (!mounted) return;
+      await _handleSessionExpired();
     } catch (error) {
       if (!mounted) return;
+      final l10n = AppLocalizations.of(context)!;
       setState(() {
-        _error = 'Failed to load terms: $error';
+        _error = l10n.failedToLoadTerms(error.toString());
       });
     } finally {
       if (mounted) {
@@ -99,10 +115,14 @@ class _ExamSchedulePageState extends State<ExamSchedulePage> {
       setState(() {
         _items = items;
       });
+    } on SessionExpiredException {
+      if (!mounted) return;
+      await _handleSessionExpired();
     } catch (error) {
       if (!mounted) return;
+      final l10n = AppLocalizations.of(context)!;
       setState(() {
-        _error = 'Failed to load exams: $error';
+        _error = l10n.failedToLoadExams(error.toString());
         _items = [];
       });
     } finally {
@@ -114,9 +134,9 @@ class _ExamSchedulePageState extends State<ExamSchedulePage> {
     }
   }
 
-  String _currentTermLabel() {
+  String _currentTermLabel(AppLocalizations l10n) {
     final termValue = _selectedTerm;
-    if (termValue == null || termValue.isEmpty) return 'Select term';
+    if (termValue == null || termValue.isEmpty) return l10n.selectTerm;
     for (final term in _terms) {
       if (term.value == termValue) return term.label;
     }
@@ -130,6 +150,7 @@ class _ExamSchedulePageState extends State<ExamSchedulePage> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) {
+        final l10n = AppLocalizations.of(context)!;
         final theme = Theme.of(context);
         return SafeArea(
           child: Container(
@@ -154,7 +175,7 @@ class _ExamSchedulePageState extends State<ExamSchedulePage> {
                       Row(
                         children: [
                           Text(
-                            'Select term',
+                            l10n.selectTerm,
                             style: theme.textTheme.titleMedium?.copyWith(
                               fontWeight: FontWeight.w700,
                             ),
@@ -163,7 +184,7 @@ class _ExamSchedulePageState extends State<ExamSchedulePage> {
                           IconButton(
                             onPressed: () => Navigator.of(context).pop(),
                             icon: const Icon(Icons.close),
-                            tooltip: 'Close',
+                            tooltip: l10n.close,
                           ),
                         ],
                       ),
@@ -171,7 +192,7 @@ class _ExamSchedulePageState extends State<ExamSchedulePage> {
                       if (_loadingTerms)
                         const LinearProgressIndicator()
                       else if (_terms.isEmpty)
-                        const Text('No term options available.')
+                        Text(l10n.noTermOptions)
                       else
                         DropdownButtonFormField<String>(
                           value: term,
@@ -188,8 +209,8 @@ class _ExamSchedulePageState extends State<ExamSchedulePage> {
                               term = value;
                             });
                           },
-                          decoration: const InputDecoration(
-                            labelText: 'Term',
+                          decoration: InputDecoration(
+                            labelText: l10n.termLabel,
                           ),
                         ),
                       const SizedBox(height: 12),
@@ -197,7 +218,7 @@ class _ExamSchedulePageState extends State<ExamSchedulePage> {
                         children: [
                           TextButton(
                             onPressed: () => Navigator.of(context).pop(),
-                            child: const Text('Cancel'),
+                            child: Text(l10n.cancel),
                           ),
                           const Spacer(),
                           FilledButton(
@@ -209,7 +230,7 @@ class _ExamSchedulePageState extends State<ExamSchedulePage> {
                                     });
                                     Navigator.of(context).pop();
                                   },
-                            child: const Text('Apply'),
+                            child: Text(l10n.apply),
                           ),
                         ],
                       ),
@@ -224,7 +245,11 @@ class _ExamSchedulePageState extends State<ExamSchedulePage> {
     );
   }
 
-  Widget _buildExamCard(ExamItem item, ThemeData theme) {
+  Widget _buildExamCard(
+    ExamItem item,
+    ThemeData theme,
+    AppLocalizations l10n,
+  ) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -236,7 +261,7 @@ class _ExamSchedulePageState extends State<ExamSchedulePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            item.courseName.isEmpty ? 'Untitled course' : item.courseName,
+            item.courseName.isEmpty ? l10n.untitledCourse : item.courseName,
             style: theme.textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.w700,
             ),
@@ -277,11 +302,12 @@ class _ExamSchedulePageState extends State<ExamSchedulePage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Exam Schedule'),
+        title: Text(l10n.examScheduleTitle),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -318,9 +344,12 @@ class _ExamSchedulePageState extends State<ExamSchedulePage> {
                 SliverPersistentHeader(
                   pinned: true,
                   delegate: _ExamSummaryHeaderDelegate(
-                    termLabel: _currentTermLabel(),
+                    termLabel: _currentTermLabel(l10n),
                     loadingTerms: _loadingTerms,
                     loadingList: _loadingList,
+                    filtersLabel: l10n.filters,
+                    queryLabel: l10n.query,
+                    loadingLabel: l10n.loading,
                     onOpenFilters: _loadingTerms ? null : _showTermSheet,
                     onQuery: _selectedTerm == null || _loadingList
                         ? null
@@ -347,7 +376,7 @@ class _ExamSchedulePageState extends State<ExamSchedulePage> {
                     hasScrollBody: false,
                     child: Center(
                       child: Text(
-                        'No exam data available.',
+                        l10n.noExamData,
                         style: theme.textTheme.bodyMedium,
                       ),
                     ),
@@ -362,7 +391,7 @@ class _ExamSchedulePageState extends State<ExamSchedulePage> {
                             return const SizedBox(height: 12);
                           }
                           final item = _items[index ~/ 2];
-                          return _buildExamCard(item, theme);
+                          return _buildExamCard(item, theme, l10n);
                         },
                         childCount:
                             _items.isEmpty ? 0 : _items.length * 2 - 1,
@@ -382,6 +411,9 @@ class _ExamSummaryHeaderDelegate extends SliverPersistentHeaderDelegate {
   final String termLabel;
   final bool loadingTerms;
   final bool loadingList;
+  final String filtersLabel;
+  final String queryLabel;
+  final String loadingLabel;
   final VoidCallback? onOpenFilters;
   final VoidCallback? onQuery;
 
@@ -389,6 +421,9 @@ class _ExamSummaryHeaderDelegate extends SliverPersistentHeaderDelegate {
     required this.termLabel,
     required this.loadingTerms,
     required this.loadingList,
+    required this.filtersLabel,
+    required this.queryLabel,
+    required this.loadingLabel,
     required this.onOpenFilters,
     required this.onQuery,
   });
@@ -434,13 +469,13 @@ class _ExamSummaryHeaderDelegate extends SliverPersistentHeaderDelegate {
                   IconButton(
                     onPressed: onOpenFilters,
                     icon: const Icon(Icons.tune),
-                    tooltip: 'Filters',
+                    tooltip: filtersLabel,
                   ),
                   const SizedBox(width: 4),
                   FilledButton.icon(
                     onPressed: onQuery,
                     icon: const Icon(Icons.search),
-                    label: Text(loadingList ? 'Loading' : 'Query'),
+                    label: Text(loadingList ? loadingLabel : queryLabel),
                   ),
                 ],
               ),
@@ -460,6 +495,9 @@ class _ExamSummaryHeaderDelegate extends SliverPersistentHeaderDelegate {
     return termLabel != oldDelegate.termLabel ||
         loadingTerms != oldDelegate.loadingTerms ||
         loadingList != oldDelegate.loadingList ||
+        filtersLabel != oldDelegate.filtersLabel ||
+        queryLabel != oldDelegate.queryLabel ||
+        loadingLabel != oldDelegate.loadingLabel ||
         onOpenFilters != oldDelegate.onOpenFilters ||
         onQuery != oldDelegate.onQuery;
   }

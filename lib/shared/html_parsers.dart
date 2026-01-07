@@ -16,11 +16,33 @@ String _stripHtml(String text) {
   return decoded.replaceAll(RegExp(r'\s+'), ' ').trim();
 }
 
+bool _looksLikeLoginPage(String html) {
+  if (RegExp(r'LoginToXkLdap', caseSensitive: false).hasMatch(html)) {
+    return true;
+  }
+  final hasUser = RegExp(
+    'name\\s*=\\s*[\\\'"]userAccount[\\\'"]',
+    caseSensitive: false,
+  ).hasMatch(html);
+  final hasCaptcha = RegExp(
+    'name\\s*=\\s*[\\\'"]RANDOMCODE[\\\'"]',
+    caseSensitive: false,
+  ).hasMatch(html);
+  return hasUser && hasCaptcha;
+}
+
+void _throwIfSessionExpired(String html) {
+  if (_looksLikeLoginPage(html)) {
+    throw const SessionExpiredException();
+  }
+}
+
 List<TermOption> parseSelectOptions(
   String html,
   String selectId, {
   bool includeEmpty = false,
 }) {
+  _throwIfSessionExpired(html);
   final escapedId = RegExp.escape(selectId);
   final selectMatch = RegExp(
     '<select[^>]*id="$escapedId"[^>]*>(.*?)</select>',
@@ -75,6 +97,7 @@ GradeQueryOptions parseGradeQueryOptions(String html) {
 }
 
 List<ExamItem> parseExamList(String html) {
+  _throwIfSessionExpired(html);
   final tableMatch = RegExp(
     r'<table[^>]*id="dataList"[^>]*>(.*?)</table>',
     caseSensitive: false,
@@ -123,6 +146,7 @@ List<ExamItem> parseExamList(String html) {
 }
 
 List<GradeItem> parseGradeList(String html) {
+  _throwIfSessionExpired(html);
   final tableMatch = RegExp(
     r'<table[^>]*id="dataList"[^>]*>(.*?)</table>',
     caseSensitive: false,
@@ -224,6 +248,7 @@ bool _isCompletedStatus(String status) {
 }
 
 List<TrainingPlanGroup> parseTrainingPlan(String html) {
+  _throwIfSessionExpired(html);
   final tableMatch = RegExp(
     r'''<table[^>]*id=['"]mxh['"][^>]*>(.*?)</table>''',
     caseSensitive: false,
@@ -399,6 +424,7 @@ List<String> _scheduleLinesFromTitle(String title) {
 }
 
 List<ScheduleItem> parseDailySchedule(String html, int weekdayIndex) {
+  _throwIfSessionExpired(html);
   if (weekdayIndex < 1 || weekdayIndex > 7) return [];
 
   final tableMatch = RegExp(

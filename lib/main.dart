@@ -1,4 +1,5 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:qfnu_app/l10n/app_localizations.dart';
 import 'package:qfnu_app/login/login_page.dart';
 
 void main() {
@@ -15,7 +16,10 @@ class QfnuApp extends StatelessWidget {
     );
 
     return MaterialApp(
-      title: 'QFNU MVP',
+      onGenerateTitle: (context) =>
+          AppLocalizations.of(context)?.appTitle ?? 'QFNU Student Portal',
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       theme: ThemeData(
         colorScheme: colorScheme,
         useMaterial3: true,
@@ -23,7 +27,10 @@ class QfnuApp extends StatelessWidget {
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
           fillColor: Colors.white.withOpacity(0.94),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 14,
+          ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
             borderSide: BorderSide(color: colorScheme.outlineVariant),

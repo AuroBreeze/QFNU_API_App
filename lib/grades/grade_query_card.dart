@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qfnu_app/grades/grade_query_page.dart';
+import 'package:qfnu_app/l10n/app_localizations.dart';
 import 'package:qfnu_app/login/login_service.dart';
 
 class GradeQueryCard extends StatelessWidget {
@@ -14,6 +15,7 @@ class GradeQueryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
     return InkWell(
@@ -64,14 +66,14 @@ class GradeQueryCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Course Grades',
+                      l10n.gradesCardTitle,
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Tap to view your grades',
+                      l10n.gradesCardSubtitle,
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: Colors.black54,
                       ),

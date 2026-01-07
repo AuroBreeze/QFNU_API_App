@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qfnu_app/l10n/app_localizations.dart';
 import 'package:qfnu_app/shared/models.dart';
 import 'package:qfnu_app/shared/widgets/glow_circle.dart';
 
@@ -12,6 +13,7 @@ class TrainingPlanDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final completed =
         group.courses.where((course) => course.completed).toList();
@@ -20,7 +22,7 @@ class TrainingPlanDetailPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Training Plan'),
+        title: Text(l10n.trainingPlanTitle),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -55,24 +57,32 @@ class TrainingPlanDetailPage extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
               child: ListView(
                 children: [
-                  _buildSummaryCard(theme),
+                  _buildSummaryCard(theme, l10n),
                   const SizedBox(height: 14),
-                  _buildSectionHeader('Completed', completed.length, theme),
+                  _buildSectionHeader(
+                    l10n.completedSection,
+                    completed.length,
+                    theme,
+                  ),
                   const SizedBox(height: 8),
                   if (completed.isEmpty)
-                    _emptyHint('No completed courses.', theme)
+                    _emptyHint(l10n.noCompletedCourses, theme)
                   else
                     ...completed
-                        .map((course) => _buildCourseCard(course, theme))
+                        .map((course) => _buildCourseCard(course, theme, l10n))
                         .expand((widget) => [widget, const SizedBox(height: 10)]),
                   const SizedBox(height: 6),
-                  _buildSectionHeader('Pending', pending.length, theme),
+                  _buildSectionHeader(
+                    l10n.pendingSection,
+                    pending.length,
+                    theme,
+                  ),
                   const SizedBox(height: 8),
                   if (pending.isEmpty)
-                    _emptyHint('No pending courses.', theme)
+                    _emptyHint(l10n.noPendingCourses, theme)
                   else
                     ...pending
-                        .map((course) => _buildCourseCard(course, theme))
+                        .map((course) => _buildCourseCard(course, theme, l10n))
                         .expand((widget) => [widget, const SizedBox(height: 10)]),
                 ],
               ),
@@ -83,7 +93,7 @@ class TrainingPlanDetailPage extends StatelessWidget {
     );
   }
 
-  Widget _buildSummaryCard(ThemeData theme) {
+  Widget _buildSummaryCard(ThemeData theme, AppLocalizations l10n) {
     final progress = group.progress;
     final percentText =
         progress == null ? '--' : '${(progress * 100).toStringAsFixed(0)}%';
@@ -129,12 +139,15 @@ class TrainingPlanDetailPage extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Completed ${group.completedCredits} / Required ${group.requiredCredits}',
+            l10n.completedRequired(
+              group.completedCredits,
+              group.requiredCredits,
+            ),
             style: theme.textTheme.bodySmall?.copyWith(color: Colors.black54),
           ),
           const SizedBox(height: 4),
           Text(
-            'Total hours: ${group.totalHours}',
+            l10n.totalHoursLabel(group.totalHours),
             style: theme.textTheme.bodySmall?.copyWith(color: Colors.black54),
           ),
         ],
@@ -167,24 +180,28 @@ class TrainingPlanDetailPage extends StatelessWidget {
     );
   }
 
-  Widget _buildCourseCard(TrainingPlanCourse course, ThemeData theme) {
+  Widget _buildCourseCard(
+    TrainingPlanCourse course,
+    ThemeData theme,
+    AppLocalizations l10n,
+  ) {
     final statusText = course.status.isEmpty
-        ? (course.completed ? 'Completed' : 'Pending')
+        ? (course.completed ? l10n.statusCompleted : l10n.statusPending)
         : course.status;
     final statusColor =
         course.completed ? theme.colorScheme.primary : Colors.orange.shade700;
     final detailItems = <String>[];
     if (course.attribute.isNotEmpty) {
-      detailItems.add('Attribute: ${course.attribute}');
+      detailItems.add(l10n.attributeLabel(course.attribute));
     }
     if (course.credits.isNotEmpty) {
-      detailItems.add('Credits: ${course.credits}');
+      detailItems.add(l10n.creditsLabel(course.credits));
     }
     if (course.term.isNotEmpty) {
-      detailItems.add('Term: ${course.term}');
+      detailItems.add(l10n.termValueLabel(course.term));
     }
     if (course.totalHours.isNotEmpty) {
-      detailItems.add('Hours: ${course.totalHours}');
+      detailItems.add(l10n.hoursValueLabel(course.totalHours));
     }
 
     return Container(

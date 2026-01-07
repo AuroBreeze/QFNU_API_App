@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:qfnu_app/exams/exam_schedule_card.dart';
 import 'package:qfnu_app/grades/grade_query_card.dart';
+import 'package:qfnu_app/l10n/app_localizations.dart';
 import 'package:qfnu_app/login/login_page.dart';
 import 'package:qfnu_app/login/login_service.dart';
 import 'package:qfnu_app/plan/training_plan_card.dart';
@@ -19,9 +20,11 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final name = username.trim();
-    final greeting = name.isEmpty ? 'Welcome back' : 'Welcome, $name';
+    final greeting =
+        name.isEmpty ? l10n.welcomeBack : l10n.welcomeUser(name);
 
     return Scaffold(
       body: Stack(
@@ -58,7 +61,7 @@ class HomePage extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        'Dashboard',
+                        l10n.dashboardTitle,
                         style: theme.textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.w700,
                         ),
@@ -76,7 +79,7 @@ class HomePage extends StatelessWidget {
                           );
                         },
                         icon: const Icon(Icons.logout),
-                        label: const Text('Logout'),
+                        label: Text(l10n.logout),
                       ),
                     ],
                   ),
