@@ -107,3 +107,46 @@ class ScheduleItem {
     required this.detailLines,
   });
 }
+
+class TrainingPlanGroup {
+  final String name;
+  final int requiredCredits;
+  final int completedCredits;
+  final int totalHours;
+  final List<TrainingPlanCourse> courses;
+
+  const TrainingPlanGroup({
+    required this.name,
+    required this.requiredCredits,
+    required this.completedCredits,
+    required this.totalHours,
+    required this.courses,
+  });
+
+  double? get progress {
+    if (requiredCredits <= 0) return null;
+    return completedCredits / requiredCredits;
+  }
+}
+
+class TrainingPlanCourse {
+  final String code;
+  final String name;
+  final String status;
+  final bool completed;
+  final String attribute;
+  final String credits;
+  final String term;
+  final String totalHours;
+
+  const TrainingPlanCourse({
+    required this.code,
+    required this.name,
+    required this.status,
+    required this.completed,
+    required this.attribute,
+    required this.credits,
+    required this.term,
+    required this.totalHours,
+  });
+}

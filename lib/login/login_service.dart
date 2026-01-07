@@ -11,6 +11,7 @@ abstract class LoginService {
   });
   Future<void> logout();
   Future<List<ScheduleItem>> fetchDailySchedule({required DateTime date});
+  Future<List<TrainingPlanGroup>> fetchTrainingPlan();
   Future<List<TermOption>> fetchExamTerms();
   Future<List<ExamItem>> fetchExamList({required String xnxqid});
   Future<GradeQueryOptions> fetchGradeQueryOptions();

@@ -173,6 +173,17 @@ class DirectLoginService implements LoginService {
   }
 
   @override
+  Future<List<TrainingPlanGroup>> fetchTrainingPlan() async {
+    await _ensureSession();
+    final response = await _dio.get(
+      trainingPlanUrl,
+      options: requestOptions(responseType: ResponseType.plain),
+    );
+    final html = response.data?.toString() ?? '';
+    return parseTrainingPlan(html);
+  }
+
+  @override
   Future<List<TermOption>> fetchExamTerms() async {
     await _ensureSession();
     final response = await _dio.get(

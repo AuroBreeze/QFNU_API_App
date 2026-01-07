@@ -154,6 +154,19 @@ class ProxyLoginService implements LoginService {
   }
 
   @override
+  Future<List<TrainingPlanGroup>> fetchTrainingPlan() async {
+    final response = await _withSessionRetry(() {
+      return _dio.get(
+        '$baseUrl/pyfa',
+        queryParameters: {'sid': _sessionId},
+        options: requestOptions(responseType: ResponseType.plain),
+      );
+    });
+    final html = response.data?.toString() ?? '';
+    return parseTrainingPlan(html);
+  }
+
+  @override
   Future<List<TermOption>> fetchExamTerms() async {
     final response = await _withSessionRetry(() {
       return _dio.get(

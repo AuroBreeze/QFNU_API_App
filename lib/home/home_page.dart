@@ -3,6 +3,7 @@ import 'package:qfnu_app/exams/exam_schedule_card.dart';
 import 'package:qfnu_app/grades/grade_query_card.dart';
 import 'package:qfnu_app/login/login_page.dart';
 import 'package:qfnu_app/login/login_service.dart';
+import 'package:qfnu_app/plan/training_plan_card.dart';
 import 'package:qfnu_app/shared/widgets/glow_circle.dart';
 import 'package:qfnu_app/timetable/today_schedule_card.dart';
 
@@ -99,6 +100,11 @@ class HomePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   GradeQueryCard(
+                    service: service,
+                    username: username,
+                  ),
+                  const SizedBox(height: 16),
+                  TrainingPlanCard(
                     service: service,
                     username: username,
                   ),

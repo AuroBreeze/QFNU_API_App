@@ -179,6 +179,186 @@ List<GradeItem> parseGradeList(String html) {
   return items;
 }
 
+int? _parseInt(String value) {
+  final match = RegExp(r'-?\d+').firstMatch(value);
+  if (match == null) return null;
+  return int.tryParse(match.group(0) ?? '');
+}
+
+String _extractNumberText(String value) {
+  final match = RegExp(r'\d+(?:\.\d+)?').firstMatch(value);
+  return match?.group(0) ?? '';
+}
+
+class _TrainingPlanAccumulator {
+  final String name;
+  int requiredCredits;
+  int completedCredits;
+  int totalHours;
+  final List<TrainingPlanCourse> courses;
+
+  _TrainingPlanAccumulator({
+    required this.name,
+    required this.requiredCredits,
+    required this.completedCredits,
+    this.totalHours = 0,
+    List<TrainingPlanCourse>? courses,
+  }) : courses = courses ?? [];
+
+  TrainingPlanGroup toGroup() {
+    return TrainingPlanGroup(
+      name: name,
+      requiredCredits: requiredCredits,
+      completedCredits: completedCredits,
+      totalHours: totalHours,
+      courses: List.unmodifiable(courses),
+    );
+  }
+}
+
+bool _isCompletedStatus(String status) {
+  return status.contains('\u5df2\u4fee') ||
+      status.contains('\u901a\u8fc7') ||
+      status.contains('\u514d\u4fee') ||
+      status.contains('\u5408\u683c');
+}
+
+List<TrainingPlanGroup> parseTrainingPlan(String html) {
+  final tableMatch = RegExp(
+    r'''<table[^>]*id=['"]mxh['"][^>]*>(.*?)</table>''',
+    caseSensitive: false,
+    dotAll: true,
+  ).firstMatch(html);
+  if (tableMatch == null) return [];
+
+  final tableHtml = tableMatch.group(1) ?? '';
+  final rowMatches = RegExp(
+    r'<tr[^>]*>(.*?)</tr>',
+    caseSensitive: false,
+    dotAll: true,
+  ).allMatches(tableHtml);
+
+  final order = <String>[];
+  final groups = <String, _TrainingPlanAccumulator>{};
+  String? currentName;
+  int currentRequired = 0;
+  int currentCompleted = 0;
+
+  for (final row in rowMatches) {
+    final rowHtml = row.group(1) ?? '';
+    if (rowHtml.toLowerCase().contains('<th')) continue;
+
+    final cellMatches = RegExp(
+      r'<td[^>]*>(.*?)</td>',
+      caseSensitive: false,
+      dotAll: true,
+    ).allMatches(rowHtml);
+
+    final cells = <String>[];
+    for (final cell in cellMatches) {
+      cells.add(_stripHtml(cell.group(1) ?? ''));
+    }
+
+    if (cells.isEmpty) continue;
+    if (cells.any(
+      (cell) =>
+          cell.contains('\u5c0f\u8ba1') || cell.contains('\u5408\u8ba1'),
+    )) {
+      continue;
+    }
+
+    if (cells[0].contains('\u5e94\u4fee') &&
+        cells[0].contains('\u5df2\u4fee')) {
+      final raw = cells[0];
+      final match = RegExp(
+        r'^(.*?)\s*\(?\s*\u5e94\u4fee\s*(\d+)\s*/\s*\u5df2\u4fee\s*(\d+)\s*\)?',
+      ).firstMatch(raw);
+      String name = raw.trim();
+      int required = 0;
+      int completed = 0;
+      if (match != null) {
+        name = match.group(1)?.trim() ?? name;
+        required = int.tryParse(match.group(2) ?? '') ?? 0;
+        completed = int.tryParse(match.group(3) ?? '') ?? 0;
+      }
+      currentName = name;
+      currentRequired = required;
+      currentCompleted = completed;
+
+      final existing = groups[name];
+      if (existing == null) {
+        groups[name] = _TrainingPlanAccumulator(
+          name: name,
+          requiredCredits: required,
+          completedCredits: completed,
+          courses: [],
+        );
+        order.add(name);
+      } else {
+        existing.requiredCredits = required;
+        existing.completedCredits = completed;
+      }
+    }
+
+    if (currentName == null || currentName.isEmpty) continue;
+    if (cells.length < 2) continue;
+
+    final hasGroupCell = cells[0].contains('\u5e94\u4fee') &&
+        cells[0].contains('\u5df2\u4fee');
+    final base = hasGroupCell ? 0 : -1;
+    final codeIndex = 2 + base;
+    final nameIndex = 3 + base;
+    final statusIndex = 4 + base;
+    final attributeIndex = 6 + base;
+    final creditIndex = 7 + base;
+
+    if (codeIndex < 0 || nameIndex < 0 || statusIndex < 0) continue;
+    if (cells.length <= statusIndex) continue;
+
+    final code = cells[codeIndex].trim();
+    final courseName = cells[nameIndex].trim();
+    final status = cells[statusIndex].trim();
+    final attribute =
+        attributeIndex >= 0 && attributeIndex < cells.length
+            ? cells[attributeIndex].trim()
+            : '';
+    final credits =
+        creditIndex >= 0 && creditIndex < cells.length
+            ? cells[creditIndex].trim()
+            : '';
+    final term = cells.isNotEmpty ? cells.last.trim() : '';
+    if (courseName.isEmpty && code.isEmpty) continue;
+
+    final totalHoursRaw =
+        cells.length > 1 ? cells[cells.length - 2].trim() : '';
+    final totalHoursText = _extractNumberText(totalHoursRaw);
+    final totalHours = _parseInt(totalHoursText);
+
+    final group = groups[currentName];
+    if (group != null) {
+      if (totalHours != null) {
+        group.totalHours += totalHours;
+      }
+      group.requiredCredits = currentRequired;
+      group.completedCredits = currentCompleted;
+      group.courses.add(
+        TrainingPlanCourse(
+          code: code,
+          name: courseName.isEmpty ? code : courseName,
+          status: status,
+          completed: _isCompletedStatus(status),
+          attribute: attribute,
+          credits: credits,
+          term: term,
+          totalHours: totalHoursText,
+        ),
+      );
+    }
+  }
+
+  return order.map((name) => groups[name]!.toGroup()).toList();
+}
+
 String _extractAttribute(String tag, String name) {
   final escaped = RegExp.escape(name);
   final match = RegExp(
