@@ -7,7 +7,6 @@ class SettingsStore {
   static const String _keyGradeCheckIntervalHours = 'grade_check_interval_hours';
   static const int defaultGradeCheckIntervalHours = 6;
   static const String _keyGradeTestNotifyEnabled = 'grade_test_notify_enabled';
-  static const String _keyCloudNotifyEnabled = 'cloud_notify_enabled';
 
   static int _normalizeDays(int value) {
     if (value < 1) return 1;
@@ -63,15 +62,5 @@ class SettingsStore {
   static Future<void> setGradeTestNotificationEnabled(bool enabled) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_keyGradeTestNotifyEnabled, enabled);
-  }
-
-  static Future<bool> getCloudNotifyEnabled() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(_keyCloudNotifyEnabled) ?? false;
-  }
-
-  static Future<void> setCloudNotifyEnabled(bool enabled) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_keyCloudNotifyEnabled, enabled);
   }
 }

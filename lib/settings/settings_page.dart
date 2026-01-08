@@ -2,22 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:qfnu_app/background/grade_check_scheduler.dart';
 import 'package:qfnu_app/settings/developer_page.dart';
-import 'package:qfnu_app/notifications/cloud_push_service.dart';
 import 'package:qfnu_app/l10n/app_localizations.dart';
-import 'package:qfnu_app/login/login_service.dart';
 import 'package:qfnu_app/shared/settings_store.dart';
 import 'package:qfnu_app/shared/training_plan_cache.dart';
 import 'package:qfnu_app/shared/widgets/glow_circle.dart';
 
 class SettingsPage extends StatefulWidget {
-  final LoginService? service;
-  final String username;
-
-  const SettingsPage({
-    super.key,
-    this.service,
-    this.username = '',
-  });
+  const SettingsPage({super.key});
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -28,7 +19,6 @@ class _SettingsPageState extends State<SettingsPage> {
   int _cacheDays = SettingsStore.defaultTrainingPlanCacheDays;
   bool _gradeNotifyEnabled = true;
   int _gradeCheckHours = SettingsStore.defaultGradeCheckIntervalHours;
-  bool _cloudNotifyEnabled = false;
 
   @override
   void initState() {
@@ -40,13 +30,11 @@ class _SettingsPageState extends State<SettingsPage> {
     final days = await SettingsStore.getTrainingPlanCacheDays();
     final gradeEnabled = await SettingsStore.getGradeNotificationEnabled();
     final gradeHours = await SettingsStore.getGradeCheckIntervalHours();
-    final cloudEnabled = await SettingsStore.getCloudNotifyEnabled();
     if (!mounted) return;
     setState(() {
       _cacheDays = days;
       _gradeNotifyEnabled = gradeEnabled;
       _gradeCheckHours = gradeHours;
-      _cloudNotifyEnabled = cloudEnabled;
       _loading = false;
     });
   }
@@ -108,74 +96,6 @@ class _SettingsPageState extends State<SettingsPage> {
     await GradeCheckScheduler.syncWithSettings();
   }
 
-  Future<bool> _confirmCloudNotify() async {
-    final l10n = AppLocalizations.of(context)!;
-    final result = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.cloudNotifyDialogTitle),
-        content: Text(l10n.cloudNotifyDialogBody),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text(l10n.cancel),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: Text(l10n.cloudNotifyDialogConfirm),
-          ),
-        ],
-      ),
-    );
-    return result ?? false;
-  }
-
-  Future<void> _toggleCloudNotify(bool value) async {
-    final l10n = AppLocalizations.of(context)!;
-    if (value) {
-      final service = widget.service;
-      if (service == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.cloudNotifyLoginRequired)),
-        );
-        return;
-      }
-      final confirmed = await _confirmCloudNotify();
-      if (!confirmed) return;
-
-      try {
-        await CloudPushService.requestPermission();
-        await CloudPushService.registerSession(
-          service: service,
-          username: widget.username,
-        );
-        if (!mounted) return;
-        setState(() {
-          _cloudNotifyEnabled = true;
-        });
-        await SettingsStore.setCloudNotifyEnabled(true);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.cloudNotifyRegisterSuccess)),
-        );
-      } catch (error) {
-        if (!mounted) return;
-        setState(() {
-          _cloudNotifyEnabled = false;
-        });
-        await SettingsStore.setCloudNotifyEnabled(false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.cloudNotifyRegisterFailed('$error'))),
-        );
-      }
-      return;
-    }
-
-    setState(() {
-      _cloudNotifyEnabled = false;
-    });
-    await SettingsStore.setCloudNotifyEnabled(false);
-    await CloudPushService.unregisterToken();
-  }
 
   void _previewGradeInterval(double value) {
     setState(() {
@@ -378,54 +298,6 @@ class _SettingsPageState extends State<SettingsPage> {
                               ),
                             ),
                           ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Card(
-                  elevation: 10,
-                  shadowColor: Colors.black26,
-                  color: Colors.white.withOpacity(0.95),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          l10n.cloudNotifyTitle,
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                        Text(
-                          l10n.cloudNotifySubtitle,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: Colors.black54,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        SwitchListTile.adaptive(
-                          value: _cloudNotifyEnabled,
-                          onChanged: _loading ? null : _toggleCloudNotify,
-                          contentPadding: EdgeInsets.zero,
-                          title: Text(
-                            l10n.cloudNotifyEnabledLabel,
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                        Text(
-                          l10n.cloudNotifyHint,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: Colors.black45,
-                          ),
                         ),
                       ],
                     ),

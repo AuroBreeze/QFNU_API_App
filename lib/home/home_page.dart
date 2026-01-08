@@ -70,12 +70,9 @@ class HomePage extends StatelessWidget {
                       const Spacer(),
                       IconButton(
                         onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                          builder: (_) => SettingsPage(
-                            service: service,
-                            username: username,
-                          ),
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const SettingsPage(),
                         ),
                       );
                     },
