@@ -259,4 +259,12 @@ class DirectLoginService implements LoginService {
     final html = response.data?.toString() ?? '';
     return parseGradeList(html);
   }
+
+  Future<List<String>> exportCookies() async {
+    if (_cookieJar == null) return const [];
+    final cookies = await _cookieJar!.loadForRequest(Uri.parse(baseUrl));
+    return cookies
+        .map((cookie) => '${cookie.name}=${cookie.value}')
+        .toList(growable: false);
+  }
 }

@@ -72,10 +72,13 @@ class HomePage extends StatelessWidget {
                         onPressed: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (_) => const SettingsPage(),
-                            ),
-                          );
-                        },
+                          builder: (_) => SettingsPage(
+                            service: service,
+                            username: username,
+                          ),
+                        ),
+                      );
+                    },
                         icon: const Icon(Icons.settings_outlined),
                         tooltip: l10n.settingsTitle,
                       ),

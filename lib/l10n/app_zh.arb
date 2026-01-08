@@ -197,5 +197,32 @@
   },
   "gradeNotifyChannelName": "成绩提醒",
   "gradeNotifyChannelDescription": "当有新成绩发布时通知",
-  "notificationPermissionRequired": "需要开启通知权限才能接收成绩提醒。"
+  "notificationPermissionRequired": "需要开启通知权限才能接收成绩提醒。",
+  "cloudNotifyTitle": "云端成绩提醒",
+  "cloudNotifySubtitle": "即使关闭 App 也能接收成绩通知。",
+  "cloudNotifyEnabledLabel": "启用云端成绩提醒",
+  "cloudNotifyHint": "需要上传当前登录的会话 Cookie 到 Firebase。",
+  "cloudNotifyDialogTitle": "开启云端提醒？",
+  "cloudNotifyDialogBody": "云端检查需要上传当前会话 Cookie。Cookie 可能过期，过期后需重新登录刷新。",
+  "cloudNotifyDialogConfirm": "开启",
+  "cloudNotifyRegisterSuccess": "云端提醒已开启。",
+  "cloudNotifyRegisterFailed": "云端提醒开启失败：{error}",
+  "@cloudNotifyRegisterFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "cloudNotifyLoginRequired": "请先登录再开启云端提醒。",
+  "developerTitle": "开发者",
+  "developerSubtitle": "高级测试工具",
+  "testNotifyTitle": "后台通知测试",
+  "testNotifySubtitle": "用于验证 App 关闭后是否仍能推送。",
+  "testNotifyEnabledLabel": "启用 1 分钟测试通知",
+  "testNotifyHint": "该测试为尽力而为，系统可能延迟执行。",
+  "exactAlarmPermissionRequired": "需要开启“精确闹钟”权限才能进行 1 分钟测试。",
+  "testNotifyNowButton": "立即发送测试通知",
+  "testNotifySent": "已发送测试通知。",
+  "testNotifyBody": "后台测试通知已发送。",
+  "testNotifyChannelName": "测试通知",
+  "testNotifyChannelDescription": "后台通知测试通道"
 }

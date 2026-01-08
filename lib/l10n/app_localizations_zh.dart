@@ -351,4 +351,73 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get notificationPermissionRequired => '需要开启通知权限才能接收成绩提醒。';
+
+  @override
+  String get cloudNotifyTitle => '云端成绩提醒';
+
+  @override
+  String get cloudNotifySubtitle => '即使关闭 App 也能接收成绩通知。';
+
+  @override
+  String get cloudNotifyEnabledLabel => '启用云端成绩提醒';
+
+  @override
+  String get cloudNotifyHint => '需要上传当前登录的会话 Cookie 到 Firebase。';
+
+  @override
+  String get cloudNotifyDialogTitle => '开启云端提醒？';
+
+  @override
+  String get cloudNotifyDialogBody =>
+      '云端检查需要上传当前会话 Cookie。Cookie 可能过期，过期后需重新登录刷新。';
+
+  @override
+  String get cloudNotifyDialogConfirm => '开启';
+
+  @override
+  String get cloudNotifyRegisterSuccess => '云端提醒已开启。';
+
+  @override
+  String cloudNotifyRegisterFailed(Object error) {
+    return '云端提醒开启失败：$error';
+  }
+
+  @override
+  String get cloudNotifyLoginRequired => '请先登录再开启云端提醒。';
+
+  @override
+  String get developerTitle => '开发者';
+
+  @override
+  String get developerSubtitle => '高级测试工具';
+
+  @override
+  String get testNotifyTitle => '后台通知测试';
+
+  @override
+  String get testNotifySubtitle => '用于验证 App 关闭后是否仍能推送。';
+
+  @override
+  String get testNotifyEnabledLabel => '启用 1 分钟测试通知';
+
+  @override
+  String get testNotifyHint => '该测试为尽力而为，系统可能延迟执行。';
+
+  @override
+  String get exactAlarmPermissionRequired => '需要开启“精确闹钟”权限才能进行 1 分钟测试。';
+
+  @override
+  String get testNotifyNowButton => '立即发送测试通知';
+
+  @override
+  String get testNotifySent => '已发送测试通知。';
+
+  @override
+  String get testNotifyBody => '后台测试通知已发送。';
+
+  @override
+  String get testNotifyChannelName => '测试通知';
+
+  @override
+  String get testNotifyChannelDescription => '后台通知测试通道';
 }

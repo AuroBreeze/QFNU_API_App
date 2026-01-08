@@ -358,4 +358,80 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get notificationPermissionRequired =>
       'Enable notification permission to receive grade reminders.';
+
+  @override
+  String get cloudNotifyTitle => 'Cloud grade reminders';
+
+  @override
+  String get cloudNotifySubtitle =>
+      'Receive grade notifications even when the app is closed.';
+
+  @override
+  String get cloudNotifyEnabledLabel => 'Enable cloud grade reminders';
+
+  @override
+  String get cloudNotifyHint =>
+      'Requires uploading your current session cookies to Firebase.';
+
+  @override
+  String get cloudNotifyDialogTitle => 'Enable cloud reminders?';
+
+  @override
+  String get cloudNotifyDialogBody =>
+      'To check grades in the cloud, your current session cookies will be uploaded to Firebase. They may expire, and you will need to log in again when that happens.';
+
+  @override
+  String get cloudNotifyDialogConfirm => 'Enable';
+
+  @override
+  String get cloudNotifyRegisterSuccess => 'Cloud reminders enabled.';
+
+  @override
+  String cloudNotifyRegisterFailed(Object error) {
+    return 'Cloud reminders failed: $error';
+  }
+
+  @override
+  String get cloudNotifyLoginRequired =>
+      'Please log in before enabling cloud reminders.';
+
+  @override
+  String get developerTitle => 'Developer';
+
+  @override
+  String get developerSubtitle => 'Advanced testing tools';
+
+  @override
+  String get testNotifyTitle => 'Background notification test';
+
+  @override
+  String get testNotifySubtitle =>
+      'Check if notifications can fire when the app is closed.';
+
+  @override
+  String get testNotifyEnabledLabel => 'Enable 1-minute test notifications';
+
+  @override
+  String get testNotifyHint =>
+      'This is best-effort. Android may delay background work.';
+
+  @override
+  String get exactAlarmPermissionRequired =>
+      'Enable exact alarms permission to run 1-minute tests.';
+
+  @override
+  String get testNotifyNowButton => 'Send test notification now';
+
+  @override
+  String get testNotifySent => 'Test notification sent.';
+
+  @override
+  String get testNotifyBody => 'Background test notification delivered.';
+
+  @override
+  String get testNotifyChannelName => 'Test notifications';
+
+  @override
+  String get testNotifyChannelDescription =>
+      'Background test notification channel';
 }

@@ -7,7 +7,9 @@ import 'package:qfnu_app/home/home_page.dart';
 import 'package:qfnu_app/login/direct_login_service.dart';
 import 'package:qfnu_app/login/login_service.dart';
 import 'package:qfnu_app/login/proxy_login_service.dart';
+import 'package:qfnu_app/notifications/cloud_push_service.dart';
 import 'package:qfnu_app/shared/constants.dart';
+import 'package:qfnu_app/shared/settings_store.dart';
 import 'package:qfnu_app/shared/widgets/glow_circle.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -274,6 +276,17 @@ class _LoginPageState extends State<LoginPage> {
       if (!mounted) return;
 
       if (result.ok) {
+        final cloudEnabled = await SettingsStore.getCloudNotifyEnabled();
+        if (cloudEnabled) {
+          try {
+            await CloudPushService.registerSession(
+              service: service,
+              username: username,
+            );
+          } catch (_) {
+            // Ignore cloud registration errors during login.
+          }
+        }
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (_) => HomePage(

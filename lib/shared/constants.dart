@@ -9,6 +9,7 @@ const gradeQueryUrl = '$baseUrl/jsxsd/kscj/cjcx_query';
 const gradeListUrl = '$baseUrl/jsxsd/kscj/cjcx_list';
 const trainingPlanUrl = '$baseUrl/jsxsd/pyfa/topyfamx';
 const defaultProxyUrl = 'http://localhost:8080';
+const firebaseFunctionsBaseUrl = 'https://<region>-<project-id>.cloudfunctions.net';
 const browserUserAgent =
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '
     '(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';

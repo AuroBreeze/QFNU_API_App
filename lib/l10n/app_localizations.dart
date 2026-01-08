@@ -709,6 +709,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enable notification permission to receive grade reminders.'**
   String get notificationPermissionRequired;
+
+  /// No description provided for @cloudNotifyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud grade reminders'**
+  String get cloudNotifyTitle;
+
+  /// No description provided for @cloudNotifySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Receive grade notifications even when the app is closed.'**
+  String get cloudNotifySubtitle;
+
+  /// No description provided for @cloudNotifyEnabledLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable cloud grade reminders'**
+  String get cloudNotifyEnabledLabel;
+
+  /// No description provided for @cloudNotifyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Requires uploading your current session cookies to Firebase.'**
+  String get cloudNotifyHint;
+
+  /// No description provided for @cloudNotifyDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable cloud reminders?'**
+  String get cloudNotifyDialogTitle;
+
+  /// No description provided for @cloudNotifyDialogBody.
+  ///
+  /// In en, this message translates to:
+  /// **'To check grades in the cloud, your current session cookies will be uploaded to Firebase. They may expire, and you will need to log in again when that happens.'**
+  String get cloudNotifyDialogBody;
+
+  /// No description provided for @cloudNotifyDialogConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable'**
+  String get cloudNotifyDialogConfirm;
+
+  /// No description provided for @cloudNotifyRegisterSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud reminders enabled.'**
+  String get cloudNotifyRegisterSuccess;
+
+  /// No description provided for @cloudNotifyRegisterFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud reminders failed: {error}'**
+  String cloudNotifyRegisterFailed(Object error);
+
+  /// No description provided for @cloudNotifyLoginRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please log in before enabling cloud reminders.'**
+  String get cloudNotifyLoginRequired;
+
+  /// No description provided for @developerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Developer'**
+  String get developerTitle;
+
+  /// No description provided for @developerSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Advanced testing tools'**
+  String get developerSubtitle;
+
+  /// No description provided for @testNotifyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Background notification test'**
+  String get testNotifyTitle;
+
+  /// No description provided for @testNotifySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check if notifications can fire when the app is closed.'**
+  String get testNotifySubtitle;
+
+  /// No description provided for @testNotifyEnabledLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable 1-minute test notifications'**
+  String get testNotifyEnabledLabel;
+
+  /// No description provided for @testNotifyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'This is best-effort. Android may delay background work.'**
+  String get testNotifyHint;
+
+  /// No description provided for @exactAlarmPermissionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable exact alarms permission to run 1-minute tests.'**
+  String get exactAlarmPermissionRequired;
+
+  /// No description provided for @testNotifyNowButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Send test notification now'**
+  String get testNotifyNowButton;
+
+  /// No description provided for @testNotifySent.
+  ///
+  /// In en, this message translates to:
+  /// **'Test notification sent.'**
+  String get testNotifySent;
+
+  /// No description provided for @testNotifyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Background test notification delivered.'**
+  String get testNotifyBody;
+
+  /// No description provided for @testNotifyChannelName.
+  ///
+  /// In en, this message translates to:
+  /// **'Test notifications'**
+  String get testNotifyChannelName;
+
+  /// No description provided for @testNotifyChannelDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Background test notification channel'**
+  String get testNotifyChannelDescription;
 }
 
 class _AppLocalizationsDelegate

@@ -197,5 +197,32 @@
   },
   "gradeNotifyChannelName": "Grade updates",
   "gradeNotifyChannelDescription": "Notify when new grades are posted",
-  "notificationPermissionRequired": "Enable notification permission to receive grade reminders."
+  "notificationPermissionRequired": "Enable notification permission to receive grade reminders.",
+  "cloudNotifyTitle": "Cloud grade reminders",
+  "cloudNotifySubtitle": "Receive grade notifications even when the app is closed.",
+  "cloudNotifyEnabledLabel": "Enable cloud grade reminders",
+  "cloudNotifyHint": "Requires uploading your current session cookies to Firebase.",
+  "cloudNotifyDialogTitle": "Enable cloud reminders?",
+  "cloudNotifyDialogBody": "To check grades in the cloud, your current session cookies will be uploaded to Firebase. They may expire, and you will need to log in again when that happens.",
+  "cloudNotifyDialogConfirm": "Enable",
+  "cloudNotifyRegisterSuccess": "Cloud reminders enabled.",
+  "cloudNotifyRegisterFailed": "Cloud reminders failed: {error}",
+  "@cloudNotifyRegisterFailed": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "cloudNotifyLoginRequired": "Please log in before enabling cloud reminders.",
+  "developerTitle": "Developer",
+  "developerSubtitle": "Advanced testing tools",
+  "testNotifyTitle": "Background notification test",
+  "testNotifySubtitle": "Check if notifications can fire when the app is closed.",
+  "testNotifyEnabledLabel": "Enable 1-minute test notifications",
+  "testNotifyHint": "This is best-effort. Android may delay background work.",
+  "exactAlarmPermissionRequired": "Enable exact alarms permission to run 1-minute tests.",
+  "testNotifyNowButton": "Send test notification now",
+  "testNotifySent": "Test notification sent.",
+  "testNotifyBody": "Background test notification delivered.",
+  "testNotifyChannelName": "Test notifications",
+  "testNotifyChannelDescription": "Background test notification channel"
 }
