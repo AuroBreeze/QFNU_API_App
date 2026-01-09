@@ -273,4 +273,62 @@ class ProxyLoginService implements LoginService {
     final html = response.data?.toString() ?? '';
     return parseWeekInfo(html);
   }
+
+  @override
+  Future<ClassroomQueryOptions> fetchClassroomQueryOptions() async {
+    final response = await _withSessionRetry(() {
+      return _dio.get(
+        '$baseUrl/kbcx/classroom',
+        queryParameters: {'sid': _sessionId},
+        options: requestOptions(responseType: ResponseType.plain),
+      );
+    });
+    final html = response.data?.toString() ?? '';
+    return parseClassroomQueryOptions(html);
+  }
+
+  @override
+  Future<ClassroomTable> fetchClassroomTable({
+    required String xnxqh,
+    required String kbjcmsid,
+    required String skyx,
+    required String xqid,
+    required String jzwid,
+    required String skjsid,
+    required String skjs,
+    required String zc1,
+    required String zc2,
+    required String skxq1,
+    required String skxq2,
+    required String jc1,
+    required String jc2,
+  }) async {
+    final response = await _withSessionRetry(() {
+      return _dio.post(
+        '$baseUrl/kbcx/classroom/list',
+        data: {
+          'sessionId': _sessionId,
+          'xnxqh': xnxqh,
+          'kbjcmsid': kbjcmsid,
+          'skyx': skyx,
+          'xqid': xqid,
+          'jzwid': jzwid,
+          'skjsid': skjsid,
+          'skjs': skjs,
+          'zc1': zc1,
+          'zc2': zc2,
+          'skxq1': skxq1,
+          'skxq2': skxq2,
+          'jc1': jc1,
+          'jc2': jc2,
+        },
+        options: requestOptions(
+          contentType: Headers.jsonContentType,
+          responseType: ResponseType.plain,
+        ),
+      );
+    });
+    final html = response.data?.toString() ?? '';
+    return parseClassroomTable(html);
+  }
 }

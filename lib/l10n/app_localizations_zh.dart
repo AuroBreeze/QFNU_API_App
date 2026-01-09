@@ -138,6 +138,16 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String failedToLoadClassroomOptions(Object error) {
+    return '加载空教室参数失败：$error';
+  }
+
+  @override
+  String failedToLoadClassroomTable(Object error) {
+    return '加载空教室列表失败：$error';
+  }
+
+  @override
   String get dashboardTitle => '首页';
 
   @override
@@ -198,10 +208,19 @@ class AppLocalizationsZh extends AppLocalizations {
   String get trainingPlanCardSubtitle => '查看课程体系进度';
 
   @override
+  String get classroomSearchCardTitle => '空教室查询';
+
+  @override
+  String get classroomSearchCardSubtitle => '查询可用教室';
+
+  @override
   String get examScheduleTitle => '考试安排';
 
   @override
   String get academicWarningTitle => '学业预警查询';
+
+  @override
+  String get classroomSearchTitle => '空教室查询';
 
   @override
   String get gradeQueryTitle => '成绩查询';
@@ -285,6 +304,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get noExamData => '暂无考试数据。';
+
+  @override
+  String get noClassroomData => '暂无空教室数据。';
 
   @override
   String get noAcademicWarningData => '暂无学业预警信息。';
@@ -383,6 +405,72 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get settingsTitle => '设置';
+
+  @override
+  String get classroomFiltersHint => '设置筛选条件后查询空教室。';
+
+  @override
+  String get classroomTimeMode => '时间模式';
+
+  @override
+  String get classroomCollege => '上课院系';
+
+  @override
+  String get classroomCampus => '校区';
+
+  @override
+  String get classroomBuilding => '教学楼';
+
+  @override
+  String get classroomRoom => '教室';
+
+  @override
+  String get classroomWeekStart => '开始周次';
+
+  @override
+  String get classroomWeekEnd => '结束周次';
+
+  @override
+  String get classroomWeekdayStart => '开始星期';
+
+  @override
+  String get classroomWeekdayEnd => '结束星期';
+
+  @override
+  String get classroomPeriodStart => '开始节次';
+
+  @override
+  String get classroomPeriodEnd => '结束节次';
+
+  @override
+  String get classroomLabel => '教室';
+
+  @override
+  String get classroomCellEmpty => '空';
+
+  @override
+  String get classroomCellOccupied => '占用';
+
+  @override
+  String get weekdayMon => '周一';
+
+  @override
+  String get weekdayTue => '周二';
+
+  @override
+  String get weekdayWed => '周三';
+
+  @override
+  String get weekdayThu => '周四';
+
+  @override
+  String get weekdayFri => '周五';
+
+  @override
+  String get weekdaySat => '周六';
+
+  @override
+  String get weekdaySun => '周日';
 
   @override
   String get trainingPlanCacheTitle => '培养方案缓存';

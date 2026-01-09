@@ -77,6 +77,18 @@
       "error": {}
     }
   },
+  "failedToLoadClassroomOptions": "Failed to load classroom options: {error}",
+  "@failedToLoadClassroomOptions": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "failedToLoadClassroomTable": "Failed to load classroom list: {error}",
+  "@failedToLoadClassroomTable": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "dashboardTitle": "Dashboard",
   "welcomeBack": "Welcome back",
   "welcomeUser": "Welcome, {name}",
@@ -111,8 +123,11 @@
   "timetableCardSubtitle": "Tap to view your schedule",
   "trainingPlanCardTitle": "Training Plan",
   "trainingPlanCardSubtitle": "Tap to view progress by curriculum group",
+  "classroomSearchCardTitle": "Empty Classroom",
+  "classroomSearchCardSubtitle": "Find available rooms",
   "examScheduleTitle": "Exam Schedule",
   "academicWarningTitle": "Academic Warning",
+  "classroomSearchTitle": "Empty Classroom",
   "gradeQueryTitle": "Course Grades",
   "scheduleTitle": "Schedule",
   "trainingPlanTitle": "Training Plan",
@@ -145,6 +160,7 @@
   "noTermOptions": "No term options available.",
   "noTermOptionsFound": "No term options found.",
   "noExamData": "No exam data available.",
+  "noClassroomData": "No classroom data.",
   "noAcademicWarningData": "No academic warning records.",
   "noGradeData": "No grade data available.",
   "noClassesForDate": "No classes scheduled for this date.",
@@ -209,6 +225,28 @@
   "academicWarningTargetLabel": "Target",
   "academicWarningActualLabel": "Actual value",
   "settingsTitle": "Settings",
+  "classroomFiltersHint": "Set filters and query available rooms.",
+  "classroomTimeMode": "Time mode",
+  "classroomCollege": "Department",
+  "classroomCampus": "Campus",
+  "classroomBuilding": "Building",
+  "classroomRoom": "Room",
+  "classroomWeekStart": "Week start",
+  "classroomWeekEnd": "Week end",
+  "classroomWeekdayStart": "Day start",
+  "classroomWeekdayEnd": "Day end",
+  "classroomPeriodStart": "Period start",
+  "classroomPeriodEnd": "Period end",
+  "classroomLabel": "Room",
+  "classroomCellEmpty": "Free",
+  "classroomCellOccupied": "Busy",
+  "weekdayMon": "Mon",
+  "weekdayTue": "Tue",
+  "weekdayWed": "Wed",
+  "weekdayThu": "Thu",
+  "weekdayFri": "Fri",
+  "weekdaySat": "Sat",
+  "weekdaySun": "Sun",
   "trainingPlanCacheTitle": "Training plan cache",
   "trainingPlanCacheSubtitle": "Cache training plan data and update every few days.",
   "cacheDaysLabel": "Refresh interval",

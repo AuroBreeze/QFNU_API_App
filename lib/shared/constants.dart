@@ -10,6 +10,8 @@ const gradeListUrl = '$baseUrl/jsxsd/kscj/cjcx_list';
 const trainingPlanUrl = '$baseUrl/jsxsd/pyfa/topyfamx';
 const academicWarningUrl = '$baseUrl/jsxsd/xsxj/xsyjxx.do';
 const mainWeekUrl = '$baseUrl/jsxsd/framework/xsMain_new.jsp';
+const classroomQueryUrl = '$baseUrl/jsxsd/kbcx/kbxx_classroom';
+const classroomListUrl = '$baseUrl/jsxsd/kbcx/kbxx_classroom_ifr';
 const defaultProxyUrl = 'http://localhost:8080';
 const browserUserAgent =
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '

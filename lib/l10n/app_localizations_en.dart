@@ -143,6 +143,16 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String failedToLoadClassroomOptions(Object error) {
+    return 'Failed to load classroom options: $error';
+  }
+
+  @override
+  String failedToLoadClassroomTable(Object error) {
+    return 'Failed to load classroom list: $error';
+  }
+
+  @override
   String get dashboardTitle => 'Dashboard';
 
   @override
@@ -205,10 +215,19 @@ class AppLocalizationsEn extends AppLocalizations {
       'Tap to view progress by curriculum group';
 
   @override
+  String get classroomSearchCardTitle => 'Empty Classroom';
+
+  @override
+  String get classroomSearchCardSubtitle => 'Find available rooms';
+
+  @override
   String get examScheduleTitle => 'Exam Schedule';
 
   @override
   String get academicWarningTitle => 'Academic Warning';
+
+  @override
+  String get classroomSearchTitle => 'Empty Classroom';
 
   @override
   String get gradeQueryTitle => 'Course Grades';
@@ -292,6 +311,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noExamData => 'No exam data available.';
+
+  @override
+  String get noClassroomData => 'No classroom data.';
 
   @override
   String get noAcademicWarningData => 'No academic warning records.';
@@ -390,6 +412,72 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsTitle => 'Settings';
+
+  @override
+  String get classroomFiltersHint => 'Set filters and query available rooms.';
+
+  @override
+  String get classroomTimeMode => 'Time mode';
+
+  @override
+  String get classroomCollege => 'Department';
+
+  @override
+  String get classroomCampus => 'Campus';
+
+  @override
+  String get classroomBuilding => 'Building';
+
+  @override
+  String get classroomRoom => 'Room';
+
+  @override
+  String get classroomWeekStart => 'Week start';
+
+  @override
+  String get classroomWeekEnd => 'Week end';
+
+  @override
+  String get classroomWeekdayStart => 'Day start';
+
+  @override
+  String get classroomWeekdayEnd => 'Day end';
+
+  @override
+  String get classroomPeriodStart => 'Period start';
+
+  @override
+  String get classroomPeriodEnd => 'Period end';
+
+  @override
+  String get classroomLabel => 'Room';
+
+  @override
+  String get classroomCellEmpty => 'Free';
+
+  @override
+  String get classroomCellOccupied => 'Busy';
+
+  @override
+  String get weekdayMon => 'Mon';
+
+  @override
+  String get weekdayTue => 'Tue';
+
+  @override
+  String get weekdayWed => 'Wed';
+
+  @override
+  String get weekdayThu => 'Thu';
+
+  @override
+  String get weekdayFri => 'Fri';
+
+  @override
+  String get weekdaySat => 'Sat';
+
+  @override
+  String get weekdaySun => 'Sun';
 
   @override
   String get trainingPlanCacheTitle => 'Training plan cache';

@@ -23,4 +23,20 @@ abstract class LoginService {
   });
   Future<AcademicWarningResult> fetchAcademicWarnings();
   Future<WeekInfo?> fetchCurrentWeekInfo();
+  Future<ClassroomQueryOptions> fetchClassroomQueryOptions();
+  Future<ClassroomTable> fetchClassroomTable({
+    required String xnxqh,
+    required String kbjcmsid,
+    required String skyx,
+    required String xqid,
+    required String jzwid,
+    required String skjsid,
+    required String skjs,
+    required String zc1,
+    required String zc2,
+    required String skxq1,
+    required String skxq2,
+    required String jc1,
+    required String jc2,
+  });
 }

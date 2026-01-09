@@ -77,6 +77,18 @@
       "error": {}
     }
   },
+  "failedToLoadClassroomOptions": "加载空教室参数失败：{error}",
+  "@failedToLoadClassroomOptions": {
+    "placeholders": {
+      "error": {}
+    }
+  },
+  "failedToLoadClassroomTable": "加载空教室列表失败：{error}",
+  "@failedToLoadClassroomTable": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "dashboardTitle": "首页",
   "welcomeBack": "欢迎回来",
   "welcomeUser": "欢迎，{name}",
@@ -111,8 +123,11 @@
   "timetableCardSubtitle": "查看课表",
   "trainingPlanCardTitle": "培养方案",
   "trainingPlanCardSubtitle": "查看课程体系进度",
+  "classroomSearchCardTitle": "空教室查询",
+  "classroomSearchCardSubtitle": "查询可用教室",
   "examScheduleTitle": "考试安排",
   "academicWarningTitle": "学业预警查询",
+  "classroomSearchTitle": "空教室查询",
   "gradeQueryTitle": "成绩查询",
   "scheduleTitle": "课表",
   "trainingPlanTitle": "培养方案",
@@ -145,6 +160,7 @@
   "noTermOptions": "暂无学期选项。",
   "noTermOptionsFound": "未找到学期选项。",
   "noExamData": "暂无考试数据。",
+  "noClassroomData": "暂无空教室数据。",
   "noAcademicWarningData": "暂无学业预警信息。",
   "noGradeData": "暂无成绩数据。",
   "noClassesForDate": "该日期没有课程安排。",
@@ -209,6 +225,28 @@
   "academicWarningTargetLabel": "对象名称",
   "academicWarningActualLabel": "实际值",
   "settingsTitle": "设置",
+  "classroomFiltersHint": "设置筛选条件后查询空教室。",
+  "classroomTimeMode": "时间模式",
+  "classroomCollege": "上课院系",
+  "classroomCampus": "校区",
+  "classroomBuilding": "教学楼",
+  "classroomRoom": "教室",
+  "classroomWeekStart": "开始周次",
+  "classroomWeekEnd": "结束周次",
+  "classroomWeekdayStart": "开始星期",
+  "classroomWeekdayEnd": "结束星期",
+  "classroomPeriodStart": "开始节次",
+  "classroomPeriodEnd": "结束节次",
+  "classroomLabel": "教室",
+  "classroomCellEmpty": "空",
+  "classroomCellOccupied": "占用",
+  "weekdayMon": "周一",
+  "weekdayTue": "周二",
+  "weekdayWed": "周三",
+  "weekdayThu": "周四",
+  "weekdayFri": "周五",
+  "weekdaySat": "周六",
+  "weekdaySun": "周日",
   "trainingPlanCacheTitle": "培养方案缓存",
   "trainingPlanCacheSubtitle": "缓存培养方案数据，按天数自动更新。",
   "cacheDaysLabel": "更新间隔",

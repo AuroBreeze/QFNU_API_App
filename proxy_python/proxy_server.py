@@ -20,6 +20,8 @@ GRADE_LIST_URL = f"{BASE_URL}/jsxsd/kscj/cjcx_list"
 TRAINING_PLAN_URL = f"{BASE_URL}/jsxsd/pyfa/topyfamx"
 ACADEMIC_WARNING_URL = f"{BASE_URL}/jsxsd/xsxj/xsyjxx.do"
 MAIN_WEEK_URL = f"{BASE_URL}/jsxsd/framework/xsMain_new.jsp"
+CLASSROOM_QUERY_URL = f"{BASE_URL}/jsxsd/kbcx/kbxx_classroom"
+CLASSROOM_LIST_URL = f"{BASE_URL}/jsxsd/kbcx/kbxx_classroom_ifr"
 
 SESSION_TTL_SECONDS = 15 * 60
 SESSIONS = {}
@@ -383,6 +385,39 @@ class ProxyHandler(BaseHTTPRequestHandler):
             self._send_text(200, html)
             return
 
+        if parsed.path == "/kbcx/classroom":
+            params = parse_qs(parsed.query)
+            session_id = None
+            if "sid" in params:
+                session_id = params["sid"][0]
+            if not session_id:
+                session_id = self.headers.get("X-Session-Id")
+
+            if not session_id:
+                _log("classroom query missing session id")
+                self._send_json(400, {"error": "Missing sessionId"})
+                return
+
+            state = _get_session(session_id)
+            if not state:
+                _log(f"classroom query session expired sid={session_id[:8]}...")
+                self._send_json(404, {"error": "Session expired"})
+                return
+
+            try:
+                response = state.session.get(CLASSROOM_QUERY_URL, timeout=10)
+            except requests.RequestException as exc:
+                _log(f"classroom query request failed: {exc}")
+                self._send_json(
+                    502, {"error": "Classroom query request failed", "detail": str(exc)}
+                )
+                return
+
+            html = _decode_response(response)
+            _log(f"classroom query ok sid={session_id[:8]}... len={len(html)}")
+            self._send_text(200, html)
+            return
+
         _log(f"unknown path: {parsed.path}")
         self._send_json(404, {"error": "Not found"})
 
@@ -423,6 +458,56 @@ class ProxyHandler(BaseHTTPRequestHandler):
 
             html = _decode_response(response)
             _log(f"kb day ok sid={session_id[:8]}... len={len(html)} rq={rq}")
+            self._send_text(200, html)
+            return
+
+        if self.path == "/kbcx/classroom/list":
+            _log(f"POST /kbcx/classroom/list from {self.client_address[0]}")
+            payload, error = self._parse_json()
+            if error:
+                _log(f"classroom list bad request: {error}")
+                self._send_json(400, {"error": error})
+                return
+
+            session_id = str(payload.get("sessionId", "")).strip()
+            if not session_id:
+                _log("classroom list missing session id")
+                self._send_json(400, {"error": "Missing sessionId"})
+                return
+
+            state = _get_session(session_id)
+            if not state:
+                _log(f"classroom list session expired sid={session_id[:8]}...")
+                self._send_json(404, {"error": "Session expired"})
+                return
+
+            data = {
+                "xnxqh": str(payload.get("xnxqh", "")).strip(),
+                "kbjcmsid": str(payload.get("kbjcmsid", "")).strip(),
+                "skyx": str(payload.get("skyx", "")).strip(),
+                "xqid": str(payload.get("xqid", "")).strip(),
+                "jzwid": str(payload.get("jzwid", "")).strip(),
+                "skjsid": str(payload.get("skjsid", "")).strip(),
+                "skjs": str(payload.get("skjs", "")).strip(),
+                "zc1": str(payload.get("zc1", "")).strip(),
+                "zc2": str(payload.get("zc2", "")).strip(),
+                "skxq1": str(payload.get("skxq1", "")).strip(),
+                "skxq2": str(payload.get("skxq2", "")).strip(),
+                "jc1": str(payload.get("jc1", "")).strip(),
+                "jc2": str(payload.get("jc2", "")).strip(),
+            }
+
+            try:
+                response = state.session.post(CLASSROOM_LIST_URL, data=data, timeout=10)
+            except requests.RequestException as exc:
+                _log(f"classroom list request failed: {exc}")
+                self._send_json(
+                    502, {"error": "Classroom list request failed", "detail": str(exc)}
+                )
+                return
+
+            html = _decode_response(response)
+            _log(f"classroom list ok sid={session_id[:8]}... len={len(html)}")
             self._send_text(200, html)
             return
 

@@ -333,6 +333,143 @@ WeekInfo? parseWeekInfo(String html) {
   return null;
 }
 
+ClassroomQueryOptions parseClassroomQueryOptions(String html) {
+  return ClassroomQueryOptions(
+    terms: parseSelectOptions(html, 'xnxqh'),
+    timeModes: parseSelectOptions(html, 'kbjcmsid'),
+    colleges: parseSelectOptions(html, 'skyx', includeEmpty: true),
+    campuses: parseSelectOptions(html, 'xqid', includeEmpty: true),
+    buildings: parseSelectOptions(html, 'jzwid', includeEmpty: true),
+    weeks: parseSelectOptions(html, 'zc1', includeEmpty: true),
+    weekdays: parseSelectOptions(html, 'skxq1', includeEmpty: true),
+    periods: parseSelectOptions(html, 'jc1', includeEmpty: true),
+  );
+}
+
+int? _extractIntAttribute(String attrs, String name) {
+  final match = RegExp(
+    '$name\\s*=\\s*[\'\\"]?(\\d+)[\'\\"]?',
+    caseSensitive: false,
+  ).firstMatch(attrs);
+  if (match == null) return null;
+  return int.tryParse(match.group(1) ?? '');
+}
+
+ClassroomTable parseClassroomTable(String html) {
+  _throwIfSessionExpired(html);
+  final tableMatch = RegExp(
+    '<table[^>]*id=["\\\']kbtable["\\\'][^>]*>(.*?)</table>',
+    caseSensitive: false,
+    dotAll: true,
+  ).firstMatch(html);
+  if (tableMatch == null) {
+    return const ClassroomTable(columns: [], rows: []);
+  }
+
+  final tableHtml = tableMatch.group(1) ?? '';
+  final rowMatches = RegExp(
+    r'<tr[^>]*>(.*?)</tr>',
+    caseSensitive: false,
+    dotAll: true,
+  ).allMatches(tableHtml);
+
+  final dayLabels = <String>[];
+  final dayIndices = <int>[];
+  final periodLabels = <String>[];
+  final rows = <ClassroomRow>[];
+
+  for (final row in rowMatches) {
+    final rowHtml = row.group(1) ?? '';
+    if (rowHtml.contains('<th')) {
+      final thMatches = RegExp(
+        r'<th([^>]*)>(.*?)</th>',
+        caseSensitive: false,
+        dotAll: true,
+      ).allMatches(rowHtml);
+      if (thMatches.isEmpty) continue;
+      final thTexts = <String>[];
+      final thAttrs = <String>[];
+      for (final th in thMatches) {
+        thAttrs.add(th.group(1) ?? '');
+        thTexts.add(_stripHtml(th.group(2) ?? ''));
+      }
+      if (thTexts.any((text) => text.contains('\u661f\u671f'))) {
+        var dayIndex = 0;
+        for (var i = 1; i < thTexts.length; i += 1) {
+          dayIndex += 1;
+          final colspan = _extractIntAttribute(thAttrs[i], 'colspan') ?? 1;
+          for (var j = 0; j < colspan; j += 1) {
+            dayLabels.add(thTexts[i]);
+            dayIndices.add(dayIndex);
+          }
+        }
+      }
+      continue;
+    }
+
+    if (rowHtml.contains('\u6559\u5ba4') &&
+        rowHtml.contains('\u8282\u6b21')) {
+      final tdMatches = RegExp(
+        r'<td[^>]*>(.*?)</td>',
+        caseSensitive: false,
+        dotAll: true,
+      ).allMatches(rowHtml);
+      final cells = tdMatches
+          .map((cell) => _stripHtml(cell.group(1) ?? ''))
+          .toList();
+      if (cells.length > 1) {
+        periodLabels
+          ..clear()
+          ..addAll(cells.skip(1));
+      }
+      continue;
+    }
+
+    final cellMatches = RegExp(
+      r'<td[^>]*>(.*?)</td>',
+      caseSensitive: false,
+      dotAll: true,
+    ).allMatches(rowHtml);
+    if (cellMatches.isEmpty) continue;
+
+    final cells = cellMatches
+        .map((cell) => _stripHtml(cell.group(1) ?? ''))
+        .toList();
+    if (cells.isEmpty) continue;
+    final room = cells.first.trim();
+    if (room.isEmpty) continue;
+    final dataCells = cells.skip(1).toList();
+    rows.add(ClassroomRow(room: room, cells: dataCells));
+  }
+
+  final columns = <ClassroomColumn>[];
+  for (var i = 0; i < periodLabels.length; i += 1) {
+    final dayLabel = i < dayLabels.length ? dayLabels[i] : '';
+    final dayIndex = i < dayIndices.length ? dayIndices[i] : (i % 7) + 1;
+    columns.add(
+      ClassroomColumn(
+        dayIndex: dayIndex,
+        dayLabel: dayLabel,
+        periodLabel: periodLabels[i],
+      ),
+    );
+  }
+
+  final normalizedRows = rows
+      .map((row) {
+        final cells = row.cells.length < columns.length
+            ? [
+                ...row.cells,
+                ...List.filled(columns.length - row.cells.length, ''),
+              ]
+            : row.cells.take(columns.length).toList();
+        return ClassroomRow(room: row.room, cells: cells);
+      })
+      .toList();
+
+  return ClassroomTable(columns: columns, rows: normalizedRows);
+}
+
 int? _parseInt(String value) {
   final match = RegExp(r'-?\d+').firstMatch(value);
   if (match == null) return null;

@@ -146,6 +146,60 @@ class WeekInfo {
   });
 }
 
+class ClassroomQueryOptions {
+  final List<TermOption> terms;
+  final List<TermOption> timeModes;
+  final List<TermOption> colleges;
+  final List<TermOption> campuses;
+  final List<TermOption> buildings;
+  final List<TermOption> weeks;
+  final List<TermOption> weekdays;
+  final List<TermOption> periods;
+
+  const ClassroomQueryOptions({
+    required this.terms,
+    required this.timeModes,
+    required this.colleges,
+    required this.campuses,
+    required this.buildings,
+    required this.weeks,
+    required this.weekdays,
+    required this.periods,
+  });
+}
+
+class ClassroomColumn {
+  final int dayIndex;
+  final String dayLabel;
+  final String periodLabel;
+
+  const ClassroomColumn({
+    required this.dayIndex,
+    required this.dayLabel,
+    required this.periodLabel,
+  });
+}
+
+class ClassroomRow {
+  final String room;
+  final List<String> cells;
+
+  const ClassroomRow({
+    required this.room,
+    required this.cells,
+  });
+}
+
+class ClassroomTable {
+  final List<ClassroomColumn> columns;
+  final List<ClassroomRow> rows;
+
+  const ClassroomTable({
+    required this.columns,
+    required this.rows,
+  });
+}
+
 class ScheduleItem {
   final String period;
   final String courseName;

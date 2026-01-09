@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:qfnu_app/exams/exam_schedule_card.dart';
 import 'package:qfnu_app/grades/grade_query_card.dart';
+import 'package:qfnu_app/classroom/classroom_search_card.dart';
 import 'package:qfnu_app/l10n/app_localizations.dart';
 import 'package:qfnu_app/login/login_page.dart';
 import 'package:qfnu_app/login/login_service.dart';
@@ -154,6 +155,11 @@ class HomePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   AcademicWarningCard(
+                    service: service,
+                    username: username,
+                  ),
+                  const SizedBox(height: 16),
+                  ClassroomSearchCard(
                     service: service,
                     username: username,
                   ),

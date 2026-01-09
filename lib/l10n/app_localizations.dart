@@ -320,6 +320,18 @@ abstract class AppLocalizations {
   /// **'Failed to load training plan: {error}'**
   String failedToLoadTrainingPlan(Object error);
 
+  /// No description provided for @failedToLoadClassroomOptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load classroom options: {error}'**
+  String failedToLoadClassroomOptions(Object error);
+
+  /// No description provided for @failedToLoadClassroomTable.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load classroom list: {error}'**
+  String failedToLoadClassroomTable(Object error);
+
   /// No description provided for @dashboardTitle.
   ///
   /// In en, this message translates to:
@@ -428,6 +440,18 @@ abstract class AppLocalizations {
   /// **'Tap to view progress by curriculum group'**
   String get trainingPlanCardSubtitle;
 
+  /// No description provided for @classroomSearchCardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Empty Classroom'**
+  String get classroomSearchCardTitle;
+
+  /// No description provided for @classroomSearchCardSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Find available rooms'**
+  String get classroomSearchCardSubtitle;
+
   /// No description provided for @examScheduleTitle.
   ///
   /// In en, this message translates to:
@@ -439,6 +463,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Academic Warning'**
   String get academicWarningTitle;
+
+  /// No description provided for @classroomSearchTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Empty Classroom'**
+  String get classroomSearchTitle;
 
   /// No description provided for @gradeQueryTitle.
   ///
@@ -601,6 +631,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No exam data available.'**
   String get noExamData;
+
+  /// No description provided for @noClassroomData.
+  ///
+  /// In en, this message translates to:
+  /// **'No classroom data.'**
+  String get noClassroomData;
 
   /// No description provided for @noAcademicWarningData.
   ///
@@ -769,6 +805,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Settings'**
   String get settingsTitle;
+
+  /// No description provided for @classroomFiltersHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Set filters and query available rooms.'**
+  String get classroomFiltersHint;
+
+  /// No description provided for @classroomTimeMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Time mode'**
+  String get classroomTimeMode;
+
+  /// No description provided for @classroomCollege.
+  ///
+  /// In en, this message translates to:
+  /// **'Department'**
+  String get classroomCollege;
+
+  /// No description provided for @classroomCampus.
+  ///
+  /// In en, this message translates to:
+  /// **'Campus'**
+  String get classroomCampus;
+
+  /// No description provided for @classroomBuilding.
+  ///
+  /// In en, this message translates to:
+  /// **'Building'**
+  String get classroomBuilding;
+
+  /// No description provided for @classroomRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Room'**
+  String get classroomRoom;
+
+  /// No description provided for @classroomWeekStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Week start'**
+  String get classroomWeekStart;
+
+  /// No description provided for @classroomWeekEnd.
+  ///
+  /// In en, this message translates to:
+  /// **'Week end'**
+  String get classroomWeekEnd;
+
+  /// No description provided for @classroomWeekdayStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Day start'**
+  String get classroomWeekdayStart;
+
+  /// No description provided for @classroomWeekdayEnd.
+  ///
+  /// In en, this message translates to:
+  /// **'Day end'**
+  String get classroomWeekdayEnd;
+
+  /// No description provided for @classroomPeriodStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Period start'**
+  String get classroomPeriodStart;
+
+  /// No description provided for @classroomPeriodEnd.
+  ///
+  /// In en, this message translates to:
+  /// **'Period end'**
+  String get classroomPeriodEnd;
+
+  /// No description provided for @classroomLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Room'**
+  String get classroomLabel;
+
+  /// No description provided for @classroomCellEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Free'**
+  String get classroomCellEmpty;
+
+  /// No description provided for @classroomCellOccupied.
+  ///
+  /// In en, this message translates to:
+  /// **'Busy'**
+  String get classroomCellOccupied;
+
+  /// No description provided for @weekdayMon.
+  ///
+  /// In en, this message translates to:
+  /// **'Mon'**
+  String get weekdayMon;
+
+  /// No description provided for @weekdayTue.
+  ///
+  /// In en, this message translates to:
+  /// **'Tue'**
+  String get weekdayTue;
+
+  /// No description provided for @weekdayWed.
+  ///
+  /// In en, this message translates to:
+  /// **'Wed'**
+  String get weekdayWed;
+
+  /// No description provided for @weekdayThu.
+  ///
+  /// In en, this message translates to:
+  /// **'Thu'**
+  String get weekdayThu;
+
+  /// No description provided for @weekdayFri.
+  ///
+  /// In en, this message translates to:
+  /// **'Fri'**
+  String get weekdayFri;
+
+  /// No description provided for @weekdaySat.
+  ///
+  /// In en, this message translates to:
+  /// **'Sat'**
+  String get weekdaySat;
+
+  /// No description provided for @weekdaySun.
+  ///
+  /// In en, this message translates to:
+  /// **'Sun'**
+  String get weekdaySun;
 
   /// No description provided for @trainingPlanCacheTitle.
   ///

@@ -285,6 +285,60 @@ class DirectLoginService implements LoginService {
     return parseWeekInfo(html);
   }
 
+  @override
+  Future<ClassroomQueryOptions> fetchClassroomQueryOptions() async {
+    await _ensureSession();
+    final response = await _dio.get(
+      classroomQueryUrl,
+      options: requestOptions(responseType: ResponseType.plain),
+    );
+    final html = response.data?.toString() ?? '';
+    return parseClassroomQueryOptions(html);
+  }
+
+  @override
+  Future<ClassroomTable> fetchClassroomTable({
+    required String xnxqh,
+    required String kbjcmsid,
+    required String skyx,
+    required String xqid,
+    required String jzwid,
+    required String skjsid,
+    required String skjs,
+    required String zc1,
+    required String zc2,
+    required String skxq1,
+    required String skxq2,
+    required String jc1,
+    required String jc2,
+  }) async {
+    await _ensureSession();
+    final response = await _dio.post(
+      classroomListUrl,
+      data: {
+        'xnxqh': xnxqh,
+        'kbjcmsid': kbjcmsid,
+        'skyx': skyx,
+        'xqid': xqid,
+        'jzwid': jzwid,
+        'skjsid': skjsid,
+        'skjs': skjs,
+        'zc1': zc1,
+        'zc2': zc2,
+        'skxq1': skxq1,
+        'skxq2': skxq2,
+        'jc1': jc1,
+        'jc2': jc2,
+      },
+      options: requestOptions(
+        contentType: Headers.formUrlEncodedContentType,
+        responseType: ResponseType.plain,
+      ),
+    );
+    final html = response.data?.toString() ?? '';
+    return parseClassroomTable(html);
+  }
+
   Future<List<String>> exportCookies() async {
     if (_cookieJar == null) return const [];
     final cookies = await _cookieJar!.loadForRequest(Uri.parse(baseUrl));
