@@ -36,6 +36,12 @@
       "error": {}
     }
   },
+  "failedToLoadAcademicWarnings": "Failed to load academic warnings: {error}",
+  "@failedToLoadAcademicWarnings": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "failedToLoadOptions": "Failed to load options: {error}",
   "@failedToLoadOptions": {
     "placeholders": {
@@ -71,6 +77,8 @@
   "logout": "Logout",
   "examScheduleCardTitle": "Exam Schedule",
   "examScheduleCardSubtitle": "Tap to view your upcoming exams",
+  "academicWarningCardTitle": "Academic Warning",
+  "academicWarningCardSubtitle": "Check your academic warning records",
   "gradesCardTitle": "Course Grades",
   "gradesCardSubtitle": "Tap to view your grades",
   "timetableCardTitle": "Timetable",
@@ -78,6 +86,7 @@
   "trainingPlanCardTitle": "Training Plan",
   "trainingPlanCardSubtitle": "Tap to view progress by curriculum group",
   "examScheduleTitle": "Exam Schedule",
+  "academicWarningTitle": "Academic Warning",
   "gradeQueryTitle": "Course Grades",
   "scheduleTitle": "Schedule",
   "trainingPlanTitle": "Training Plan",
@@ -110,6 +119,7 @@
   "noTermOptions": "No term options available.",
   "noTermOptionsFound": "No term options found.",
   "noExamData": "No exam data available.",
+  "noAcademicWarningData": "No academic warning records.",
   "noGradeData": "No grade data available.",
   "noClassesForDate": "No classes scheduled for this date.",
   "noTrainingPlanData": "No training plan data.",
@@ -166,6 +176,12 @@
   },
   "statusCompleted": "Completed",
   "statusPending": "Pending",
+  "academicWarningUnnamed": "Untitled warning",
+  "academicWarningTermLabel": "Term",
+  "academicWarningConditionLabel": "Warning condition",
+  "academicWarningMessageLabel": "Note",
+  "academicWarningTargetLabel": "Target",
+  "academicWarningActualLabel": "Actual value",
   "settingsTitle": "Settings",
   "trainingPlanCacheTitle": "Training plan cache",
   "trainingPlanCacheSubtitle": "Cache training plan data and update every few days.",

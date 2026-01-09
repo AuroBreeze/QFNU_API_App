@@ -224,6 +224,12 @@ abstract class AppLocalizations {
   /// **'Failed to load exams: {error}'**
   String failedToLoadExams(Object error);
 
+  /// No description provided for @failedToLoadAcademicWarnings.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to load academic warnings: {error}'**
+  String failedToLoadAcademicWarnings(Object error);
+
   /// No description provided for @failedToLoadOptions.
   ///
   /// In en, this message translates to:
@@ -284,6 +290,18 @@ abstract class AppLocalizations {
   /// **'Tap to view your upcoming exams'**
   String get examScheduleCardSubtitle;
 
+  /// No description provided for @academicWarningCardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Academic Warning'**
+  String get academicWarningCardTitle;
+
+  /// No description provided for @academicWarningCardSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your academic warning records'**
+  String get academicWarningCardSubtitle;
+
   /// No description provided for @gradesCardTitle.
   ///
   /// In en, this message translates to:
@@ -325,6 +343,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Exam Schedule'**
   String get examScheduleTitle;
+
+  /// No description provided for @academicWarningTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Academic Warning'**
+  String get academicWarningTitle;
 
   /// No description provided for @gradeQueryTitle.
   ///
@@ -488,6 +512,12 @@ abstract class AppLocalizations {
   /// **'No exam data available.'**
   String get noExamData;
 
+  /// No description provided for @noAcademicWarningData.
+  ///
+  /// In en, this message translates to:
+  /// **'No academic warning records.'**
+  String get noAcademicWarningData;
+
   /// No description provided for @noGradeData.
   ///
   /// In en, this message translates to:
@@ -607,6 +637,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Pending'**
   String get statusPending;
+
+  /// No description provided for @academicWarningUnnamed.
+  ///
+  /// In en, this message translates to:
+  /// **'Untitled warning'**
+  String get academicWarningUnnamed;
+
+  /// No description provided for @academicWarningTermLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Term'**
+  String get academicWarningTermLabel;
+
+  /// No description provided for @academicWarningConditionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Warning condition'**
+  String get academicWarningConditionLabel;
+
+  /// No description provided for @academicWarningMessageLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Note'**
+  String get academicWarningMessageLabel;
+
+  /// No description provided for @academicWarningTargetLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Target'**
+  String get academicWarningTargetLabel;
+
+  /// No description provided for @academicWarningActualLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Actual value'**
+  String get academicWarningActualLabel;
 
   /// No description provided for @settingsTitle.
   ///

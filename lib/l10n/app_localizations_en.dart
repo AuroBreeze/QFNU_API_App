@@ -80,6 +80,11 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String failedToLoadAcademicWarnings(Object error) {
+    return 'Failed to load academic warnings: $error';
+  }
+
+  @override
   String failedToLoadOptions(Object error) {
     return 'Failed to load options: $error';
   }
@@ -120,6 +125,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get examScheduleCardSubtitle => 'Tap to view your upcoming exams';
 
   @override
+  String get academicWarningCardTitle => 'Academic Warning';
+
+  @override
+  String get academicWarningCardSubtitle =>
+      'Check your academic warning records';
+
+  @override
   String get gradesCardTitle => 'Course Grades';
 
   @override
@@ -140,6 +152,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get examScheduleTitle => 'Exam Schedule';
+
+  @override
+  String get academicWarningTitle => 'Academic Warning';
 
   @override
   String get gradeQueryTitle => 'Course Grades';
@@ -225,6 +240,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noExamData => 'No exam data available.';
 
   @override
+  String get noAcademicWarningData => 'No academic warning records.';
+
+  @override
   String get noGradeData => 'No grade data available.';
 
   @override
@@ -297,6 +315,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get statusPending => 'Pending';
+
+  @override
+  String get academicWarningUnnamed => 'Untitled warning';
+
+  @override
+  String get academicWarningTermLabel => 'Term';
+
+  @override
+  String get academicWarningConditionLabel => 'Warning condition';
+
+  @override
+  String get academicWarningMessageLabel => 'Note';
+
+  @override
+  String get academicWarningTargetLabel => 'Target';
+
+  @override
+  String get academicWarningActualLabel => 'Actual value';
 
   @override
   String get settingsTitle => 'Settings';

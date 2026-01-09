@@ -96,6 +96,46 @@ class GradeItem {
   });
 }
 
+class AcademicWarningItem {
+  final String term;
+  final String name;
+  final String condition;
+  final String result;
+  final String message;
+  final String target;
+  final String actual;
+
+  const AcademicWarningItem({
+    required this.term,
+    required this.name,
+    required this.condition,
+    required this.result,
+    required this.message,
+    required this.target,
+    required this.actual,
+  });
+}
+
+class AcademicWarningSummary {
+  final String label;
+  final String value;
+
+  const AcademicWarningSummary({
+    required this.label,
+    required this.value,
+  });
+}
+
+class AcademicWarningResult {
+  final AcademicWarningSummary? summary;
+  final List<AcademicWarningItem> items;
+
+  const AcademicWarningResult({
+    required this.summary,
+    required this.items,
+  });
+}
+
 class ScheduleItem {
   final String period;
   final String courseName;

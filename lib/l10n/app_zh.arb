@@ -36,6 +36,12 @@
       "error": {}
     }
   },
+  "failedToLoadAcademicWarnings": "加载学业预警失败：{error}",
+  "@failedToLoadAcademicWarnings": {
+    "placeholders": {
+      "error": {}
+    }
+  },
   "failedToLoadOptions": "加载选项失败：{error}",
   "@failedToLoadOptions": {
     "placeholders": {
@@ -71,6 +77,8 @@
   "logout": "退出登录",
   "examScheduleCardTitle": "考试安排",
   "examScheduleCardSubtitle": "查看你的考试安排",
+  "academicWarningCardTitle": "学业预警",
+  "academicWarningCardSubtitle": "查看学业预警信息",
   "gradesCardTitle": "成绩查询",
   "gradesCardSubtitle": "查看你的成绩",
   "timetableCardTitle": "课表",
@@ -78,6 +86,7 @@
   "trainingPlanCardTitle": "培养方案",
   "trainingPlanCardSubtitle": "查看课程体系进度",
   "examScheduleTitle": "考试安排",
+  "academicWarningTitle": "学业预警查询",
   "gradeQueryTitle": "成绩查询",
   "scheduleTitle": "课表",
   "trainingPlanTitle": "培养方案",
@@ -110,6 +119,7 @@
   "noTermOptions": "暂无学期选项。",
   "noTermOptionsFound": "未找到学期选项。",
   "noExamData": "暂无考试数据。",
+  "noAcademicWarningData": "暂无学业预警信息。",
   "noGradeData": "暂无成绩数据。",
   "noClassesForDate": "该日期没有课程安排。",
   "noTrainingPlanData": "暂无培养方案数据。",
@@ -166,6 +176,12 @@
   },
   "statusCompleted": "已完成",
   "statusPending": "未完成",
+  "academicWarningUnnamed": "未命名预警",
+  "academicWarningTermLabel": "预警学期",
+  "academicWarningConditionLabel": "预警条件",
+  "academicWarningMessageLabel": "提示信息",
+  "academicWarningTargetLabel": "对象名称",
+  "academicWarningActualLabel": "实际值",
   "settingsTitle": "设置",
   "trainingPlanCacheTitle": "培养方案缓存",
   "trainingPlanCacheSubtitle": "缓存培养方案数据，按天数自动更新。",

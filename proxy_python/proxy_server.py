@@ -18,6 +18,7 @@ SCHEDULE_URL = f"{BASE_URL}/jsxsd/framework/main_index_loadkb.jsp"
 GRADE_QUERY_URL = f"{BASE_URL}/jsxsd/kscj/cjcx_query"
 GRADE_LIST_URL = f"{BASE_URL}/jsxsd/kscj/cjcx_list"
 TRAINING_PLAN_URL = f"{BASE_URL}/jsxsd/pyfa/topyfamx"
+ACADEMIC_WARNING_URL = f"{BASE_URL}/jsxsd/xsxj/xsyjxx.do"
 
 SESSION_TTL_SECONDS = 15 * 60
 SESSIONS = {}
@@ -312,6 +313,39 @@ class ProxyHandler(BaseHTTPRequestHandler):
 
             html = _decode_response(response)
             _log(f"pyfa ok sid={session_id[:8]}... len={len(html)}")
+            self._send_text(200, html)
+            return
+
+        if parsed.path == "/xsxj/warnings":
+            params = parse_qs(parsed.query)
+            session_id = None
+            if "sid" in params:
+                session_id = params["sid"][0]
+            if not session_id:
+                session_id = self.headers.get("X-Session-Id")
+
+            if not session_id:
+                _log("xsxj warnings missing session id")
+                self._send_json(400, {"error": "Missing sessionId"})
+                return
+
+            state = _get_session(session_id)
+            if not state:
+                _log(f"xsxj warnings session expired sid={session_id[:8]}...")
+                self._send_json(404, {"error": "Session expired"})
+                return
+
+            try:
+                response = state.session.get(ACADEMIC_WARNING_URL, timeout=10)
+            except requests.RequestException as exc:
+                _log(f"xsxj warnings request failed: {exc}")
+                self._send_json(
+                    502, {"error": "Academic warnings request failed", "detail": str(exc)}
+                )
+                return
+
+            html = _decode_response(response)
+            _log(f"xsxj warnings ok sid={session_id[:8]}... len={len(html)}")
             self._send_text(200, html)
             return
 

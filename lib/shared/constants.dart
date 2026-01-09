@@ -8,6 +8,7 @@ const scheduleUrl = '$baseUrl/jsxsd/framework/main_index_loadkb.jsp';
 const gradeQueryUrl = '$baseUrl/jsxsd/kscj/cjcx_query';
 const gradeListUrl = '$baseUrl/jsxsd/kscj/cjcx_list';
 const trainingPlanUrl = '$baseUrl/jsxsd/pyfa/topyfamx';
+const academicWarningUrl = '$baseUrl/jsxsd/xsxj/xsyjxx.do';
 const defaultProxyUrl = 'http://localhost:8080';
 const browserUserAgent =
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 '

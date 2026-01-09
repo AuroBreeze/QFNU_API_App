@@ -219,6 +219,81 @@ List<GradeItem> parseGradeList(String html) {
   return items;
 }
 
+AcademicWarningResult parseAcademicWarningResult(String html) {
+  _throwIfSessionExpired(html);
+  final tableMatch = RegExp(
+    '<table[^>]*Nsb_table[^>]*>(.*?)</table>',
+    caseSensitive: false,
+    dotAll: true,
+  ).firstMatch(html);
+  if (tableMatch == null) {
+    return const AcademicWarningResult(summary: null, items: []);
+  }
+
+  final tableHtml = tableMatch.group(1) ?? '';
+  final rowMatches = RegExp(
+    r'<tr[^>]*>(.*?)</tr>',
+    caseSensitive: false,
+    dotAll: true,
+  ).allMatches(tableHtml);
+
+  final items = <AcademicWarningItem>[];
+  AcademicWarningSummary? summary;
+  for (final row in rowMatches) {
+    final rowHtml = row.group(1) ?? '';
+    if (rowHtml.contains('<th')) continue;
+
+    final cellMatches = RegExp(
+      r'<td[^>]*>(.*?)</td>',
+      caseSensitive: false,
+      dotAll: true,
+    ).allMatches(rowHtml);
+
+    final cells = <String>[];
+    for (final cell in cellMatches) {
+      cells.add(_stripHtml(cell.group(1) ?? ''));
+    }
+
+    if (cells.isEmpty) continue;
+    if (cells.length < 8) continue;
+
+    final hasMeaning = cells.any((value) => value.trim().isNotEmpty);
+    if (!hasMeaning) continue;
+
+    final term = cells[1].trim();
+    final name = cells[2].trim();
+    final condition = cells[3].trim();
+    final result = cells[4].trim();
+    final message = cells[5].trim();
+    final target = cells[6].trim();
+    final actual = cells[7].trim();
+    final isSummaryRow = term.isEmpty &&
+        name.isEmpty &&
+        condition.isEmpty &&
+        result.isEmpty &&
+        message.isEmpty &&
+        target.isNotEmpty;
+    if (isSummaryRow) {
+      summary = AcademicWarningSummary(label: target, value: actual);
+      continue;
+    }
+
+    items.add(
+      AcademicWarningItem(
+        term: term,
+        name: name,
+        condition: condition,
+        result: result,
+        message: message,
+        target: target,
+        actual: actual,
+      ),
+    );
+  }
+
+  return AcademicWarningResult(summary: summary, items: items);
+}
+
 int? _parseInt(String value) {
   final match = RegExp(r'-?\d+').firstMatch(value);
   if (match == null) return null;

@@ -247,4 +247,17 @@ class ProxyLoginService implements LoginService {
     final html = response.data?.toString() ?? '';
     return parseGradeList(html);
   }
+
+  @override
+  Future<AcademicWarningResult> fetchAcademicWarnings() async {
+    final response = await _withSessionRetry(() {
+      return _dio.get(
+        '$baseUrl/xsxj/warnings',
+        queryParameters: {'sid': _sessionId},
+        options: requestOptions(responseType: ResponseType.plain),
+      );
+    });
+    final html = response.data?.toString() ?? '';
+    return parseAcademicWarningResult(html);
+  }
 }

@@ -21,4 +21,5 @@ abstract class LoginService {
     String kcmc,
     String xsfs,
   });
+  Future<AcademicWarningResult> fetchAcademicWarnings();
 }

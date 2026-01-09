@@ -78,6 +78,11 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String failedToLoadAcademicWarnings(Object error) {
+    return '加载学业预警失败：$error';
+  }
+
+  @override
   String failedToLoadOptions(Object error) {
     return '加载选项失败：$error';
   }
@@ -118,6 +123,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get examScheduleCardSubtitle => '查看你的考试安排';
 
   @override
+  String get academicWarningCardTitle => '学业预警';
+
+  @override
+  String get academicWarningCardSubtitle => '查看学业预警信息';
+
+  @override
   String get gradesCardTitle => '成绩查询';
 
   @override
@@ -137,6 +148,9 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get examScheduleTitle => '考试安排';
+
+  @override
+  String get academicWarningTitle => '学业预警查询';
 
   @override
   String get gradeQueryTitle => '成绩查询';
@@ -222,6 +236,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get noExamData => '暂无考试数据。';
 
   @override
+  String get noAcademicWarningData => '暂无学业预警信息。';
+
+  @override
   String get noGradeData => '暂无成绩数据。';
 
   @override
@@ -294,6 +311,24 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get statusPending => '未完成';
+
+  @override
+  String get academicWarningUnnamed => '未命名预警';
+
+  @override
+  String get academicWarningTermLabel => '预警学期';
+
+  @override
+  String get academicWarningConditionLabel => '预警条件';
+
+  @override
+  String get academicWarningMessageLabel => '提示信息';
+
+  @override
+  String get academicWarningTargetLabel => '对象名称';
+
+  @override
+  String get academicWarningActualLabel => '实际值';
 
   @override
   String get settingsTitle => '设置';
