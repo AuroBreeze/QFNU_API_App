@@ -3,6 +3,7 @@ import 'package:qfnu_app/l10n/app_localizations.dart';
 import 'package:qfnu_app/login/login_page.dart';
 import 'package:qfnu_app/login/login_service.dart';
 import 'package:qfnu_app/shared/models.dart';
+import 'package:qfnu_app/shared/settings_store.dart';
 import 'package:qfnu_app/shared/widgets/glow_circle.dart';
 
 class ClassroomSearchPage extends StatefulWidget {
@@ -67,6 +68,98 @@ class _ClassroomSearchPageState extends State<ClassroomSearchPage> {
     return options.isEmpty ? '' : options.first.value;
   }
 
+  int? _parseOptionNumber(TermOption option) {
+    final value = int.tryParse(option.value);
+    if (value != null) return value;
+    final match = RegExp(r'\d+').firstMatch(option.label);
+    if (match == null) return null;
+    return int.tryParse(match.group(0) ?? '');
+  }
+
+  String _firstNonEmptyValue(List<TermOption> options) {
+    for (final option in options) {
+      if (option.value.isNotEmpty) return option.value;
+    }
+    return '';
+  }
+
+  String _selectValueByNumber(List<TermOption> options, int? number) {
+    if (number == null) return '';
+    for (final option in options) {
+      final value = _parseOptionNumber(option);
+      if (value == number) return option.value;
+    }
+    return '';
+  }
+
+  String _selectOptionValue(List<TermOption> options, String? value) {
+    if (value != null) {
+      for (final option in options) {
+        if (option.value == value) return value;
+      }
+    }
+    if (options.isEmpty) return '';
+    return _pickSelectedValue(options);
+  }
+
+  String _nextValueByNumber(List<TermOption> options, String startValue) {
+    if (startValue.isEmpty) return '';
+    final number = _numberForValue(options, startValue);
+    if (number != null) {
+      final nextByNumber = _selectValueByNumber(options, number + 1);
+      if (nextByNumber.isNotEmpty) return nextByNumber;
+    }
+    return _selectNextValue(options, startValue);
+  }
+
+  String _selectNextValue(List<TermOption> options, String startValue) {
+    if (startValue.isEmpty) return '';
+    final index =
+        options.indexWhere((option) => option.value == startValue);
+    if (index == -1) return '';
+    for (var i = index + 1; i < options.length; i += 1) {
+      final value = options[i].value;
+      if (value.isNotEmpty) return value;
+    }
+    return startValue;
+  }
+
+  int? _numberForValue(List<TermOption> options, String value) {
+    if (value.isEmpty) return null;
+    for (final option in options) {
+      if (option.value == value) {
+        return _parseOptionNumber(option);
+      }
+    }
+    return null;
+  }
+
+  List<int> _resolveVisibleColumnIndices(ClassroomTable table) {
+    final options = _options?.weekdays ?? const <TermOption>[];
+    final startValue = _numberForValue(options, _weekdayStart);
+    final endValue = _numberForValue(options, _weekdayEnd);
+    var rangeStart = startValue ?? endValue;
+    var rangeEnd = endValue ?? startValue;
+    if (rangeStart != null && rangeEnd != null && rangeEnd < rangeStart) {
+      final temp = rangeStart;
+      rangeStart = rangeEnd;
+      rangeEnd = temp;
+    }
+
+    final indices = <int>[];
+    for (var i = 0; i < table.columns.length; i += 1) {
+      final dayIndex = table.columns[i].dayIndex;
+      if (rangeStart == null || rangeEnd == null) {
+        indices.add(i);
+        continue;
+      }
+      if (dayIndex >= rangeStart && dayIndex <= rangeEnd) {
+        indices.add(i);
+      }
+    }
+    return indices;
+  }
+
   Future<void> _loadOptions() async {
     setState(() {
       _loadingOptions = true;
@@ -75,6 +168,43 @@ class _ClassroomSearchPageState extends State<ClassroomSearchPage> {
 
     try {
       final options = await widget.service.fetchClassroomQueryOptions();
+      final savedWeekInfo = await SettingsStore.getSavedWeekInfo();
+      final savedCollege = await SettingsStore.getClassroomCollege();
+      final savedCampus = await SettingsStore.getClassroomCampus();
+      final savedRoom = await SettingsStore.getClassroomRoom();
+      final defaultWeekStart = _selectValueByNumber(
+        options.weeks,
+        savedWeekInfo?.currentWeek,
+      );
+      final fallbackWeekStart = defaultWeekStart.isEmpty
+          ? _firstNonEmptyValue(options.weeks)
+          : defaultWeekStart;
+      final weekStartNumber =
+          _numberForValue(options.weeks, fallbackWeekStart);
+      final defaultWeekEnd = _selectValueByNumber(
+        options.weeks,
+        weekStartNumber == null ? null : weekStartNumber + 1,
+      );
+      final fallbackWeekEnd = defaultWeekEnd.isEmpty
+          ? _selectNextValue(options.weeks, fallbackWeekStart)
+          : defaultWeekEnd;
+      final todayWeekday = DateTime.now().weekday;
+      final defaultWeekdayStart = _selectValueByNumber(
+        options.weekdays,
+        todayWeekday,
+      );
+      final fallbackWeekdayStart = defaultWeekdayStart.isEmpty
+          ? _firstNonEmptyValue(options.weekdays)
+          : defaultWeekdayStart;
+      final weekdayStartNumber =
+          _numberForValue(options.weekdays, fallbackWeekdayStart);
+      final defaultWeekdayEnd = _selectValueByNumber(
+        options.weekdays,
+        weekdayStartNumber == null ? null : weekdayStartNumber + 1,
+      );
+      final fallbackWeekdayEnd = defaultWeekdayEnd.isEmpty
+          ? _selectNextValue(options.weekdays, fallbackWeekdayStart)
+          : defaultWeekdayEnd;
       if (!mounted) return;
       setState(() {
         _options = options;
@@ -82,21 +212,18 @@ class _ClassroomSearchPageState extends State<ClassroomSearchPage> {
         _timeMode = options.timeModes.isEmpty
             ? null
             : _pickSelectedValue(options.timeModes);
-        _college = options.colleges.isEmpty
-            ? ''
-            : _pickSelectedValue(options.colleges);
-        _campus = options.campuses.isEmpty
-            ? ''
-            : _pickSelectedValue(options.campuses);
+        _college = _selectOptionValue(options.colleges, savedCollege);
+        _campus = _selectOptionValue(options.campuses, savedCampus);
         _building = options.buildings.isEmpty
             ? ''
             : _pickSelectedValue(options.buildings);
-        _weekStart = '';
-        _weekEnd = '';
-        _weekdayStart = '';
-        _weekdayEnd = '';
+        _weekStart = fallbackWeekStart;
+        _weekEnd = fallbackWeekEnd;
+        _weekdayStart = fallbackWeekdayStart;
+        _weekdayEnd = fallbackWeekdayEnd;
         _periodStart = '';
         _periodEnd = '';
+        _roomController.text = savedRoom ?? '';
       });
 
     } on SessionExpiredException {
@@ -375,6 +502,12 @@ class _ClassroomSearchPageState extends State<ClassroomSearchPage> {
                               onChanged: (value) {
                                 setSheetState(() {
                                   weekStart = value ?? '';
+                                  weekEnd = weekStart.isEmpty
+                                      ? ''
+                                      : _nextValueByNumber(
+                                          options.weeks,
+                                          weekStart,
+                                        );
                                 });
                               },
                               decoration: InputDecoration(
@@ -433,6 +566,12 @@ class _ClassroomSearchPageState extends State<ClassroomSearchPage> {
                               onChanged: (value) {
                                 setSheetState(() {
                                   weekdayStart = value ?? '';
+                                  weekdayEnd = weekdayStart.isEmpty
+                                      ? ''
+                                      : _nextValueByNumber(
+                                          options.weekdays,
+                                          weekdayStart,
+                                        );
                                 });
                               },
                               decoration: InputDecoration(
@@ -510,7 +649,7 @@ class _ClassroomSearchPageState extends State<ClassroomSearchPage> {
                           ),
                           const Spacer(),
                           FilledButton(
-                            onPressed: () {
+                            onPressed: () async {
                               setState(() {
                                 _term = term.isEmpty ? _term : term;
                                 _timeMode = timeMode.isEmpty ? _timeMode : timeMode;
@@ -526,6 +665,11 @@ class _ClassroomSearchPageState extends State<ClassroomSearchPage> {
                                 _roomController.text = roomController.text.trim();
                               });
                               Navigator.of(context).pop();
+                              await SettingsStore.setClassroomCollege(college);
+                              await SettingsStore.setClassroomCampus(campus);
+                              await SettingsStore.setClassroomRoom(
+                                roomController.text.trim(),
+                              );
                             },
                             child: Text(l10n.apply),
                           ),
@@ -593,9 +737,20 @@ class _ClassroomSearchPageState extends State<ClassroomSearchPage> {
       );
     }
 
+    final visibleIndices = _resolveVisibleColumnIndices(table);
+    if (visibleIndices.isEmpty) {
+      return Center(
+        child: Text(
+          l10n.noClassroomData,
+          style: theme.textTheme.bodyMedium,
+        ),
+      );
+    }
+
     final columns = [
       DataColumn(label: Text(l10n.classroomLabel)),
-      ...table.columns.map((column) {
+      ...visibleIndices.map((index) {
+        final column = table.columns[index];
         final day = _displayDayLabel(column.dayLabel, column.dayIndex, l10n);
         final label = column.periodLabel.isEmpty
             ? day
@@ -607,7 +762,8 @@ class _ClassroomSearchPageState extends State<ClassroomSearchPage> {
     final rows = table.rows.map((row) {
       final cells = [
         DataCell(Text(row.room)),
-        ...row.cells.map((cell) {
+        ...visibleIndices.map((index) {
+          final cell = row.cells[index];
           final text = cell.trim().isEmpty
               ? l10n.classroomCellEmpty
               : l10n.classroomCellOccupied;

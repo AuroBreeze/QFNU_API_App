@@ -14,6 +14,11 @@ class SettingsStore {
   static const String _keyDisclaimerAccepted = 'disclaimer_accepted';
   static const String _keyCurrentWeek = 'current_week';
   static const String _keyTotalWeeks = 'total_weeks';
+  static const String _keyClassroomWeekStart = 'classroom_week_start';
+  static const String _keyClassroomWeekdayStart = 'classroom_weekday_start';
+  static const String _keyClassroomCollege = 'classroom_college';
+  static const String _keyClassroomCampus = 'classroom_campus';
+  static const String _keyClassroomRoom = 'classroom_room';
 
   static int _normalizeDays(int value) {
     if (value < 1) return 1;
@@ -24,6 +29,18 @@ class SettingsStore {
   static int _normalizeHours(int value) {
     if (value < 1) return 1;
     if (value > 24) return 24;
+    return value;
+  }
+
+  static int _normalizeWeek(int value) {
+    if (value < 1) return 1;
+    if (value > 30) return 30;
+    return value;
+  }
+
+  static int _normalizeWeekday(int value) {
+    if (value < 1) return 1;
+    if (value > 7) return 7;
     return value;
   }
 
@@ -125,5 +142,55 @@ class SettingsStore {
     if (info.totalWeeks != null) {
       await prefs.setInt(_keyTotalWeeks, info.totalWeeks!);
     }
+  }
+
+  static Future<int?> getClassroomWeekStart() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(_keyClassroomWeekStart);
+  }
+
+  static Future<void> setClassroomWeekStart(int week) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_keyClassroomWeekStart, _normalizeWeek(week));
+  }
+
+  static Future<int?> getClassroomWeekdayStart() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(_keyClassroomWeekdayStart);
+  }
+
+  static Future<void> setClassroomWeekdayStart(int weekday) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_keyClassroomWeekdayStart, _normalizeWeekday(weekday));
+  }
+
+  static Future<String?> getClassroomCollege() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_keyClassroomCollege);
+  }
+
+  static Future<void> setClassroomCollege(String value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_keyClassroomCollege, value);
+  }
+
+  static Future<String?> getClassroomCampus() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_keyClassroomCampus);
+  }
+
+  static Future<void> setClassroomCampus(String value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_keyClassroomCampus, value);
+  }
+
+  static Future<String?> getClassroomRoom() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_keyClassroomRoom);
+  }
+
+  static Future<void> setClassroomRoom(String value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_keyClassroomRoom, value);
   }
 }
