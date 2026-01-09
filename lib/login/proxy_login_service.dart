@@ -123,7 +123,9 @@ class ProxyLoginService implements LoginService {
     final payload = _decodeJson(response.data);
     final ok = payload['ok'] == true;
     final raw = payload['raw']?.toString() ?? '';
-    final alert = payload['alert']?.toString();
+    final loginError = parseLoginErrorMessage(raw);
+    final alert = loginError ??
+        (looksLikeLoginPage(raw) ? null : payload['alert']?.toString());
     return LoginResult(ok: ok, raw: raw, alert: alert);
   }
 

@@ -8,6 +8,7 @@ import 'package:qfnu_app/login/direct_login_service.dart';
 import 'package:qfnu_app/login/login_service.dart';
 import 'package:qfnu_app/login/proxy_login_service.dart';
 import 'package:qfnu_app/shared/constants.dart';
+import 'package:qfnu_app/shared/html_parsers.dart';
 import 'package:qfnu_app/settings/tribute_page.dart';
 import 'package:qfnu_app/shared/settings_store.dart';
 import 'package:qfnu_app/shared/widgets/glow_circle.dart';
@@ -309,7 +310,11 @@ class _LoginPageState extends State<LoginPage> {
         final l10n = AppLocalizations.of(context)!;
         setState(() {
           _error = message ??
-              (result.preview.isEmpty ? l10n.loginFailed : result.preview);
+              (looksLikeLoginPage(result.raw)
+                  ? l10n.loginFailed
+                  : (result.preview.isEmpty
+                      ? l10n.loginFailed
+                      : result.preview));
         });
         await _refreshCaptcha(clearError: false);
       }

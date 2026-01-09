@@ -140,7 +140,9 @@ class DirectLoginService implements LoginService {
     );
 
     final raw = response.data?.toString() ?? '';
-    final alert = _extractAlert(raw);
+    final loginError = parseLoginErrorMessage(raw);
+    final alert =
+        loginError ?? (looksLikeLoginPage(raw) ? null : _extractAlert(raw));
     final ok = _isLoginSuccess(
       raw,
       finalUri: response.realUri,

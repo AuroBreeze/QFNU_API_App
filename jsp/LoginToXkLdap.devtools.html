@@ -1,0 +1,215 @@
+
+
+
+
+
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>登录</title>
+
+	<link href="/jsxsd/js/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="/jsxsd/css/reset.css">
+	<link rel="stylesheet" type="text/css" href="/jsxsd/css/style.css">
+</head>
+<style>
+	.QRcodeSkip{
+		width: 80px;
+		height: 70px;
+		position: absolute;
+		visibility: inherit;
+		right: 17.5%;
+		cursor: pointer;
+	}
+	.QRcode{
+		width: 300px;
+		height: 300px;
+		position: absolute;
+		visibility: inherit;
+		right: 21%;
+		top: 30%;
+	}
+</style>
+<body class="login_bg">
+<div id="login_content">
+	<div class="login_logo">
+		<img class="img-responsive" src="/jsxsd/css/images/login_logo.png" >
+		
+	</div>
+	<div class="login_box">
+		<div class="box_left">
+			
+			<img class="img-responsive" src="/jsxsd/css/images/login_icon.png" >
+			
+		</div>
+		<!-- 二维码跳转图片 -->
+		<div  class="QRcodeSkip" id="QRcodeSkip" style="display: none;"	>
+			<img onclick="QRcodeFun(1)" alt="加载失败" height="70" width="80" src="/jsxsd/css/images/showCode.png" >
+		</div>
+		<div class="box_right" style="">
+			<form action="/jsxsd/xk/LoginToXkLdap" method="post" id="Form1" name="Form1" onsubmit="return submitForm1();">
+				<ul id="ul1" >
+					<li class="box_bt"><img class="img-responsive" src="/jsxsd/css/images/user_icon.png"  style="float:left;margin:8px 8px 0 0">用户登录</li>
+					<li class="input-group input_li">
+						<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+						<input type="text" class="form-control" id="userAccount" name="userAccount" placeholder="请输入账号" value="" autofocus>
+					</li>
+					<li class="input-group input_li">
+						<span class="input-group-addon" id="basic-addon1"><i class="glyphicon glyphicon-lock"></i></span>
+						<input type="password" class="form-control" id="userPassword" name="userPassword" autocomplete="new-version" placeholder="请输入密码" value="">
+					</li>
+					
+					<li class="input-group input_li">
+						<ul>
+							<li class="no_padding col-sm-9">
+								<input type="text" class="form-control" id="RANDOMCODE" name="RANDOMCODE" placeholder="请输入验证码">&nbsp;&nbsp;
+							</li>
+							<li class="no_padding col-sm-3">
+								<img src="/jsxsd/verifycode.servlet" id="SafeCodeImg"  onclick="ReShowCode()" width="80px" height="40px" style="margin-left: 5px;" />
+							</li>
+						</ul>
+					</li>
+					
+					
+					<li class="input_li">
+						
+						<button type="submit" class="btn btn-primary login_btn" onclick="login()">登&nbsp;&nbsp;&nbsp;录</button>
+						
+					</li>
+					<li class="input_li" style="color: red; margin-bottom: 0;height: 10px;">
+						&nbsp;<font color="red">温馨提示：推荐使用IE9以上浏览器以及360极速模式。</font><br>
+					</li>
+					<li class="input_li" id="showMsg" style="color: red; margin-bottom: 0;">
+						&nbsp;验证码错误!!
+					</li>
+				</ul>
+				<!-- 二维码展示层 -->
+				<ul id="ul2" style="display: none;" >
+					<li class="box_bt">
+						<p class="u9" >APP下载
+							<span style="font-size: 13px;cursor: pointer;text-align: right;float: right;" onclick="QRcodeFun(2)" >
+				 					<img   alt="加载失败" height="13" width="13" src="/jsxsd/css/images/ret.png" >
+				 					返回登录
+			 					</span>
+						</p>
+					</li>
+					<li class="input_li" style="text-align: center;"  >
+						<center><img class="img-responsive" alt="加载失败" height="300" width="300" src="/jsxsd/css/images/codeFrame.png" ></center>
+					</li>
+					<li class="input_li" style=" margin-bottom: 0;height: 15.5px;">
+						<center>扫描二维码  下载APP</center>
+					</li>
+				</ul>
+				<input name="encoded" id="encoded" type="hidden" value=""/>
+			</form>
+            <div style="margin-left:auto;font-size:13px;color:red;white-space:nowrap;">&nbsp;本平台为互联网非涉密平台，严禁处理、传输国家秘密、工作秘密及敏感信息。</div>
+		</div>
+	</div>
+</div>
+
+<footer>Copyright © 2017.湖南强智科技发展有限公司</footer>
+
+
+<script type="text/javascript" src="/jsxsd/js/jqChart/js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="/jsxsd/js/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/jsxsd/js/conwork.js"></script>
+</body>
+</html>
+<script language="javascript">
+	//是否启用APP下载二维码
+	
+	function ReShowCode(){
+		var SafeCodeImg = document.getElementById("SafeCodeImg");
+		var url="/jsxsd/verifycode.servlet?t="+Math.random();
+		SafeCodeImg.src = url;
+	}
+
+	function submitForm1(){
+		try{
+			var xh = document.getElementById("userAccount").value;
+			var pwd = document.getElementById("userPassword").value;
+			if(xh==""){
+				alert("用户名不能为空！");
+				return false;
+			}
+			if(pwd==""){
+				alert("密码不能为空！");
+				return false;
+			}
+			var account = encodeInp(xh);
+			var passwd = encodeInp(pwd);
+			var encoded = account+"%%%"+passwd;
+
+			document.getElementById("encoded").value = encoded;
+			var jzmmid = document.getElementById("Form1").jzmmid;
+			document.getElementById("userPassword").value="";
+			if("LoginToXkLdap"!="logonLdap"){
+				document.getElementById("userPassword").value="";
+				document.getElementById("userAccount").value="";
+			}
+			return true;
+		}catch(e){
+			alert(e);
+			return false;
+		}
+	}
+
+	//根据用户帐号选择登录服务器
+	function selectServer(uName){
+		var enableServers = true;//是否启用多服务器 true/false
+		var serversArray = new Array();//服务器列表
+
+		
+		serversArray[0] = "http://192.168.100.43:80/jsxsd/";
+		
+		serversArray[1] = "http://192.168.100.45:80/jsxsd/";
+		
+		serversArray[2] = "http://192.168.100.42:80/jsxsd/";
+		
+		serversArray[3] = "http://192.168.100.44:80/jsxsd/";
+		
+		serversArray[4] = "http://192.168.100.46:80/jsxsd/";
+		
+		serversArray[5] = "http://192.168.100.33:80/jsxsd/";
+		
+		serversArray[6] = "http://192.168.100.32:80/jsxsd/";
+		
+		serversArray[7] = "http://192.168.100.34:80/jsxsd/";
+		
+		serversArray[8] = "http://192.168.100.35:80/jsxsd/";
+		
+		serversArray[9] = "http://192.168.100.36:80/jsxsd/";
+		
+
+		var loginUrl = "xk/LoginToXk";
+		if(enableServers == true){
+			if(!/[^\d]/.test(uName)){//必须为数字
+				var modVal = eval(uName % serversArray.length);
+				loginUrl = serversArray[modVal] + loginUrl;
+			}else{
+				loginUrl = serversArray[0] + loginUrl;
+			}
+		}else{
+			loginUrl = "/jsxsd"+ loginUrl;
+		}
+		return loginUrl;
+	}
+
+	/***
+	 *切换验证码
+	 **/
+	function QRcodeFun(type) {
+		if("1" == type ){
+			$("#ul1").hide();
+			$("#ul2").show();
+			$("#QRcodeSkip").hide();
+		}else{
+			$("#ul2").hide();
+			$("#ul1").show();
+			$("#QRcodeSkip").show();
+		}
+
+	}
+</script>

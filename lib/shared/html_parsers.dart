@@ -31,6 +31,22 @@ bool _looksLikeLoginPage(String html) {
   return hasUser && hasCaptcha;
 }
 
+bool looksLikeLoginPage(String html) {
+  return _looksLikeLoginPage(html);
+}
+
+String? parseLoginErrorMessage(String html) {
+  final match = RegExp(
+    '<li[^>]*id=["\']showMsg["\'][^>]*>(.*?)</li>',
+    caseSensitive: false,
+    dotAll: true,
+  ).firstMatch(html);
+  if (match == null) return null;
+  final text = _stripHtml(match.group(1) ?? '');
+  if (text.isEmpty) return null;
+  return text;
+}
+
 void _throwIfSessionExpired(String html) {
   if (_looksLikeLoginPage(html)) {
     throw const SessionExpiredException();
