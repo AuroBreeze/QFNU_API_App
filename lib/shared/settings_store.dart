@@ -1,3 +1,4 @@
+import 'package:qfnu_app/shared/models.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsStore {
@@ -11,6 +12,8 @@ class SettingsStore {
   static const String _keyTributePromptShown = 'tribute_prompt_shown';
   static const String _keyShowHomeTributeCard = 'show_home_tribute_card';
   static const String _keyDisclaimerAccepted = 'disclaimer_accepted';
+  static const String _keyCurrentWeek = 'current_week';
+  static const String _keyTotalWeeks = 'total_weeks';
 
   static int _normalizeDays(int value) {
     if (value < 1) return 1;
@@ -106,5 +109,21 @@ class SettingsStore {
   static Future<void> setDisclaimerAccepted(bool accepted) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_keyDisclaimerAccepted, accepted);
+  }
+
+  static Future<WeekInfo?> getSavedWeekInfo() async {
+    final prefs = await SharedPreferences.getInstance();
+    final current = prefs.getInt(_keyCurrentWeek);
+    if (current == null) return null;
+    final total = prefs.getInt(_keyTotalWeeks);
+    return WeekInfo(currentWeek: current, totalWeeks: total);
+  }
+
+  static Future<void> setSavedWeekInfo(WeekInfo info) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_keyCurrentWeek, info.currentWeek);
+    if (info.totalWeeks != null) {
+      await prefs.setInt(_keyTotalWeeks, info.totalWeeks!);
+    }
   }
 }

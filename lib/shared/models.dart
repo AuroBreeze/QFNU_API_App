@@ -136,6 +136,16 @@ class AcademicWarningResult {
   });
 }
 
+class WeekInfo {
+  final int currentWeek;
+  final int? totalWeeks;
+
+  const WeekInfo({
+    required this.currentWeek,
+    this.totalWeeks,
+  });
+}
+
 class ScheduleItem {
   final String period;
   final String courseName;

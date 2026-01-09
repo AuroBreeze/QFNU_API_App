@@ -86,6 +86,21 @@
     }
   },
   "logout": "Logout",
+  "currentWeekTitle": "Current teaching week",
+  "currentWeekUnknown": "Week info unavailable",
+  "currentWeekValue": "Week {week}",
+  "@currentWeekValue": {
+    "placeholders": {
+      "week": {}
+    }
+  },
+  "currentWeekValueWithTotal": "Week {week} / {total}",
+  "@currentWeekValueWithTotal": {
+    "placeholders": {
+      "week": {},
+      "total": {}
+    }
+  },
   "examScheduleCardTitle": "Exam Schedule",
   "examScheduleCardSubtitle": "Tap to view your upcoming exams",
   "academicWarningCardTitle": "Academic Warning",

@@ -86,6 +86,21 @@
     }
   },
   "logout": "退出登录",
+  "currentWeekTitle": "当前教学周",
+  "currentWeekUnknown": "暂无周次信息",
+  "currentWeekValue": "第 {week} 周",
+  "@currentWeekValue": {
+    "placeholders": {
+      "week": {}
+    }
+  },
+  "currentWeekValueWithTotal": "第 {week} 周 / 共 {total} 周",
+  "@currentWeekValueWithTotal": {
+    "placeholders": {
+      "week": {},
+      "total": {}
+    }
+  },
   "examScheduleCardTitle": "考试安排",
   "examScheduleCardSubtitle": "查看你的考试安排",
   "academicWarningCardTitle": "学业预警",

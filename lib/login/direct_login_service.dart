@@ -273,6 +273,18 @@ class DirectLoginService implements LoginService {
     return parseAcademicWarningResult(html);
   }
 
+  @override
+  Future<WeekInfo?> fetchCurrentWeekInfo() async {
+    await _ensureSession();
+    final response = await _dio.get(
+      mainWeekUrl,
+      queryParameters: {'t1': '1'},
+      options: requestOptions(responseType: ResponseType.plain),
+    );
+    final html = response.data?.toString() ?? '';
+    return parseWeekInfo(html);
+  }
+
   Future<List<String>> exportCookies() async {
     if (_cookieJar == null) return const [];
     final cookies = await _cookieJar!.loadForRequest(Uri.parse(baseUrl));

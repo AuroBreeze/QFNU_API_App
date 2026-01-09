@@ -16,6 +16,14 @@ String _stripHtml(String text) {
   return decoded.replaceAll(RegExp(r'\s+'), ' ').trim();
 }
 
+List<int> _extractNumbers(String text) {
+  return RegExp(r'\d+')
+      .allMatches(text)
+      .map((match) => int.tryParse(match.group(0) ?? '') ?? -1)
+      .where((value) => value >= 0)
+      .toList(growable: false);
+}
+
 bool _looksLikeLoginPage(String html) {
   if (RegExp(r'LoginToXkLdap', caseSensitive: false).hasMatch(html)) {
     return true;
@@ -292,6 +300,37 @@ AcademicWarningResult parseAcademicWarningResult(String html) {
   }
 
   return AcademicWarningResult(summary: summary, items: items);
+}
+
+WeekInfo? parseWeekInfo(String html) {
+  _throwIfSessionExpired(html);
+  final blockMatch = RegExp(
+    'id=["\\\']li_showWeek["\\\'][^>]*>(.*?)</',
+    caseSensitive: false,
+    dotAll: true,
+  ).firstMatch(html);
+  if (blockMatch != null) {
+    final rawText = _stripHtml(blockMatch.group(1) ?? '');
+    final numbers = _extractNumbers(rawText);
+    if (numbers.isNotEmpty) {
+      final current = numbers.first;
+      final total = numbers.length > 1 ? numbers[1] : null;
+      return WeekInfo(currentWeek: current, totalWeeks: total);
+    }
+  }
+
+  final fallbackMatch = RegExp(
+    "zc\\s*:\\s*['\\\"](\\d+)['\\\"]",
+    caseSensitive: false,
+  ).firstMatch(html);
+  if (fallbackMatch != null) {
+    final value = int.tryParse(fallbackMatch.group(1) ?? '');
+    if (value != null) {
+      return WeekInfo(currentWeek: value);
+    }
+  }
+
+  return null;
 }
 
 int? _parseInt(String value) {

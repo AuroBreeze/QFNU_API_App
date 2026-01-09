@@ -157,6 +157,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get logout => 'Logout';
 
   @override
+  String get currentWeekTitle => 'Current teaching week';
+
+  @override
+  String get currentWeekUnknown => 'Week info unavailable';
+
+  @override
+  String currentWeekValue(Object week) {
+    return 'Week $week';
+  }
+
+  @override
+  String currentWeekValueWithTotal(Object week, Object total) {
+    return 'Week $week / $total';
+  }
+
+  @override
   String get examScheduleCardTitle => 'Exam Schedule';
 
   @override

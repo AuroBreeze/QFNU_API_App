@@ -3,29 +3,26 @@ import 'package:qfnu_app/l10n/app_localizations.dart';
 import 'package:qfnu_app/login/login_service.dart';
 import 'package:qfnu_app/shared/models.dart';
 import 'package:qfnu_app/shared/settings_store.dart';
-import 'package:qfnu_app/timetable/today_schedule_page.dart';
 
-class TodayScheduleCard extends StatefulWidget {
+class WeekInfoCard extends StatefulWidget {
   final LoginService service;
-  final String username;
 
-  const TodayScheduleCard({
+  const WeekInfoCard({
     super.key,
     required this.service,
-    required this.username,
   });
 
   @override
-  State<TodayScheduleCard> createState() => _TodayScheduleCardState();
+  State<WeekInfoCard> createState() => _WeekInfoCardState();
 }
 
-class _TodayScheduleCardState extends State<TodayScheduleCard> {
-  Future<WeekInfo?>? _weekFuture;
+class _WeekInfoCardState extends State<WeekInfoCard> {
+  Future<WeekInfo?>? _future;
 
   @override
   void initState() {
     super.initState();
-    _weekFuture = _loadWeekInfo();
+    _future = _loadWeekInfo();
   }
 
   Future<WeekInfo?> _loadWeekInfo() async {
@@ -36,9 +33,15 @@ class _TodayScheduleCardState extends State<TodayScheduleCard> {
         return info;
       }
     } catch (_) {
-      // Ignore and fall back to cached value.
+      // Ignore and fall back to saved value.
     }
     return SettingsStore.getSavedWeekInfo();
+  }
+
+  void _refresh() {
+    setState(() {
+      _future = _loadWeekInfo();
+    });
   }
 
   String _formatWeek(AppLocalizations l10n, WeekInfo info) {
@@ -56,16 +59,7 @@ class _TodayScheduleCardState extends State<TodayScheduleCard> {
 
     return InkWell(
       borderRadius: BorderRadius.circular(18),
-      onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => TodaySchedulePage(
-              service: widget.service,
-              username: widget.username,
-            ),
-          ),
-        );
-      },
+      onTap: _refresh,
       child: Ink(
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.94),
@@ -87,13 +81,13 @@ class _TodayScheduleCardState extends State<TodayScheduleCard> {
                 height: 52,
                 width: 52,
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.tertiary.withOpacity(0.12),
+                  color: theme.colorScheme.primary.withOpacity(0.12),
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: Icon(
-                  Icons.today_outlined,
-                  color: theme.colorScheme.tertiary,
-                  size: 28,
+                  Icons.calendar_today_outlined,
+                  color: theme.colorScheme.primary,
+                  size: 26,
                 ),
               ),
               const SizedBox(width: 14),
@@ -102,39 +96,32 @@ class _TodayScheduleCardState extends State<TodayScheduleCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      l10n.timetableCardTitle,
+                      l10n.currentWeekTitle,
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      l10n.timetableCardSubtitle,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: Colors.black54,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
                     FutureBuilder<WeekInfo?>(
-                      future: _weekFuture,
+                      future: _future,
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
                           return Text(
                             l10n.loading,
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color: Colors.black45,
+                              color: Colors.black54,
                             ),
                           );
                         }
                         final info = snapshot.data;
-                        final value = info == null
+                        final text = info == null
                             ? l10n.currentWeekUnknown
                             : _formatWeek(l10n, info);
                         return Text(
-                          '${l10n.currentWeekTitle}: $value',
+                          text,
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: Colors.black45,
+                            color: Colors.black54,
                           ),
                         );
                       },
@@ -143,9 +130,9 @@ class _TodayScheduleCardState extends State<TodayScheduleCard> {
                 ),
               ),
               Icon(
-                Icons.arrow_forward_ios,
+                Icons.refresh,
                 size: 16,
-                color: theme.colorScheme.onSurface.withOpacity(0.4),
+                color: theme.colorScheme.onSurface.withOpacity(0.45),
               ),
             ],
           ),

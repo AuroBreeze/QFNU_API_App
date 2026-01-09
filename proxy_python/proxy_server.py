@@ -19,6 +19,7 @@ GRADE_QUERY_URL = f"{BASE_URL}/jsxsd/kscj/cjcx_query"
 GRADE_LIST_URL = f"{BASE_URL}/jsxsd/kscj/cjcx_list"
 TRAINING_PLAN_URL = f"{BASE_URL}/jsxsd/pyfa/topyfamx"
 ACADEMIC_WARNING_URL = f"{BASE_URL}/jsxsd/xsxj/xsyjxx.do"
+MAIN_WEEK_URL = f"{BASE_URL}/jsxsd/framework/xsMain_new.jsp"
 
 SESSION_TTL_SECONDS = 15 * 60
 SESSIONS = {}
@@ -346,6 +347,39 @@ class ProxyHandler(BaseHTTPRequestHandler):
 
             html = _decode_response(response)
             _log(f"xsxj warnings ok sid={session_id[:8]}... len={len(html)}")
+            self._send_text(200, html)
+            return
+
+        if parsed.path == "/week":
+            params = parse_qs(parsed.query)
+            session_id = None
+            if "sid" in params:
+                session_id = params["sid"][0]
+            if not session_id:
+                session_id = self.headers.get("X-Session-Id")
+
+            if not session_id:
+                _log("week info missing session id")
+                self._send_json(400, {"error": "Missing sessionId"})
+                return
+
+            state = _get_session(session_id)
+            if not state:
+                _log(f"week info session expired sid={session_id[:8]}...")
+                self._send_json(404, {"error": "Session expired"})
+                return
+
+            try:
+                response = state.session.get(MAIN_WEEK_URL, params={"t1": "1"}, timeout=10)
+            except requests.RequestException as exc:
+                _log(f"week info request failed: {exc}")
+                self._send_json(
+                    502, {"error": "Week info request failed", "detail": str(exc)}
+                )
+                return
+
+            html = _decode_response(response)
+            _log(f"week info ok sid={session_id[:8]}... len={len(html)}")
             self._send_text(200, html)
             return
 

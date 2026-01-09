@@ -152,6 +152,22 @@ class AppLocalizationsZh extends AppLocalizations {
   String get logout => '退出登录';
 
   @override
+  String get currentWeekTitle => '当前教学周';
+
+  @override
+  String get currentWeekUnknown => '暂无周次信息';
+
+  @override
+  String currentWeekValue(Object week) {
+    return '第 $week 周';
+  }
+
+  @override
+  String currentWeekValueWithTotal(Object week, Object total) {
+    return '第 $week 周 / 共 $total 周';
+  }
+
+  @override
   String get examScheduleCardTitle => '考试安排';
 
   @override

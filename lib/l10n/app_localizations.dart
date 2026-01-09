@@ -344,6 +344,30 @@ abstract class AppLocalizations {
   /// **'Logout'**
   String get logout;
 
+  /// No description provided for @currentWeekTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Current teaching week'**
+  String get currentWeekTitle;
+
+  /// No description provided for @currentWeekUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Week info unavailable'**
+  String get currentWeekUnknown;
+
+  /// No description provided for @currentWeekValue.
+  ///
+  /// In en, this message translates to:
+  /// **'Week {week}'**
+  String currentWeekValue(Object week);
+
+  /// No description provided for @currentWeekValueWithTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Week {week} / {total}'**
+  String currentWeekValueWithTotal(Object week, Object total);
+
   /// No description provided for @examScheduleCardTitle.
   ///
   /// In en, this message translates to:

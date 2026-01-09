@@ -22,4 +22,5 @@ abstract class LoginService {
     String xsfs,
   });
   Future<AcademicWarningResult> fetchAcademicWarnings();
+  Future<WeekInfo?> fetchCurrentWeekInfo();
 }

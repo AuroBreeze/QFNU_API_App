@@ -260,4 +260,17 @@ class ProxyLoginService implements LoginService {
     final html = response.data?.toString() ?? '';
     return parseAcademicWarningResult(html);
   }
+
+  @override
+  Future<WeekInfo?> fetchCurrentWeekInfo() async {
+    final response = await _withSessionRetry(() {
+      return _dio.get(
+        '$baseUrl/week',
+        queryParameters: {'sid': _sessionId},
+        options: requestOptions(responseType: ResponseType.plain),
+      );
+    });
+    final html = response.data?.toString() ?? '';
+    return parseWeekInfo(html);
+  }
 }
