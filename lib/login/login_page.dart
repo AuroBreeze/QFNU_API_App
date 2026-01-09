@@ -8,6 +8,7 @@ import 'package:qfnu_app/login/direct_login_service.dart';
 import 'package:qfnu_app/login/login_service.dart';
 import 'package:qfnu_app/login/proxy_login_service.dart';
 import 'package:qfnu_app/shared/constants.dart';
+import 'package:qfnu_app/settings/tribute_page.dart';
 import 'package:qfnu_app/shared/widgets/glow_circle.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -274,6 +275,12 @@ class _LoginPageState extends State<LoginPage> {
       if (!mounted) return;
 
       if (result.ok) {
+        await Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => const TributePage(showContinueButton: true),
+          ),
+        );
+        if (!mounted) return;
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (_) => HomePage(

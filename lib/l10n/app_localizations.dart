@@ -841,6 +841,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Background test notification channel'**
   String get testNotifyChannelDescription;
+
+  /// No description provided for @tributeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tribute'**
+  String get tributeTitle;
+
+  /// No description provided for @tributeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A note of thanks to the original creator.'**
+  String get tributeSubtitle;
+
+  /// No description provided for @tributeHeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'Tribute & Note'**
+  String get tributeHeadline;
+
+  /// No description provided for @tributeBody1.
+  ///
+  /// In en, this message translates to:
+  /// **'Thanks to a senior who built a smoother academic tool and helped many students.'**
+  String get tributeBody1;
+
+  /// No description provided for @tributeBody2.
+  ///
+  /// In en, this message translates to:
+  /// **'This app continues that inspiration and does not diminish the original contribution.'**
+  String get tributeBody2;
+
+  /// No description provided for @tributeBody3.
+  ///
+  /// In en, this message translates to:
+  /// **'If that work helped you, please keep respect and kindness toward the original author.'**
+  String get tributeBody3;
+
+  /// No description provided for @tributeBody4.
+  ///
+  /// In en, this message translates to:
+  /// **'May more students build to serve and share.'**
+  String get tributeBody4;
+
+  /// No description provided for @tributeContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue to Home'**
+  String get tributeContinue;
 }
 
 class _AppLocalizationsDelegate

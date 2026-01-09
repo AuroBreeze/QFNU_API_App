@@ -224,5 +224,13 @@
   "testNotifySent": "已发送测试通知。",
   "testNotifyBody": "后台测试通知已发送。",
   "testNotifyChannelName": "测试通知",
-  "testNotifyChannelDescription": "后台通知测试通道"
+  "testNotifyChannelDescription": "后台通知测试通道",
+  "tributeTitle": "致敬",
+  "tributeSubtitle": "向前辈的贡献致敬。",
+  "tributeHeadline": "致敬与说明",
+  "tributeBody1": "感谢一位前辈为同学们打造了更好用的教务工具，让事务办理更顺畅。",
+  "tributeBody2": "本应用是在他的启发下继续改进体验，并不否定或取代他的贡献。",
+  "tributeBody3": "如果你也受益于那份努力，请保持尊重与善意，并向原作者致谢。",
+  "tributeBody4": "愿更多同学把技术用于服务与分享，让学习变得更轻松。",
+  "tributeContinue": "进入首页"
 }

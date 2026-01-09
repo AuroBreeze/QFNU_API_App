@@ -420,4 +420,28 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get testNotifyChannelDescription => '后台通知测试通道';
+
+  @override
+  String get tributeTitle => '致敬';
+
+  @override
+  String get tributeSubtitle => '向前辈的贡献致敬。';
+
+  @override
+  String get tributeHeadline => '致敬与说明';
+
+  @override
+  String get tributeBody1 => '感谢一位前辈为同学们打造了更好用的教务工具，让事务办理更顺畅。';
+
+  @override
+  String get tributeBody2 => '本应用是在他的启发下继续改进体验，并不否定或取代他的贡献。';
+
+  @override
+  String get tributeBody3 => '如果你也受益于那份努力，请保持尊重与善意，并向原作者致谢。';
+
+  @override
+  String get tributeBody4 => '愿更多同学把技术用于服务与分享，让学习变得更轻松。';
+
+  @override
+  String get tributeContinue => '进入首页';
 }

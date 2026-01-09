@@ -224,5 +224,13 @@
   "testNotifySent": "Test notification sent.",
   "testNotifyBody": "Background test notification delivered.",
   "testNotifyChannelName": "Test notifications",
-  "testNotifyChannelDescription": "Background test notification channel"
+  "testNotifyChannelDescription": "Background test notification channel",
+  "tributeTitle": "Tribute",
+  "tributeSubtitle": "A note of thanks to the original creator.",
+  "tributeHeadline": "Tribute & Note",
+  "tributeBody1": "Thanks to a senior who built a smoother academic tool and helped many students.",
+  "tributeBody2": "This app continues that inspiration and does not diminish the original contribution.",
+  "tributeBody3": "If that work helped you, please keep respect and kindness toward the original author.",
+  "tributeBody4": "May more students build to serve and share.",
+  "tributeContinue": "Continue to Home"
 }

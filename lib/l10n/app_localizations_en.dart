@@ -434,4 +434,31 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get testNotifyChannelDescription =>
       'Background test notification channel';
+
+  @override
+  String get tributeTitle => 'Tribute';
+
+  @override
+  String get tributeSubtitle => 'A note of thanks to the original creator.';
+
+  @override
+  String get tributeHeadline => 'Tribute & Note';
+
+  @override
+  String get tributeBody1 =>
+      'Thanks to a senior who built a smoother academic tool and helped many students.';
+
+  @override
+  String get tributeBody2 =>
+      'This app continues that inspiration and does not diminish the original contribution.';
+
+  @override
+  String get tributeBody3 =>
+      'If that work helped you, please keep respect and kindness toward the original author.';
+
+  @override
+  String get tributeBody4 => 'May more students build to serve and share.';
+
+  @override
+  String get tributeContinue => 'Continue to Home';
 }

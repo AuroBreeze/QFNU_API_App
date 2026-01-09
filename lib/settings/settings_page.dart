@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:qfnu_app/background/grade_check_scheduler.dart';
 import 'package:qfnu_app/settings/developer_page.dart';
+import 'package:qfnu_app/settings/tribute_page.dart';
 import 'package:qfnu_app/l10n/app_localizations.dart';
 import 'package:qfnu_app/shared/settings_store.dart';
 import 'package:qfnu_app/shared/training_plan_cache.dart';
@@ -301,6 +302,28 @@ class _SettingsPageState extends State<SettingsPage> {
                         ),
                       ],
                     ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Card(
+                  elevation: 8,
+                  shadowColor: Colors.black26,
+                  color: Colors.white.withOpacity(0.95),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: ListTile(
+                    leading: const Icon(Icons.favorite_border),
+                    title: Text(l10n.tributeTitle),
+                    subtitle: Text(l10n.tributeSubtitle),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const TributePage(),
+                        ),
+                      );
+                    },
                   ),
                 ),
                 const SizedBox(height: 16),
