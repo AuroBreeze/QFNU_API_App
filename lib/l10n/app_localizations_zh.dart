@@ -411,6 +411,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get gradeNotifySectionSubtitle => '后台定时检查新成绩并通知。';
 
   @override
+  String get gradeNotifyBetaLabel => 'BETA · 开发中';
+
+  @override
   String get gradeNotifyEnabledLabel => '启用成绩提醒';
 
   @override

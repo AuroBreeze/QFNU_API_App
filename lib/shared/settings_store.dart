@@ -41,7 +41,7 @@ class SettingsStore {
 
   static Future<bool> getGradeNotificationEnabled() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(_keyGradeNotifyEnabled) ?? true;
+    return prefs.getBool(_keyGradeNotifyEnabled) ?? false;
   }
 
   static Future<void> setGradeNotificationEnabled(bool enabled) async {

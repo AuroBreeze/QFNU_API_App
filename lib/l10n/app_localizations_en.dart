@@ -420,6 +420,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Check in background and notify when new grades appear.';
 
   @override
+  String get gradeNotifyBetaLabel => 'BETA · In progress';
+
+  @override
   String get gradeNotifyEnabledLabel => 'Enable grade notifications';
 
   @override

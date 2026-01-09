@@ -222,6 +222,7 @@
   "cacheClearedMessage": "培养方案缓存已清除。",
   "gradeNotifySectionTitle": "成绩提醒",
   "gradeNotifySectionSubtitle": "后台定时检查新成绩并通知。",
+  "gradeNotifyBetaLabel": "BETA · 开发中",
   "gradeNotifyEnabledLabel": "启用成绩提醒",
   "gradeNotifyIntervalLabel": "检查间隔",
   "gradeNotifyIntervalValue": "每 {hours} 小时检查",

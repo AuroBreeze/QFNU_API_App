@@ -222,6 +222,7 @@
   "cacheClearedMessage": "Training plan cache cleared.",
   "gradeNotifySectionTitle": "Grade notifications",
   "gradeNotifySectionSubtitle": "Check in background and notify when new grades appear.",
+  "gradeNotifyBetaLabel": "BETA · In progress",
   "gradeNotifyEnabledLabel": "Enable grade notifications",
   "gradeNotifyIntervalLabel": "Check interval",
   "gradeNotifyIntervalValue": "Every {hours} hours",

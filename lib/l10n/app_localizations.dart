@@ -818,6 +818,12 @@ abstract class AppLocalizations {
   /// **'Check in background and notify when new grades appear.'**
   String get gradeNotifySectionSubtitle;
 
+  /// No description provided for @gradeNotifyBetaLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'BETA · In progress'**
+  String get gradeNotifyBetaLabel;
+
   /// No description provided for @gradeNotifyEnabledLabel.
   ///
   /// In en, this message translates to:
