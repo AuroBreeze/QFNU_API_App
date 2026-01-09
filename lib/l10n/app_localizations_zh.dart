@@ -68,6 +68,41 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
+  String get disclaimerTitle => '免责声明';
+
+  @override
+  String get disclaimerHeadline => '使用声明';
+
+  @override
+  String get disclaimerSubtitle => '请阅读并同意后继续使用。';
+
+  @override
+  String get disclaimerBody1 => '本程序为教务系统的便捷客户端，所有请求直连教务系统官方域名，不通过第三方服务器或中转程序。';
+
+  @override
+  String get disclaimerBody2 => '账号、密码与验证码仅用于向教务系统发起登录请求，本程序不收集、不上传、不转发这些信息。';
+
+  @override
+  String get disclaimerBody3 =>
+      '会话信息仅保存在本地用于维持登录状态；如使用 Web 调试代理，其通信仅发生在本地或局域网且由你自行配置。';
+
+  @override
+  String get disclaimerBody4 =>
+      '本项目已在 GitHub 开源，采用 GPLv3 许可证，开源地址：https://github.com/AuroBreeze/QFNU_API_App';
+
+  @override
+  String get disclaimerAccept => '同意并继续';
+
+  @override
+  String get disclaimerDecline => '不同意并退出';
+
+  @override
+  String get disclaimerEntryTitle => '免责声明';
+
+  @override
+  String get disclaimerEntrySubtitle => '查看使用声明与开源协议。';
+
+  @override
   String failedToLoadTerms(Object error) {
     return '加载学期失败：$error';
   }

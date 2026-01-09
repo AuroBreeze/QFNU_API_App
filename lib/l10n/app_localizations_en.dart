@@ -70,6 +70,44 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get disclaimerTitle => 'Disclaimer';
+
+  @override
+  String get disclaimerHeadline => 'Usage Notice';
+
+  @override
+  String get disclaimerSubtitle => 'Please read and accept to continue.';
+
+  @override
+  String get disclaimerBody1 =>
+      'This app is a convenience client. All requests go directly to the official academic system domain, with no third-party server or relay.';
+
+  @override
+  String get disclaimerBody2 =>
+      'Your username, password, and captcha are only used to log in to the academic system. The app does not collect, upload, or forward them.';
+
+  @override
+  String get disclaimerBody3 =>
+      'Session data is stored locally to keep you signed in. If you use the web debug proxy, it only runs on your local machine or LAN and is configured by you.';
+
+  @override
+  String get disclaimerBody4 =>
+      'This project is open-sourced on GitHub under the GPLv3 license: https://github.com/AuroBreeze/QFNU_API_App';
+
+  @override
+  String get disclaimerAccept => 'Accept and continue';
+
+  @override
+  String get disclaimerDecline => 'Decline and exit';
+
+  @override
+  String get disclaimerEntryTitle => 'Disclaimer';
+
+  @override
+  String get disclaimerEntrySubtitle =>
+      'View the usage notice and open-source license.';
+
+  @override
   String failedToLoadTerms(Object error) {
     return 'Failed to load terms: $error';
   }

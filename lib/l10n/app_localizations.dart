@@ -212,6 +212,72 @@ abstract class AppLocalizations {
   /// **'Failed to load captcha: {error}'**
   String loadCaptchaFailed(Object error);
 
+  /// No description provided for @disclaimerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Disclaimer'**
+  String get disclaimerTitle;
+
+  /// No description provided for @disclaimerHeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'Usage Notice'**
+  String get disclaimerHeadline;
+
+  /// No description provided for @disclaimerSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Please read and accept to continue.'**
+  String get disclaimerSubtitle;
+
+  /// No description provided for @disclaimerBody1.
+  ///
+  /// In en, this message translates to:
+  /// **'This app is a convenience client. All requests go directly to the official academic system domain, with no third-party server or relay.'**
+  String get disclaimerBody1;
+
+  /// No description provided for @disclaimerBody2.
+  ///
+  /// In en, this message translates to:
+  /// **'Your username, password, and captcha are only used to log in to the academic system. The app does not collect, upload, or forward them.'**
+  String get disclaimerBody2;
+
+  /// No description provided for @disclaimerBody3.
+  ///
+  /// In en, this message translates to:
+  /// **'Session data is stored locally to keep you signed in. If you use the web debug proxy, it only runs on your local machine or LAN and is configured by you.'**
+  String get disclaimerBody3;
+
+  /// No description provided for @disclaimerBody4.
+  ///
+  /// In en, this message translates to:
+  /// **'This project is open-sourced on GitHub under the GPLv3 license: https://github.com/AuroBreeze/QFNU_API_App'**
+  String get disclaimerBody4;
+
+  /// No description provided for @disclaimerAccept.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept and continue'**
+  String get disclaimerAccept;
+
+  /// No description provided for @disclaimerDecline.
+  ///
+  /// In en, this message translates to:
+  /// **'Decline and exit'**
+  String get disclaimerDecline;
+
+  /// No description provided for @disclaimerEntryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Disclaimer'**
+  String get disclaimerEntryTitle;
+
+  /// No description provided for @disclaimerEntrySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'View the usage notice and open-source license.'**
+  String get disclaimerEntrySubtitle;
+
   /// No description provided for @failedToLoadTerms.
   ///
   /// In en, this message translates to:

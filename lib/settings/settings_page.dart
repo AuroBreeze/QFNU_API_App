@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:qfnu_app/background/grade_check_scheduler.dart';
+import 'package:qfnu_app/disclaimer/disclaimer_page.dart';
 import 'package:qfnu_app/settings/developer_page.dart';
 import 'package:qfnu_app/settings/tribute_page.dart';
 import 'package:qfnu_app/l10n/app_localizations.dart';
@@ -406,6 +407,28 @@ class _SettingsPageState extends State<SettingsPage> {
                         ),
                       ],
                     ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Card(
+                  elevation: 8,
+                  shadowColor: Colors.black26,
+                  color: Colors.white.withOpacity(0.95),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: ListTile(
+                    leading: const Icon(Icons.description_outlined),
+                    title: Text(l10n.disclaimerEntryTitle),
+                    subtitle: Text(l10n.disclaimerEntrySubtitle),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const DisclaimerPage(),
+                        ),
+                      );
+                    },
                   ),
                 ),
                 const SizedBox(height: 16),

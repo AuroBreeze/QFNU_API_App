@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:qfnu_app/background/grade_check_scheduler.dart';
+import 'package:qfnu_app/disclaimer/disclaimer_gate.dart';
 import 'package:qfnu_app/l10n/app_localizations.dart';
-import 'package:qfnu_app/login/login_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -53,7 +53,7 @@ class QfnuApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const LoginPage(),
+      home: const DisclaimerGate(),
     );
   }
 }

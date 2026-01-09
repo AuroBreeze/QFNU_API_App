@@ -10,6 +10,7 @@ class SettingsStore {
   static const String _keyTributePromptEnabled = 'tribute_prompt_enabled';
   static const String _keyTributePromptShown = 'tribute_prompt_shown';
   static const String _keyShowHomeTributeCard = 'show_home_tribute_card';
+  static const String _keyDisclaimerAccepted = 'disclaimer_accepted';
 
   static int _normalizeDays(int value) {
     if (value < 1) return 1;
@@ -95,5 +96,15 @@ class SettingsStore {
   static Future<void> setShowHomeTributeCard(bool show) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_keyShowHomeTributeCard, show);
+  }
+
+  static Future<bool> getDisclaimerAccepted() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_keyDisclaimerAccepted) ?? false;
+  }
+
+  static Future<void> setDisclaimerAccepted(bool accepted) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_keyDisclaimerAccepted, accepted);
   }
 }
