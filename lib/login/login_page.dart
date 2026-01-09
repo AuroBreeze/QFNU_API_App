@@ -9,6 +9,7 @@ import 'package:qfnu_app/login/login_service.dart';
 import 'package:qfnu_app/login/proxy_login_service.dart';
 import 'package:qfnu_app/shared/constants.dart';
 import 'package:qfnu_app/settings/tribute_page.dart';
+import 'package:qfnu_app/shared/settings_store.dart';
 import 'package:qfnu_app/shared/widgets/glow_circle.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -153,6 +154,16 @@ class _LoginPageState extends State<LoginPage> {
       final terms = await service.fetchExamTerms();
       if (!mounted) return false;
       if (terms.isNotEmpty) {
+        final shouldShowTribute = await _shouldShowTributePrompt();
+        if (shouldShowTribute && mounted) {
+          await Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => const TributePage(showContinueButton: true),
+            ),
+          );
+          await SettingsStore.setTributePromptShown(true);
+        }
+        if (!mounted) return false;
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (_) => HomePage(
@@ -275,11 +286,15 @@ class _LoginPageState extends State<LoginPage> {
       if (!mounted) return;
 
       if (result.ok) {
-        await Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => const TributePage(showContinueButton: true),
-          ),
-        );
+        final shouldShowTribute = await _shouldShowTributePrompt();
+        if (shouldShowTribute && mounted) {
+          await Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => const TributePage(showContinueButton: true),
+            ),
+          );
+          await SettingsStore.setTributePromptShown(true);
+        }
         if (!mounted) return;
         Navigator.of(context).push(
           MaterialPageRoute(
@@ -310,6 +325,13 @@ class _LoginPageState extends State<LoginPage> {
         });
       }
     }
+  }
+
+  Future<bool> _shouldShowTributePrompt() async {
+    final enabled = await SettingsStore.getTributePromptEnabled();
+    if (!enabled) return false;
+    final shown = await SettingsStore.getTributePromptShown();
+    return !shown;
   }
 
   @override

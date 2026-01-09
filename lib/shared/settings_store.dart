@@ -7,6 +7,8 @@ class SettingsStore {
   static const String _keyGradeCheckIntervalHours = 'grade_check_interval_hours';
   static const int defaultGradeCheckIntervalHours = 6;
   static const String _keyGradeTestNotifyEnabled = 'grade_test_notify_enabled';
+  static const String _keyTributePromptEnabled = 'tribute_prompt_enabled';
+  static const String _keyTributePromptShown = 'tribute_prompt_shown';
 
   static int _normalizeDays(int value) {
     if (value < 1) return 1;
@@ -62,5 +64,25 @@ class SettingsStore {
   static Future<void> setGradeTestNotificationEnabled(bool enabled) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_keyGradeTestNotifyEnabled, enabled);
+  }
+
+  static Future<bool> getTributePromptEnabled() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_keyTributePromptEnabled) ?? true;
+  }
+
+  static Future<void> setTributePromptEnabled(bool enabled) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_keyTributePromptEnabled, enabled);
+  }
+
+  static Future<bool> getTributePromptShown() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_keyTributePromptShown) ?? false;
+  }
+
+  static Future<void> setTributePromptShown(bool shown) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_keyTributePromptShown, shown);
   }
 }

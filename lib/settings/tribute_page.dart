@@ -1,11 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:qfnu_app/l10n/app_localizations.dart';
+import 'package:qfnu_app/shared/settings_store.dart';
 import 'package:qfnu_app/shared/widgets/glow_circle.dart';
 
-class TributePage extends StatelessWidget {
+class TributePage extends StatefulWidget {
   const TributePage({super.key, this.showContinueButton = false});
 
   final bool showContinueButton;
+
+  @override
+  State<TributePage> createState() => _TributePageState();
+}
+
+class _TributePageState extends State<TributePage> {
+  bool _promptEnabled = true;
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSettings();
+  }
+
+  Future<void> _loadSettings() async {
+    final enabled = await SettingsStore.getTributePromptEnabled();
+    if (!mounted) return;
+    setState(() {
+      _promptEnabled = enabled;
+      _loading = false;
+    });
+  }
+
+  Future<void> _togglePrompt(bool value) async {
+    setState(() {
+      _promptEnabled = value;
+    });
+    await SettingsStore.setTributePromptEnabled(value);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +120,33 @@ class TributePage extends StatelessWidget {
                             ),
                           ),
                         ),
-                      if (showContinueButton) ...[
+                      const Divider(height: 20),
+                      Text(
+                        l10n.tributePromptTitle,
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        l10n.tributePromptSubtitle,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: Colors.black54,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      SwitchListTile.adaptive(
+                        value: _promptEnabled,
+                        onChanged: _loading ? null : _togglePrompt,
+                        contentPadding: EdgeInsets.zero,
+                        title: Text(
+                          l10n.tributePromptEnabledLabel,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      if (widget.showContinueButton) ...[
                         const SizedBox(height: 8),
                         SizedBox(
                           width: double.infinity,

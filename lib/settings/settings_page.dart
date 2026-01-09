@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:qfnu_app/background/grade_check_scheduler.dart';
 import 'package:qfnu_app/settings/developer_page.dart';
-import 'package:qfnu_app/settings/tribute_page.dart';
 import 'package:qfnu_app/l10n/app_localizations.dart';
 import 'package:qfnu_app/shared/settings_store.dart';
 import 'package:qfnu_app/shared/training_plan_cache.dart';
@@ -20,6 +19,7 @@ class _SettingsPageState extends State<SettingsPage> {
   int _cacheDays = SettingsStore.defaultTrainingPlanCacheDays;
   bool _gradeNotifyEnabled = true;
   int _gradeCheckHours = SettingsStore.defaultGradeCheckIntervalHours;
+  bool _tributePromptEnabled = true;
 
   @override
   void initState() {
@@ -31,11 +31,13 @@ class _SettingsPageState extends State<SettingsPage> {
     final days = await SettingsStore.getTrainingPlanCacheDays();
     final gradeEnabled = await SettingsStore.getGradeNotificationEnabled();
     final gradeHours = await SettingsStore.getGradeCheckIntervalHours();
+    final tributePromptEnabled = await SettingsStore.getTributePromptEnabled();
     if (!mounted) return;
     setState(() {
       _cacheDays = days;
       _gradeNotifyEnabled = gradeEnabled;
       _gradeCheckHours = gradeHours;
+      _tributePromptEnabled = tributePromptEnabled;
       _loading = false;
     });
   }
@@ -95,6 +97,13 @@ class _SettingsPageState extends State<SettingsPage> {
     });
     await SettingsStore.setGradeNotificationEnabled(value);
     await GradeCheckScheduler.syncWithSettings();
+  }
+
+  Future<void> _toggleTributePrompt(bool value) async {
+    setState(() {
+      _tributePromptEnabled = value;
+    });
+    await SettingsStore.setTributePromptEnabled(value);
   }
 
 
@@ -306,24 +315,44 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 const SizedBox(height: 16),
                 Card(
-                  elevation: 8,
+                  elevation: 10,
                   shadowColor: Colors.black26,
                   color: Colors.white.withOpacity(0.95),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  child: ListTile(
-                    leading: const Icon(Icons.favorite_border),
-                    title: Text(l10n.tributeTitle),
-                    subtitle: Text(l10n.tributeSubtitle),
-                    trailing: const Icon(Icons.chevron_right),
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => const TributePage(),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.tributePromptTitle,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
-                      );
-                    },
+                        const SizedBox(height: 6),
+                        Text(
+                          l10n.tributePromptSubtitle,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: Colors.black54,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        SwitchListTile.adaptive(
+                          value: _tributePromptEnabled,
+                          onChanged: _loading ? null : _toggleTributePrompt,
+                          contentPadding: EdgeInsets.zero,
+                          title: Text(
+                            l10n.tributePromptEnabledLabel,
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16),

@@ -889,6 +889,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Continue to Home'**
   String get tributeContinue;
+
+  /// No description provided for @tributePromptTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tribute reminder'**
+  String get tributePromptTitle;
+
+  /// No description provided for @tributePromptSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Show the tribute once after a successful login.'**
+  String get tributePromptSubtitle;
+
+  /// No description provided for @tributePromptEnabledLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Show tribute after login'**
+  String get tributePromptEnabledLabel;
 }
 
 class _AppLocalizationsDelegate

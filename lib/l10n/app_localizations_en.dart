@@ -461,4 +461,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tributeContinue => 'Continue to Home';
+
+  @override
+  String get tributePromptTitle => 'Tribute reminder';
+
+  @override
+  String get tributePromptSubtitle =>
+      'Show the tribute once after a successful login.';
+
+  @override
+  String get tributePromptEnabledLabel => 'Show tribute after login';
 }
