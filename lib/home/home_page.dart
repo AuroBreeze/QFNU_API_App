@@ -7,6 +7,7 @@ import 'package:qfnu_app/login/login_service.dart';
 import 'package:qfnu_app/plan/training_plan_card.dart';
 import 'package:qfnu_app/settings/settings_page.dart';
 import 'package:qfnu_app/settings/tribute_page.dart';
+import 'package:qfnu_app/shared/settings_store.dart';
 import 'package:qfnu_app/shared/widgets/glow_circle.dart';
 import 'package:qfnu_app/timetable/today_schedule_card.dart';
 
@@ -105,28 +106,42 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  Card(
-                    elevation: 8,
-                    shadowColor: Colors.black26,
-                    color: Colors.white.withOpacity(0.95),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: ListTile(
-                      leading: const Icon(Icons.favorite_border),
-                      title: Text(l10n.tributeTitle),
-                      subtitle: Text(l10n.tributeSubtitle),
-                      trailing: const Icon(Icons.chevron_right),
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) => const TributePage(),
+                  FutureBuilder<bool>(
+                    future: SettingsStore.getShowHomeTributeCard(),
+                    builder: (context, snapshot) {
+                      final showCard = snapshot.data ?? true;
+                      if (!showCard) {
+                        return const SizedBox.shrink();
+                      }
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Card(
+                            elevation: 8,
+                            shadowColor: Colors.black26,
+                            color: Colors.white.withOpacity(0.95),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: ListTile(
+                              leading: const Icon(Icons.favorite_border),
+                              title: Text(l10n.tributeTitle),
+                              subtitle: Text(l10n.tributeSubtitle),
+                              trailing: const Icon(Icons.chevron_right),
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => const TributePage(),
+                                  ),
+                                );
+                              },
+                            ),
                           ),
-                        );
-                      },
-                    ),
+                          const SizedBox(height: 16),
+                        ],
+                      );
+                    },
                   ),
-                  const SizedBox(height: 16),
                   TodayScheduleCard(
                     service: service,
                     username: username,

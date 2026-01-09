@@ -446,11 +446,20 @@ class AppLocalizationsZh extends AppLocalizations {
   String get tributeContinue => '进入首页';
 
   @override
-  String get tributePromptTitle => '致敬提醒';
+  String get tributePromptTitle => '登录提醒';
 
   @override
-  String get tributePromptSubtitle => '登录成功后弹出一次致敬说明。';
+  String get tributePromptSubtitle => '登录成功后弹出一次致敬页面。';
 
   @override
-  String get tributePromptEnabledLabel => '登录后显示致敬';
+  String get tributePromptEnabledLabel => '登录后弹出致敬';
+
+  @override
+  String get tributeHomeCardTitle => '首页致敬入口';
+
+  @override
+  String get tributeHomeCardSubtitle => '控制首页是否显示致敬入口。';
+
+  @override
+  String get tributeHomeCardEnabledLabel => '在首页显示致敬';
 }

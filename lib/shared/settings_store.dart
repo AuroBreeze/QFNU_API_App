@@ -9,6 +9,7 @@ class SettingsStore {
   static const String _keyGradeTestNotifyEnabled = 'grade_test_notify_enabled';
   static const String _keyTributePromptEnabled = 'tribute_prompt_enabled';
   static const String _keyTributePromptShown = 'tribute_prompt_shown';
+  static const String _keyShowHomeTributeCard = 'show_home_tribute_card';
 
   static int _normalizeDays(int value) {
     if (value < 1) return 1;
@@ -84,5 +85,15 @@ class SettingsStore {
   static Future<void> setTributePromptShown(bool shown) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_keyTributePromptShown, shown);
+  }
+
+  static Future<bool> getShowHomeTributeCard() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_keyShowHomeTributeCard) ?? true;
+  }
+
+  static Future<void> setShowHomeTributeCard(bool show) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_keyShowHomeTributeCard, show);
   }
 }

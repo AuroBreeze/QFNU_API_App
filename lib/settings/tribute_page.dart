@@ -84,81 +84,101 @@ class _TributePageState extends State<TributePage> {
           SafeArea(
             child: SingleChildScrollView(
               padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
-              child: Card(
-                elevation: 10,
-                shadowColor: Colors.black26,
-                color: Colors.white.withOpacity(0.95),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l10n.tributeHeadline,
-                        style: theme.textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        l10n.tributeSubtitle,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: Colors.black54,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      for (final text in paragraphs)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 12),
-                          child: Text(
-                            text,
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              height: 1.6,
+              child: Column(
+                children: [
+                  Card(
+                    elevation: 10,
+                    shadowColor: Colors.black26,
+                    color: Colors.white.withOpacity(0.95),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n.tributeHeadline,
+                            style: theme.textTheme.headlineSmall?.copyWith(
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
-                        ),
-                      const Divider(height: 20),
-                      Text(
-                        l10n.tributePromptTitle,
-                        style: theme.textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        l10n.tributePromptSubtitle,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: Colors.black54,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      SwitchListTile.adaptive(
-                        value: _promptEnabled,
-                        onChanged: _loading ? null : _togglePrompt,
-                        contentPadding: EdgeInsets.zero,
-                        title: Text(
-                          l10n.tributePromptEnabledLabel,
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
+                          const SizedBox(height: 8),
+                          Text(
+                            l10n.tributeSubtitle,
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: Colors.black54,
+                            ),
                           ),
-                        ),
+                          const SizedBox(height: 16),
+                          for (final text in paragraphs)
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 12),
+                              child: Text(
+                                text,
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  height: 1.6,
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
-                      if (widget.showContinueButton) ...[
-                        const SizedBox(height: 8),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () => Navigator.of(context).pop(),
-                            child: Text(l10n.tributeContinue),
-                          ),
-                        ),
-                      ],
-                    ],
+                    ),
                   ),
-                ),
+                  const SizedBox(height: 16),
+                  Card(
+                    elevation: 10,
+                    shadowColor: Colors.black26,
+                    color: Colors.white.withOpacity(0.95),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n.tributePromptTitle,
+                            style: theme.textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            l10n.tributePromptSubtitle,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: Colors.black54,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          SwitchListTile.adaptive(
+                            value: _promptEnabled,
+                            onChanged: _loading ? null : _togglePrompt,
+                            contentPadding: EdgeInsets.zero,
+                            title: Text(
+                              l10n.tributePromptEnabledLabel,
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                          if (widget.showContinueButton) ...[
+                            const SizedBox(height: 8),
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                child: Text(l10n.tributeContinue),
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

@@ -233,7 +233,10 @@
   "tributeBody3": "如果你也受益于那份努力，请保持尊重与善意，并向原作者W1ndys致谢。",
   "tributeBody4": "愿更多同学把技术用于服务与分享，让学习变得更轻松。",
   "tributeContinue": "进入首页",
-  "tributePromptTitle": "致敬提醒",
-  "tributePromptSubtitle": "登录成功后弹出一次致敬说明。",
-  "tributePromptEnabledLabel": "登录后显示致敬"
+  "tributePromptTitle": "登录提醒",
+  "tributePromptSubtitle": "登录成功后弹出一次致敬页面。",
+  "tributePromptEnabledLabel": "登录后弹出致敬",
+  "tributeHomeCardTitle": "首页致敬入口",
+  "tributeHomeCardSubtitle": "控制首页是否显示致敬入口。",
+  "tributeHomeCardEnabledLabel": "在首页显示致敬"
 }

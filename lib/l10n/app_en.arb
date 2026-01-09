@@ -233,7 +233,10 @@
   "tributeBody3": "If that work helped you, please keep respect and kindness toward the original author.",
   "tributeBody4": "May more students build to serve and share.",
   "tributeContinue": "Continue to Home",
-  "tributePromptTitle": "Tribute reminder",
-  "tributePromptSubtitle": "Show the tribute once after a successful login.",
-  "tributePromptEnabledLabel": "Show tribute after login"
+  "tributePromptTitle": "Login reminder",
+  "tributePromptSubtitle": "Show the tribute page once after a successful login.",
+  "tributePromptEnabledLabel": "Show tribute after login",
+  "tributeHomeCardTitle": "Home tribute entry",
+  "tributeHomeCardSubtitle": "Control whether the tribute entry is shown on Home.",
+  "tributeHomeCardEnabledLabel": "Show tribute on Home"
 }

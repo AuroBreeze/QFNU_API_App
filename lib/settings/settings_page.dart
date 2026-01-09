@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:qfnu_app/background/grade_check_scheduler.dart';
 import 'package:qfnu_app/settings/developer_page.dart';
+import 'package:qfnu_app/settings/tribute_page.dart';
 import 'package:qfnu_app/l10n/app_localizations.dart';
 import 'package:qfnu_app/shared/settings_store.dart';
 import 'package:qfnu_app/shared/training_plan_cache.dart';
@@ -20,6 +21,7 @@ class _SettingsPageState extends State<SettingsPage> {
   bool _gradeNotifyEnabled = true;
   int _gradeCheckHours = SettingsStore.defaultGradeCheckIntervalHours;
   bool _tributePromptEnabled = true;
+  bool _showHomeTributeCard = true;
 
   @override
   void initState() {
@@ -32,12 +34,14 @@ class _SettingsPageState extends State<SettingsPage> {
     final gradeEnabled = await SettingsStore.getGradeNotificationEnabled();
     final gradeHours = await SettingsStore.getGradeCheckIntervalHours();
     final tributePromptEnabled = await SettingsStore.getTributePromptEnabled();
+    final showHomeTributeCard = await SettingsStore.getShowHomeTributeCard();
     if (!mounted) return;
     setState(() {
       _cacheDays = days;
       _gradeNotifyEnabled = gradeEnabled;
       _gradeCheckHours = gradeHours;
       _tributePromptEnabled = tributePromptEnabled;
+      _showHomeTributeCard = showHomeTributeCard;
       _loading = false;
     });
   }
@@ -104,6 +108,13 @@ class _SettingsPageState extends State<SettingsPage> {
       _tributePromptEnabled = value;
     });
     await SettingsStore.setTributePromptEnabled(value);
+  }
+
+  Future<void> _toggleHomeTributeCard(bool value) async {
+    setState(() {
+      _showHomeTributeCard = value;
+    });
+    await SettingsStore.setShowHomeTributeCard(value);
   }
 
 
@@ -353,6 +364,70 @@ class _SettingsPageState extends State<SettingsPage> {
                         ),
                       ],
                     ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Card(
+                  elevation: 10,
+                  shadowColor: Colors.black26,
+                  color: Colors.white.withOpacity(0.95),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.tributeHomeCardTitle,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          l10n.tributeHomeCardSubtitle,
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: Colors.black54,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        SwitchListTile.adaptive(
+                          value: _showHomeTributeCard,
+                          onChanged: _loading ? null : _toggleHomeTributeCard,
+                          contentPadding: EdgeInsets.zero,
+                          title: Text(
+                            l10n.tributeHomeCardEnabledLabel,
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Card(
+                  elevation: 8,
+                  shadowColor: Colors.black26,
+                  color: Colors.white.withOpacity(0.95),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: ListTile(
+                    leading: const Icon(Icons.favorite_border),
+                    title: Text(l10n.tributeTitle),
+                    subtitle: Text(l10n.tributeSubtitle),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const TributePage(),
+                        ),
+                      );
+                    },
                   ),
                 ),
                 const SizedBox(height: 16),

@@ -893,13 +893,13 @@ abstract class AppLocalizations {
   /// No description provided for @tributePromptTitle.
   ///
   /// In en, this message translates to:
-  /// **'Tribute reminder'**
+  /// **'Login reminder'**
   String get tributePromptTitle;
 
   /// No description provided for @tributePromptSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Show the tribute once after a successful login.'**
+  /// **'Show the tribute page once after a successful login.'**
   String get tributePromptSubtitle;
 
   /// No description provided for @tributePromptEnabledLabel.
@@ -907,6 +907,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Show tribute after login'**
   String get tributePromptEnabledLabel;
+
+  /// No description provided for @tributeHomeCardTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Home tribute entry'**
+  String get tributeHomeCardTitle;
+
+  /// No description provided for @tributeHomeCardSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Control whether the tribute entry is shown on Home.'**
+  String get tributeHomeCardSubtitle;
+
+  /// No description provided for @tributeHomeCardEnabledLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Show tribute on Home'**
+  String get tributeHomeCardEnabledLabel;
 }
 
 class _AppLocalizationsDelegate
